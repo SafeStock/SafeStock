@@ -1,8 +1,12 @@
 package com.example.safestock.controller;
 
 
+import com.example.safestock.model.Creche;
 import com.example.safestock.model.Funcionario;
 import com.example.safestock.repository.FuncionarioRepository;
+import com.example.safestock.service.FuncionarioService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,44 +16,41 @@ import java.util.Optional;
 @RequestMapping("api/funcionarios")
 public class FuncionarioController {
 
-    private final FuncionarioRepository funcionarioRepository;
+    private final FuncionarioService funcionarioService;
 
-    public FuncionarioController(FuncionarioRepository funcionarioRepository) {
-        this.funcionarioRepository = funcionarioRepository;
-    }
-
-    @GetMapping("/{id}")
-    public Optional<Funcionario> listarUsuarioPorId(@PathVariable Long id){
-        return usuarioRepository.findById(id);
+    public FuncionarioController(FuncionarioService funcionarioService) {
+        this.funcionarioService = funcionarioService;
     }
 
     @GetMapping
-    public List<Funcionario> listarUsuario(){
-        return usuarioRepository.findAll();
+    public List<Funcionario> listarCreches(){
+        return funcionarioService.listarFuncionarios();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Funcionario> buscarFuncionarioPorId(@PathVariable Long id){
+        Optional<Funcionario> funcionario = funcionarioService.buscarFuncionarioPorId(id);
+        return funcionario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Funcionario adicionarUsuario(@RequestBody Funcionario usuario){
-        return usuarioRepository.save(usuario);
+    public ResponseEntity<Funcionario> adicionarFuncionario(@Valid @RequestBody Funcionario funcionario){
+        Funcionario novaCreche = funcionarioService.salvarFuncionario(funcionario);
+        return ResponseEntity.ok(novaCreche);
     }
 
-
-
     @DeleteMapping("/{id}")
-    public String removerUsuario(@PathVariable Long id){
-        usuarioRepository.deleteById(id);
-        return "Usuario removido com sucesso!";
+    public ResponseEntity<Funcionario> removerCreche(@PathVariable Long id){
+        if (funcionarioService.buscarFuncionarioPorId(id).isPresent()){
+            funcionarioService.removerFuncionarioPorId(id);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public Funcionario atualizarUsuario(@PathVariable Long id, @RequestBody Funcionario novoUsuario){
-        return usuarioRepository.findById(id).map(usuario -> {
-            usuario.setNome(novoUsuario.getNome());
-            usuario.setEmail(novoUsuario.getEmail());
-            usuario.setSenha(novoUsuario.getSenha());
-            usuario.setTelefone(novoUsuario.getTelefone());
-            usuario.setCargo(novoUsuario.getCargo());
-            return usuarioRepository.save(usuario);
-        }).orElseThrow(() -> new RuntimeException("Usuario não Encontrado"));
+    public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody Funcionario novoFuncionario) {
+        return funcionarioService.atualizarFuncionario(id, novoFuncionario)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
