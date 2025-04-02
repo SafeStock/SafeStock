@@ -2,9 +2,11 @@ package com.example.safestock.model;
 
 import com.example.safestock.model.enums.TipoCreche;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name="creche")
+@Getter @Setter @AllArgsConstructor @ToString
 public class Creche {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

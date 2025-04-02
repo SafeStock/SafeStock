@@ -3,6 +3,9 @@ package com.example.safestock.controller;
 
 import com.example.safestock.model.Creche;
 import com.example.safestock.repository.CrecheRepository;
+import com.example.safestock.service.CrecheService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,39 +15,41 @@ import java.util.Optional;
 @RequestMapping("api/creches")
 public class CrecheController {
 
-    private final CrecheRepository crecheRepository;
+    private final CrecheService crecheService;
 
-    public CrecheController(CrecheRepository crecheRepository) {
-        this.crecheRepository = crecheRepository;
-    }
-
-    @GetMapping("/{id}")
-    public Optional<Creche> listarCrechePorId(@PathVariable Long id){
-        return crecheRepository.findById(id);
+    public CrecheController(CrecheService crecheService) {
+        this.crecheService = crecheService;
     }
 
     @GetMapping
-    public List<Creche> listarCreche(){
-        return crecheRepository.findAll();
+    public List<Creche> listarCreches(){
+        return crecheService.listarCreches();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Creche> listarCrechePorId(@PathVariable Long id){
+        Optional<Creche> creche = crecheService.buscarCrechePorId(id);
+        return creche.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Creche adicionarCreche(@RequestBody Creche creche){
-        return crecheRepository.save(creche);
+    public ResponseEntity<Creche> adicionarCreche(@Valid @RequestBody Creche creche){
+        Creche novaCreche = crecheService.salvarCreche(creche);
+        return ResponseEntity.ok(novaCreche);
     }
 
     @DeleteMapping("/{id}")
-    public String removerCreche(@PathVariable Long id){
-        crecheRepository.deleteById(id);
-        return "Creche removido com sucesso!";
+    public ResponseEntity<Creche> removerCreche(@PathVariable Long id){
+        if (crecheService.buscarCrechePorId(id).isPresent()){
+            crecheService.removerCrechePorId(id);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public Creche atualizarCreche(@PathVariable Long id, @RequestBody Creche novaCreche){
-        return crecheRepository.findById(id).map(creche -> {
-            creche.setNome(novaCreche.getNome());
-            creche.setTipoCreche(novaCreche.getTipoCreche());
-            return crecheRepository.save(creche);
-        }).orElseThrow(() -> new RuntimeException("Creche não Encontrado"));
+    public ResponseEntity<Creche> atualizarCreche(@PathVariable Long id, @RequestBody Creche novaCreche) {
+        return crecheService.atualizarCreche(id, novaCreche)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
