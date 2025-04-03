@@ -18,6 +18,7 @@ public class Funcionario {
     private TipoFuncionario tipoCargo;
 
     public Funcionario() {};
+
     public Funcionario(String nome, String senha, String telefone, String email, TipoFuncionario tipoCargo) {
         this.nome = nome;
         this.senha = senha;

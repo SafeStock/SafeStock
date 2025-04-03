@@ -1,6 +1,5 @@
 package com.example.safestock.service;
 
-import com.example.safestock.model.Creche;
 import com.example.safestock.model.Funcionario;
 import com.example.safestock.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;

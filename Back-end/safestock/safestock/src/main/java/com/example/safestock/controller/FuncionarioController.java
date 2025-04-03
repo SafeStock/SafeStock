@@ -1,9 +1,6 @@
 package com.example.safestock.controller;
 
-
-import com.example.safestock.model.Creche;
 import com.example.safestock.model.Funcionario;
-import com.example.safestock.repository.FuncionarioRepository;
 import com.example.safestock.service.FuncionarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,7 @@ public class FuncionarioController {
     }
 
     @GetMapping
-    public List<Funcionario> listarCreches(){
+    public List<Funcionario> listarFuncionarios(){
         return funcionarioService.listarFuncionarios();
     }
 
@@ -40,7 +37,7 @@ public class FuncionarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Funcionario> removerCreche(@PathVariable Long id){
+    public ResponseEntity<Funcionario> removerFuncionario(@PathVariable Long id){
         if (funcionarioService.buscarFuncionarioPorId(id).isPresent()){
             funcionarioService.removerFuncionarioPorId(id);
         }
