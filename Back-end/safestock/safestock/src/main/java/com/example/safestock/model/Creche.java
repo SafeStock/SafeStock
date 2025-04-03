@@ -18,6 +18,7 @@ public class Creche {
     private TipoCreche tipoCreche;
 
     public Creche() {};
+
     public Creche(String nome, String endereco, String telefone, String cnpj, TipoCreche tipoCreche) {
         this.nome = nome;
         this.endereco = endereco;
