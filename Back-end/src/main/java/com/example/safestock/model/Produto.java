@@ -17,11 +17,11 @@ public class Produto {
     private String nome;
     private LocalDate dataEntrada;
     private LocalDate dataValidade;
-    private TipoCreche categoria;
+    private TipoProduto categoria;
 
     public Produto() {}
 
-    public Produto(String nome, LocalDate dataEntrada, LocalDate dataValidade, TipoCreche categoria) {
+    public Produto(String nome, LocalDate dataEntrada, LocalDate dataValidade, TipoProduto categoria) {
         this.nome = nome;
         this.dataEntrada = dataEntrada;
         this.dataValidade = dataValidade;
