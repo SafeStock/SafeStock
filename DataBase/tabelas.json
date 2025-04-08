@@ -1,0 +1,87 @@
+{
+    "tables": [
+      {
+        "name": "Creche",
+        "columns": [
+          { "name": "idCreche", "type": "INT", "primaryKey": true },
+          { "name": "nome", "type": "VARCHAR(45)" },
+          { "name": "endereco", "type": "VARCHAR(80)" },
+          { "name": "telefone", "type": "INT" }
+        ]
+      },
+      {
+        "name": "Funcionario",
+        "columns": [
+          { "name": "idFuncionario", "type": "INT", "primaryKey": true },
+          { "name": "nome", "type": "VARCHAR(45)" },
+          { "name": "sobrenome", "type": "VARCHAR(45)" },
+          { "name": "cargo", "type": "VARCHAR(45)" },
+          { "name": "CNPJ", "type": "CHAR(14)" },
+          { "name": "email", "type": "VARCHAR(45)" },
+          { "name": "senha", "type": "VARCHAR(45)" },
+          { "name": "telefone", "type": "VARCHAR(45)" },
+          { "name": "Creche_idCreche", "type": "INT", "foreignKey": { "references": "Creche(idCreche)" } }
+        ]
+      },
+      {
+        "name": "Produto",
+        "columns": [
+          { "name": "idProduto", "type": "INT", "primaryKey": true },
+          { "name": "nome", "type": "VARCHAR(45)" },
+          { "name": "categoria", "type": "VARCHAR(45)" },
+          { "name": "dataValidade", "type": "VARCHAR(45)" },
+          { "name": "dataEntrada", "type": "VARCHAR(45)" },
+          { "name": "Creche_idCreche", "type": "INT", "foreignKey": { "references": "Creche(idCreche)" } }
+        ]
+      },
+      {
+        "name": "RegistroUso",
+        "columns": [
+          { "name": "idRegistroUso", "type": "INT", "primaryKey": true },
+          { "name": "dataHoraSaida", "type": "VARCHAR(45)" },
+          { "name": "quantidade", "type": "VARCHAR(45)" },
+          { "name": "Funcionario_idFuncionario", "type": "INT", "foreignKey": { "references": "Funcionario(idFuncionario)" } },
+          { "name": "Funcionario_idFuncionario1", "type": "INT", "foreignKey": { "references": "Funcionario(idFuncionario)" } }
+        ]
+      },
+      {
+        "name": "HistoricoAlertas",
+        "columns": [
+          { "name": "idHistoricoAlertas", "type": "INT", "primaryKey": true },
+          { "name": "dataHora", "type": "DATETIME" },
+          { "name": "status", "type": "VARCHAR(45)" },
+          { "name": "descricao", "type": "VARCHAR(200)" }
+        ]
+      },
+      {
+        "name": "Relatorio",
+        "columns": [
+          { "name": "idRelatorio", "type": "INT", "primaryKey": true },
+          { "name": "dataHora", "type": "DATETIME" },
+          { "name": "descricao", "type": "VARCHAR(999)" },
+          { "name": "RegistroUso_idRegistroUso", "type": "INT", "foreignKey": { "references": "RegistroUso(idRegistroUso)" } },
+          { "name": "RegistroUso_Funcionario_idFuncionario", "type": "INT", "foreignKey": { "references": "Funcionario(idFuncionario)" } },
+          { "name": "HistoricoAlertas_idHistoricoAlertas", "type": "INT", "foreignKey": { "references": "HistoricoAlertas(idHistoricoAlertas)" } },
+          { "name": "Produto_idProduto", "type": "INT", "foreignKey": { "references": "Produto(idProduto)" } }
+        ]
+      },
+      {
+        "name": "RelacionamentosEmMerMaid",
+        "columns": [
+          { "name": "Creche ||--o{ Funcionario : possui" },
+          { "name": "Creche ||--o{ Produto : possui" },
+          { "name": "Produto ||--o{ Relatorio : está_em" },
+          { "name": "Funcionario ||--o{ RegistroUso : faz" } ,
+          { "name": "RegistroUso ||--o{ Relatorio : gera" },
+          { "name": "HistoricoAlertas ||--o{ Relatorio : associado_a" } 
+        ]
+      }
+    ]
+  }
+  
+  
+  
+  
+  
+  
+  
