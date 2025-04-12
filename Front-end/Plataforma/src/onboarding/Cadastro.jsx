@@ -6,9 +6,17 @@ export function Cadastro() {
     const [nome, setNome] = useState("");
     const [sobrenome, setSobrenome] = useState("");
     const [telefone, setTelefone] = useState("");
-
+    const [cargo, setCargo] = useState("");
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("")
+    const [senha, setSenha] = useState("");
+
+    function proximo() {
+
+    }
+
+    function cadastrar() {
+        
+    }
 
     return (
         <div>
@@ -42,15 +50,22 @@ export function Cadastro() {
                         value={telefone}
                         onChange={(e) => setTelefone(e.target.value)}
                         />
-                        <button>Próximo</button>
+                        <button onClick={proximo}>Próximo</button>
                     </form>
                 </section>
 
                 <section>
                     <form action="">
-                        <select name="" id="">
-
+                        <select 
+                        value={cargo}
+                        onChange={(e) => setCargo(e.target.value)}
+                        >
+                        <option value="">Selecione o tipo de usuário</option>
+                        <option value="dono">Dono</option>
+                        <option value="secretaria">Secretária</option>
+                        <option value="limpeza">Equipe de Limpeza</option>
                         </select>
+
                         <input 
                         type="text" 
                         placeholder="emailexemplo@gmail.com"
@@ -63,11 +78,11 @@ export function Cadastro() {
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         />
-                        <button>Enviar</button>
+                        <button onClick={cadastrar}>Enviar</button>
                     </form>
                 </section>
 
-                <div></div>
+                <div id="Resultado"></div>
                 
             </main>
 
