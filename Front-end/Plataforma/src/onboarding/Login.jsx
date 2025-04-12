@@ -11,7 +11,7 @@ export function Login() {
     }
 
     return (
-        <div className='< flex flex-row w-full h-screen'>
+        <div className='< flex flex-row w-full h-screen bg-[#ff5733]'>
             <section class="areaImagemCadastro">
             <img src={imagemLogin} alt="Imagem de login" />
             </section>
