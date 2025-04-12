@@ -19,26 +19,29 @@ public class Produto {
     @NotBlank(message = "O campo nome não pode estar em branco")
     private String nome;
 
+    private CategoriaProduto categoriaProduto;
+
     @NotBlank(message = "O campo quantidade não pode estar em branco")
     private String quantidade;
 
-    private CategoriaProduto categoriaProduto;
 
+    private int limiteSemanalDeUso;
     private LocalDate dataValidade;
     private LocalDate dataEntrada;
 
     public Produto() {
     }
 
-    public Produto(String nome, String quantidade, CategoriaProduto categoriaProduto, LocalDate dataValidade, LocalDate dataEntrada) {
+    public Produto(String nome, CategoriaProduto categoriaProduto, String quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDate dataEntrada) {
         this.nome = nome;
-        this.quantidade = quantidade;
         this.categoriaProduto = categoriaProduto;
+        this.quantidade = quantidade;
+        this.limiteSemanalDeUso = limiteSemanalDeUso;
         this.dataValidade = dataValidade;
         this.dataEntrada = dataEntrada;
     }
 
-   // getters e setters
+    // getters e setters
     public Long getId() {
         return id;
     }
@@ -69,6 +72,14 @@ public class Produto {
 
     public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
         this.categoriaProduto = categoriaProduto;
+    }
+
+    public int getLimiteSemanalDeUso() {
+        return limiteSemanalDeUso;
+    }
+
+    public void setLimiteSemanalDeUso(int limiteSemanalDeUso) {
+        this.limiteSemanalDeUso = limiteSemanalDeUso;
     }
 
     public LocalDate getDataValidade() {

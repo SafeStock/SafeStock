@@ -1,0 +1,92 @@
+{
+  "database": "safeStock",
+  "tables": [
+    {
+      "name": "Creche",
+      "columns": [
+        {"name": "idCreche", "type": "INT", "primaryKey": true},
+        {"name": "nome", "type": "VARCHAR(45)"},
+        {"name": "endereco", "type": "VARCHAR(80)"},
+        {"name": "telefone", "type": "INT"},
+        {"name": "cnpj", "type": "CHAR(14)"}
+      ]
+    },
+    {
+      "name": "Funcionario",
+      "columns": [
+        {"name": "idFuncionario", "type": "INT", "primaryKey": true},
+        {"name": "nome", "type": "VARCHAR(45)"},
+        {"name": "sobrenome", "type": "VARCHAR(45)"},
+        {"name": "cargo", "type": "VARCHAR(45)"},
+        {"name": "email", "type": "VARCHAR(45)"},
+        {"name": "senha", "type": "VARCHAR(45)"},
+        {"name": "telefone", "type": "CHAR(11)"},
+        {"name": "fkCreche", "type": "INT"}
+      ],
+      "foreignKeys": [
+        {"column": "fkCreche", "references": {"table": "Creche", "column": "idCreche"}}
+      ],
+      "constraints": [
+        {"name": "chk_cargo_valido", "check": "cargo IN ('dono', 'administracao', 'equipe_de_limpeza')"}
+      ]
+    },
+    {
+      "name": "Produto",
+      "columns": [
+        {"name": "idProduto", "type": "INT", "primaryKey": true},
+        {"name": "nome", "type": "VARCHAR(45)"},
+        {"name": "categoria", "type": "VARCHAR(45)"},
+        {"name": "quantidade", "type": "INT"},
+        {"name": "limiteUso", "type": "INT"},
+        {"name": "dataValidade", "type": "DATE"},
+        {"name": "dataEntrada", "type": "DATE"},
+        {"name": "fkCreche", "type": "INT"}
+      ],
+      "foreignKeys": [
+        {"column": "fkCreche", "references": {"table": "Creche", "column": "idCreche"}}
+      ]
+    },
+    {
+      "name": "RegistroUso",
+      "columns": [
+        {"name": "idRegistroUso", "type": "INT", "primaryKey": true},
+        {"name": "fkProduto", "type": "INT"},
+        {"name": "quantidade", "type": "VARCHAR(45)"},
+        {"name": "dataValidade", "type": "DATE"},
+        {"name": "dataHoraSaida", "type": "DATETIME"},
+        {"name": "fkFuncionario", "type": "INT"}
+      ],
+      "foreignKeys": [
+        {"column": "fkProduto", "references": {"table": "Produto", "column": "idProduto"}},
+        {"column": "fkFuncionario", "references": {"table": "Funcionario", "column": "idFuncionario"}}
+      ]
+    },
+    {
+      "name": "HistoricoAlerta",
+      "columns": [
+        {"name": "idHistoricoAlerta", "type": "INT", "primaryKey": true},
+        {"name": "dataHora", "type": "DATETIME"},
+        {"name": "status", "type": "VARCHAR(45)"},
+        {"name": "descricao", "type": "VARCHAR(200)"}
+      ],
+      "constraints": [
+        {"name": "chk_status", "check": "status IN ('Critico', 'Atenção', 'Não urgente')"}
+      ]
+    },
+    {
+      "name": "Relatorio",
+      "columns": [
+        {"name": "idRelatorio", "type": "INT", "primaryKey": true},
+        {"name": "fkProduto", "type": "INT"},
+        {"name": "fkRegistroUso", "type": "INT"},
+        {"name": "fkAlerta", "type": "INT"},
+        {"name": "dataHoraEmissao", "type": "DATETIME"}
+      ],
+      "foreignKeys": [
+        {"column": "fkProduto", "references": {"table": "Produto", "column": "idProduto"}},
+        {"column": "fkRegistroUso", "references": {"table": "RegistroUso", "column": "idRegistroUso"}},
+        {"column": "fkAlerta", "references": {"table": "HistoricoAlerta", "column": "idHistoricoAlerta"}}
+      ]
+    }
+  ]
+}
