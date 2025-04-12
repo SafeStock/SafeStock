@@ -1,5 +1,6 @@
 package com.example.safestock.service;
 
+import com.example.safestock.model.Funcionario;
 import com.example.safestock.model.Produto;
 import com.example.safestock.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,17 @@ public class ProdutoService {
     public ProdutoService(ProdutoRepository produtoRepository) {
         this.produtoRepository = produtoRepository;
     }
+
+    public Produto cadastrarProdduto(Produto produto){
+        return produtoRepository.save(produto);
+    }
+
+    public List<Produto> listarProdutos() {
+        return produtoRepository.findAll();
+    }
+
+    public Optional<Produto> buscarProdutoPorId(Long id ){
+        return produtoRepository.findById(id);
+    }
+
 }

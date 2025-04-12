@@ -38,7 +38,7 @@ public class FuncionarioService {
             funcionario.setEmail(novoFuncionario.getEmail());
             funcionario.setSenha(novoFuncionario.getSenha());
             funcionario.setTelefone(novoFuncionario.getTelefone());
-            funcionario.setTipoCargo(novoFuncionario.getTipoCargo());
+            funcionario.setCargo(novoFuncionario.getCargo());
             return funcionarioRepository.save(funcionario);
         });
     }

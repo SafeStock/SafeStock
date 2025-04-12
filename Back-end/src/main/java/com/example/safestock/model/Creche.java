@@ -1,6 +1,5 @@
 package com.example.safestock.model;
 
-import com.example.safestock.model.enums.TipoCreche;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,16 +14,56 @@ public class Creche {
     private String endereco;
     private String telefone;
     private String cnpj;
-    private TipoCreche tipoCreche;
 
+    // Construtores
     public Creche() {};
 
-    public Creche(String nome, String endereco, String telefone, String cnpj, TipoCreche tipoCreche) {
+    public Creche(String nome, String endereco, String telefone, String cnpj) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
         this.cnpj = cnpj;
-        this.tipoCreche = tipoCreche;
+
     };
 
+    // getters e setters POIS NO MEU (RAYANE) NÃO FUNCIONA O LOMBOK
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 }

@@ -38,7 +38,6 @@ public class CrecheService {
             creche.setEndereco(novaCreche.getEndereco());
             creche.setTelefone(novaCreche.getTelefone());
             creche.setCnpj(novaCreche.getCnpj());
-            creche.setTipoCreche(novaCreche.getTipoCreche());
             return crecheRepository.save(creche);
         });
     }
