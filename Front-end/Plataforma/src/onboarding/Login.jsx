@@ -4,7 +4,11 @@ import imagemLogin from "../assets/imagemLogin.svg";
 export function Login() {
 
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("")
+    const [senha, setSenha] = useState("");
+
+    function login() {
+        
+    }
 
     return (
         <div className='< flex flex-row w-full h-screen'>
@@ -20,19 +24,24 @@ export function Login() {
 
                 <section>
                     <form action="">
+
+                        <p>E-mail</p>
                         <input 
                         type="text" 
                         placeholder="emailexemplo@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         />
+
+                        <p>Senha</p>
                         <input 
                         type="text" 
                         placeholder="******"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         />
-                        <button>Enviar</button>
+
+                        <button onClick={login}>Enviar</button>
                     </form>
                 </section>
 
