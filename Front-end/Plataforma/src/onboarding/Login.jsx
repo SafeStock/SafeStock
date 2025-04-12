@@ -1,58 +1,80 @@
 import { useState } from "react";
 import imagemLogin from "../assets/imagemLogin.svg";
+import { Link } from "react-router-dom"; // Se estiver usando react-router-dom
 
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+  function login(e) {
+    e.preventDefault();
+    
 
-    function login() {
-        
-    }
+  }
 
-    return (
-        <div className='< flex flex-row w-full h-screen bg-[#ff5733]'>
-            <section class="areaImagemCadastro">
-            <img src={imagemLogin} alt="Imagem de login" />
-            </section>
+  return (
+    <div className="flex flex-row w-full h-screen bg-gray-100">
+      
+      <main className="flex-1 flex items-center justify-center">
 
-            <main>
+        <div className="bg-white border border-gray-300 p-8 rounded-xl shadow-lg w-[450px] h-[250px]">
 
-                <header>
-                    <h1>Entrar</h1>
-                </header>
+          <header className="mb-6 text-center">
+            <h1 className="text-3xl font-bold text-gray-800">Entrar</h1>
+          </header>
 
-                <section>
-                    <form action="">
+          <form onSubmit={login} className="flex flex-col items-center justify-center">
+            <div className="flex flex-col  justify-center">
+              <p className="text-sm font-medium text-gray-600 mb-1">E-mail</p>
+              <input
+                type="text"
+                placeholder="emailexemplo@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-[23vw] h-[5vh] px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            
+              <p className="text-sm font-medium text-gray-600 mb-1">Senha</p>
+              <input
+                type="password"
+                placeholder="******"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                className="w-[23vw] h-[5vh] px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            </div>
 
-                        <p>E-mail</p>
-                        <input 
-                        type="text" 
-                        placeholder="emailexemplo@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        />
+            <button
+              type="submit"
+              className="w-[170px] text-white py-2 rounded-md mt-6 hover:bg-blue-700 text-sm"
+            >
+              Enviar
+            </button>
+          </form>
 
-                        <p>Senha</p>
-                        <input 
-                        type="text" 
-                        placeholder="******"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
-                        />
+          <div className="mt-4 text-sm text-center text-gray-600">
+            <p>
+              Esqueceu sua{" "}
+              <button className="text-blue-500 hover:underline">Senha?</button>
+            </p>
+            <p className="mt-2">
+                Não tem uma Conta?{" "}
+                <Link to="/cadastro" className="text-blue-500 hover:underline">
+                Cadastre-se
+                </Link>
+            </p>
+          </div>
+        </div>
+      </main>
 
-                        <button onClick={login}>Enviar</button>
-                    </form>
-                </section>
-
-                <div></div>
-                
-                <p>Esqueceu sua <button class="Redirecionar" id="Redirecionar1">Senha?</button></p>
-
-                <p>Não tem uma Conta? <button class="Redirecionar"><a href="index-cadastro.html">Cadastre-se</a></button></p>
-
-            </main>
-
+      <section className="flex-1 flex items-center justify-center p-10">
+        <img
+          src={imagemLogin}
+          alt="Imagem de login"
+          className="max-w-[350px] w-full h-auto"
+        />
+      </section>
+      
     </div>
-    )
+  );
 }
