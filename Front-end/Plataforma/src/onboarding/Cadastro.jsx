@@ -1,91 +1,144 @@
-import { useState } from "react";
-import ImagemCadastro from "../assets/imagemCadastro.svg";
+import { useState } from 'react';
+import imagemCadastro from "../assets/imagemCadastro.svg"
 
 export function Cadastro() {
+    const [etapa, setEtapa] = useState(1);
+    const [nome, setNome] = useState('');
+    const [sobrenome, setSobrenome] = useState('');
+    const [telefone, setTelefone] = useState('');
+    const [cargo, setCargo] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [mensagemErro, setMensagemErro] = useState('');
 
-    const [nome, setNome] = useState("");
-    const [sobrenome, setSobrenome] = useState("");
-    const [telefone, setTelefone] = useState("");
-    const [cargo, setCargo] = useState("");
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
-
-    function proximo() {
-
+    function proximo(e) {
+        e.preventDefault();
+        if (nome && sobrenome && telefone) {
+            setEtapa(2);
+            setMensagemErro(''); // Limpa a mensagem de erro ao avançar
+        } else {
+            setMensagemErro('Preencha os campos obrigatórios');
+        }
     }
 
-    function cadastrar() {
-        
+    function cadastrar(e) {
+        e.preventDefault();
+        console.log({ nome, sobrenome, telefone, cargo, email, senha });
     }
 
     return (
-        <div>
-            <section class="areaImagemCadastro">
-            <img src={ImagemCadastro} alt="Imagem de login" />
-            </section>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
 
-            <main>
+                {/* Formulário 1 */}
+                {etapa === 1 && (
+                    <div className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]" style={{ animation: 'fade-in-right 0.5s ease-out' }}>
+                        <form onSubmit={proximo} className='justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]'>
+                            <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
+                            <div className='w-[80%] flex flex-col gap-[1vh] text-[2.5vh]'>
+                                <p>Nome</p>
+                                <input
+                                    type="text"
+                                    placeholder="Digite seu nome"
+                                    value={nome}
+                                    onChange={(e) => setNome(e.target.value)}
+                                    className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                                />
+                                <p className='mt-[3vh]'>Sobrenome</p>
+                                <input
+                                    type="text"
+                                    placeholder="Digite seu Sobrenome"
+                                    value={sobrenome}
+                                    onChange={(e) => setSobrenome(e.target.value)}
+                                    className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                                />
+                                <p className='mt-[3vh]'>Telefone</p>
+                                <input
+                                    type="text"
+                                    placeholder="1140020922"
+                                    value={telefone}
+                                    onChange={(e) => setTelefone(e.target.value)}
+                                    className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]"
+                            >
+                                Próximo
+                            </button>
 
-                <header>
-                    <h1>Cadastro</h1>
-                </header>
+                            {/* Mensagem de erro */}
+                            <div className="mt-2 text-center text-[2vh]">
+                                <span className={`${mensagemErro ? 'opacity-100 text-[#FF0000]' : 'opacity-0 text-transparent'} transition-opacity duration-300`}>
+                                    {mensagemErro || 'mensagem de erro'}
+                                </span>
+                            </div>
 
-                <section>
-                    <form action="">
-                        <input 
-                        type="text" 
-                        placeholder="Maria"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        />
-                        <input 
-                        type="text" 
-                        placeholder="Gomes da Silva"
-                        value={sobrenome}
-                        onChange={(e) => setSobrenome(e.target.value)}
-                        />
-                        <input 
-                        type="text" 
-                        placeholder="11020406080"
-                        value={telefone}
-                        onChange={(e) => setTelefone(e.target.value)}
-                        />
-                        <button onClick={proximo}>Próximo</button>
-                    </form>
-                </section>
+                            <h2 className='flex justify-end w-[100%] text-[#2F4672]'>1/2</h2>
+                        </form>
+                    </div>
+                )}
 
-                <section>
-                    <form action="">
-                        <select 
-                        value={cargo}
-                        onChange={(e) => setCargo(e.target.value)}
-                        >
-                        <option value="">Selecione o tipo de usuário</option>
-                        <option value="dono">Dono</option>
-                        <option value="secretaria">Secretária</option>
-                        <option value="limpeza">Equipe de Limpeza</option>
-                        </select>
+                {/* Formulário 2 */}
+                {etapa === 2 && (
+                    <div className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]" style={{ animation: 'fade-in-right 0.5s ease-out' }}>
+                        <form onSubmit={cadastrar} className='justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]'>
+                            <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
+                            <div className='w-[80%] flex flex-col gap-[1vh] text-[2.5vh]'>
+                                <p>Cargo</p>
+                                <select
+                                    value={cargo}
+                                    onChange={(e) => setCargo(e.target.value)}
+                                    className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none"
+                                >
+                                    <option value="">Selecione o tipo de usuário</option>
+                                    <option value="dono">Dono</option>
+                                    <option value="secretaria">Secretária</option>
+                                    <option value="limpeza">Equipe de Limpeza</option>
+                                </select>
 
-                        <input 
-                        type="text" 
-                        placeholder="emailexemplo@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <input 
-                        type="text" 
-                        placeholder="******"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
-                        />
-                        <button onClick={cadastrar}>Enviar</button>
-                    </form>
-                </section>
+                                <p className='mt-[3vh]'>Email</p>
+                                <input
+                                    type="text"
+                                    placeholder="Digite seu Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                                />
+                                <p className='mt-[3vh]'>Senha</p>
+                                <input
+                                    type="password"
+                                    placeholder="******"
+                                    value={senha}
+                                    onChange={(e) => setSenha(e.target.value)}
+                                    className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]"
+                            >
+                                Cadastrar
+                            </button>
 
-                <div id="Resultado"></div>
-                
-            </main>
+                            {/* Mensagem de erro */}
+                            <div className="mt-2 text-center text-[2vh]">
+                                <span className={`${mensagemErro ? 'opacity-100 text-[#FF0000]' : 'opacity-0 text-transparent'} transition-opacity duration-300`}>
+                                    {mensagemErro || 'mensagem de erro'}
+                                </span>
+                            </div>
 
-    </div>
-    )
+                            <h2 className='flex justify-end w-[100%] text-[#2F4672]'>2/2</h2>
+                        </form>
+                    </div>
+                )}
+
+                {/* Imagem */}
+                <div className="w-80">
+                    <img src={imagemCadastro} alt="Cadastro" className="max-w-full" />
+                </div>
+            </div>
+        </div>
+    );
 }
