@@ -1,16 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import imagemLogin from "../assets/imagemLogin.svg";
-import { Link } from "react-router-dom"; // Se estiver usando react-router-dom
 
 export function Login() {
+
+  const navigate = useNavigate();  
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  function login(e) {
-    e.preventDefault();
-    
+  const irParaCadastro = () => {
+    navigate('/cadastro')
+}
 
-  }
+function login(e) {
+    e.preventDefault()
+    
+    console.log("Email:", email)
+    console.log("Senha:", senha)
+}
 
   return (
     <div className="flex flex-row w-full h-screen bg-gray-100">
@@ -57,12 +64,8 @@ export function Login() {
               Esqueceu sua{" "}
               <button className="text-blue-500 hover:underline">Senha?</button>
             </p>
-            <p className="mt-2">
-                Não tem uma Conta?{" "}
-                <Link to="/cadastro" className="text-blue-500 hover:underline">
-                Cadastre-se
-                </Link>
-            </p>
+
+            <button className="Redirecionar" onClick={irParaCadastro}> Não tem Cadastro?</button>
           </div>
         </div>
       </main>
