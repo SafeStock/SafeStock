@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import imagemLogin from "../assets/imagemLogin.svg";
+import { Link } from "react-router-dom"; // Se estiver usando react-router-dom
 
 export function Login() {
+
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
