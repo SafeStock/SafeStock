@@ -1,5 +1,4 @@
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Login } from "./onboarding/Login"
 import { Cadastro } from "./onboarding/Cadastro"
 
@@ -9,7 +8,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-
         <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
     </Router>

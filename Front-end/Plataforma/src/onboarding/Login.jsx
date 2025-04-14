@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import imagemLogin from "../assets/imagemLogin.svg";
+import { Link } from "react-router-dom"; // Se estiver usando react-router-dom
 
 export function Login() {
 
@@ -67,6 +68,7 @@ function login(e) {
 
             <button className="Redirecionar" onClick={irParaCadastro}> Não tem Cadastro?</button>
           </div>
+
         </div>
       </main>
 
