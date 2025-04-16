@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import imagemCadastro from "../assets/imagemCadastro.svg"
+import { useNavigate } from 'react-router-dom';
 
 export function Cadastro() {
+    const navigate = useNavigate();
     const [etapa, setEtapa] = useState(1);
     const [nome, setNome] = useState('');
     const [sobrenome, setSobrenome] = useState('');
@@ -10,20 +12,41 @@ export function Cadastro() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [mensagemErro, setMensagemErro] = useState('');
+    const [mensagemAcerto, setMensagemAcerto] = useState('');
 
     function proximo(e) {
         e.preventDefault();
         if (nome && sobrenome && telefone) {
             setEtapa(2);
-            setMensagemErro(''); // Limpa a mensagem de erro ao avançar
+            setMensagemErro('');
+            setMensagemAcerto(''); // <-- limpa caso tenha sobrado algo
         } else {
             setMensagemErro('Preencha os campos obrigatórios');
+            setMensagemAcerto(''); // <-- limpa também aqui
         }
     }
 
+    const irParaCadastro = () => {
+        navigate('/login')
+    }
+
+
+
     function cadastrar(e) {
         e.preventDefault();
-        console.log({ nome, sobrenome, telefone, cargo, email, senha });
+        if (cargo && email && senha) {
+            setMensagemErro(''); // Limpa a mensagem de erro ao avançar
+            setMensagemAcerto('Cadastro Concluido');
+            setTimeout(() => {
+                console.log({ nome, sobrenome, telefone, cargo, email, senha });
+                irParaCadastro();
+            }, 3000);
+
+        } else {
+            setMensagemErro('Preencha os campos obrigatórios');
+            setMensagemAcerto('');
+        }
+
     }
 
     return (
@@ -33,7 +56,7 @@ export function Cadastro() {
                 {/* Formulário 1 */}
                 {etapa === 1 && (
                     <div className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]" style={{ animation: 'fade-in-right 0.5s ease-out' }}>
-                        <form onSubmit={proximo} className='justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]'>
+                        <form onSubmit={proximo} className='justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672] '>
                             <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
                             <div className='w-[80%] flex flex-col gap-[1vh] text-[2.5vh]'>
                                 <p>Nome</p>
@@ -68,9 +91,8 @@ export function Cadastro() {
                                 Próximo
                             </button>
 
-                            {/* Mensagem de erro */}
-                            <div className="mt-2 text-center text-[2vh]">
-                                <span className={`${mensagemErro ? 'opacity-100 text-[#FF0000]' : 'opacity-0 text-transparent'} transition-opacity duration-300`}>
+                            <div className="h-[4vh] w-[35vh] text-center text-[2vh] font-[600]">
+                                <span className={`${mensagemErro ? 'visible text-[#FF0000]' : 'invisible'} transition-opacity duration-300`}>
                                     {mensagemErro || 'mensagem de erro'}
                                 </span>
                             </div>
@@ -121,11 +143,16 @@ export function Cadastro() {
                             >
                                 Cadastrar
                             </button>
-
-                            {/* Mensagem de erro */}
-                            <div className="mt-2 text-center text-[2vh]">
-                                <span className={`${mensagemErro ? 'opacity-100 text-[#FF0000]' : 'opacity-0 text-transparent'} transition-opacity duration-300`}>
+                            <div className="bg-[#000] h-[4vh] w-[35vh] text-center text-[2vh] font-[600]">
+                                <span className={`${mensagemErro ? 'visible text-[#FF0000]' : 'invisible'} transition-opacity duration-300`}>
                                     {mensagemErro || 'mensagem de erro'}
+                                </span>
+                            </div>
+
+
+                            <div className="bg-[#000] h-[4vh] w-[35vh] text-center text-[2vh] font-[600]">
+                                <span className={`${mensagemAcerto ? 'visible text-[#00AA00]' : 'invisible'} transition-opacity duration-300`}>
+                                    {mensagemAcerto || 'mensagem de acerto'}
                                 </span>
                             </div>
 
