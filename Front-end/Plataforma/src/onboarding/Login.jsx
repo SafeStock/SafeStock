@@ -21,11 +21,11 @@ function login(e) {
 }
 
   return (
-    <div className="flex flex-row w-full h-screen bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       
-      <main className="flex-1 flex items-center justify-center">
+      <main className="flex-1 flex items-center justify-center text-[#2F4672] p-10">
 
-        <div className="bg-white border border-gray-300 p-8 rounded-xl shadow-lg w-[450px] h-[250px]">
+        <div className="h-[40vh] w-[30vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]">
 
           <header className="mb-6 text-center">
             <h1 className="text-3xl font-bold text-gray-800">Entrar</h1>
@@ -63,7 +63,8 @@ function login(e) {
           <div className="mt-4 text-sm text-center text-gray-600">
             <p>
               Esqueceu sua{" "}
-              <button className="text-blue-500 hover:underline">Senha?</button>
+              <button className="text-blue-500 underline border-none bg-[white] text-[#2F4672] pointer hover:text-[#2F4690]">Senha</button>
+              ?
             </p>
 
             <button className="Redirecionar" onClick={irParaCadastro}> Não tem Cadastro?</button>
