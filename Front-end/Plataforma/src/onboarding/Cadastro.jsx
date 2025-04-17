@@ -18,8 +18,6 @@ export function Cadastro() {
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
   const navigate = useNavigate();  
-
-
     
   function proximo(e) {
     e.preventDefault();
@@ -30,9 +28,9 @@ export function Cadastro() {
     } else {
       setMensagemErro("Preencha os campos obrigatórios");
       setColor("#FF0000")
+
     }
   }
-
 
   function cadastrar(e) {
 
@@ -197,6 +195,7 @@ export function Cadastro() {
         {/* Imagem */}
         <div className="w-80">
           <img src={imagemCadastro} alt="Cadastro" className="max-w-full" />
+
         </div>
       </div>
     </div>
