@@ -74,7 +74,8 @@ export function Cadastro() {
                   placeholder="Digite seu nome"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
+                  focus:border-[#2F4672] transition-colors duration-200"
                 />
                 <p className="mt-[3vh]">Sobrenome</p>
                 <input
@@ -82,7 +83,8 @@ export function Cadastro() {
                   placeholder="Digite seu Sobrenome"
                   value={sobrenome}
                   onChange={(e) => setSobrenome(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
+                  focus:border-[#2F4672] transition-colors duration-200"
                 />
                 <p className="mt-[3vh]">Telefone</p>
                 <input
@@ -90,12 +92,14 @@ export function Cadastro() {
                   placeholder="1140020922"
                   value={telefone}
                   onChange={(e) => setTelefone(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
+                  focus:border-[#2F4672] transition-colors duration-200"
                 />
               </div>
               <button
                 type="submit"
-                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]"
+                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]
+                              hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200 "
               >
                 Próximo
               </button>
@@ -128,7 +132,7 @@ export function Cadastro() {
           >
             <form
               onSubmit={cadastrar}
-              className="justify-center flex flex-col items-center gap-[3.5vh]"
+              className="justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]"
             >
               <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
               <div className="w-[80%] flex flex-col gap-[1vh] text-[2.5vh]">
@@ -136,7 +140,8 @@ export function Cadastro() {
                 <select
                   value={cargo}
                   onChange={(e) => setCargo(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none"
+                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none
+                  focus:border-[#2F4672] transition-colors duration-200"
                 >
                   <option value="">Selecione o tipo de usuário</option>
                   <option value="dono">Dono</option>
@@ -150,7 +155,8 @@ export function Cadastro() {
                   placeholder="Digite seu Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
+                  focus:border-[#2F4672] transition-colors duration-200"
                 />
                 <p className="mt-[3vh]">Senha</p>
                 <input
@@ -158,12 +164,14 @@ export function Cadastro() {
                   placeholder="******"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                  className="'w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
+                  focus:border-[#2F4672] transition-colors duration-200"
                 />
               </div>
               <button
                 type="submit"
-                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]"
+                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]
+                          hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
               >
                 Cadastrar
               </button>
@@ -171,13 +179,14 @@ export function Cadastro() {
               {/* Mensagem de erro */}
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
               <span
-  className={`${
-    mensagemErro ? "opacity-100" : "opacity-0"
-  } transition-opacity duration-300`}
-  style={{ color: mensagemErro ? color : "transparent" }}
->
-  {mensagemErro || "mensagem de erro"}
-</span>
+                className={`${
+                  mensagemErro ?
+                   "opacity-100" : "opacity-0"}
+                    transition-opacity duration-300`}
+                style={{ color: mensagemErro ? color : "transparent" }}>
+
+                {mensagemErro || "mensagem de erro"}
+              </span>
               </div>
 
               <h2 className="flex justify-end w-[100%] text-[#2F4672]">2/2</h2>
