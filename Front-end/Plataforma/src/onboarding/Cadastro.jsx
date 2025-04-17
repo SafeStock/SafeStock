@@ -19,6 +19,7 @@ export function Cadastro() {
   const [color, setColor] = useState("");
   const navigate = useNavigate();  
 
+
     
   function proximo(e) {
     e.preventDefault();
@@ -49,7 +50,8 @@ export function Cadastro() {
       setMensagemErro("Preencha os campos obrigatórios");
         setColor("#FF0000")
     }
-  }
+
+ }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -99,16 +101,18 @@ export function Cadastro() {
               </button>
 
               {/* Mensagem de erro */}
-              <div className="   w-[35vh] mt-2 text-center text-[2vh]">
+              <div className="w-[35vh] mt-2 text-center text-[2vh]">
+
+                `{console.log(color)}
+              
                 <span
-                  className={`${
-                    mensagemErro
-                      ? `opacity-100 text-[${color}]`
-                      : "opacity-0 text-transparent"
-                  } transition-opacity duration-300`}
-                >
-                  {mensagemErro || "mensagem de erro"}
-                </span>
+  className={`${
+    mensagemErro ? "opacity-100" : "opacity-0"
+  } transition-opacity duration-300`}
+  style={{ color: mensagemErro ? color : "transparent" }}
+>
+  {mensagemErro || "mensagem de erro"}
+</span>
               </div>
 
               <h2 className="flex justify-end w-[100%] text-[#2F4672]">1/2</h2>
@@ -124,7 +128,7 @@ export function Cadastro() {
           >
             <form
               onSubmit={cadastrar}
-              className="justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]"
+              className="justify-center flex flex-col items-center gap-[3.5vh]"
             >
               <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
               <div className="w-[80%] flex flex-col gap-[1vh] text-[2.5vh]">
@@ -166,15 +170,14 @@ export function Cadastro() {
 
               {/* Mensagem de erro */}
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
-                <span
-                  className={`${
-                    mensagemErro
-                      ? `opacity-100 text-[${color}]`
-                      : "opacity-0 text-transparent"
-                  } transition-opacity duration-300`}
-                >
-                  {mensagemErro || "mensagem de erro"}
-                </span>
+              <span
+  className={`${
+    mensagemErro ? "opacity-100" : "opacity-0"
+  } transition-opacity duration-300`}
+  style={{ color: mensagemErro ? color : "transparent" }}
+>
+  {mensagemErro || "mensagem de erro"}
+</span>
               </div>
 
               <h2 className="flex justify-end w-[100%] text-[#2F4672]">2/2</h2>
