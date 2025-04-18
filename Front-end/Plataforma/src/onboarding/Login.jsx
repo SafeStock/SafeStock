@@ -23,9 +23,9 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      
-      <main className="flex-1 flex items-center justify-center text-[#2F4672] p-10 ml-[10vw]">
+    <div className="flex flex-row w-full h-screen bg-gray-100">
+
+      <main className="flex-1 flex items-center justify-center">
 
         <div className="h-[40vh] w-[30vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]">
 
