@@ -13,6 +13,9 @@ export function Cadastro() {
     const [senha, setSenha] = useState('');
     const [mensagemErro, setMensagemErro] = useState('');
     const [mensagemAcerto, setMensagemAcerto] = useState('');
+    
+
+ 
 
     function proximo(e) {
         e.preventDefault();
@@ -27,7 +30,7 @@ export function Cadastro() {
     }
 
     const irParaCadastro = () => {
-        navigate('/login')
+        navigate('/cadastro')
     }
 
 

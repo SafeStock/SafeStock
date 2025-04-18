@@ -5,24 +5,27 @@ import imagemLogin from "../assets/imagemLogin.svg";
 
 export function Login() {
 
-  const navigate = useNavigate();  
+  
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
+
+
   const irParaCadastro = () => {
     navigate('/cadastro')
-}
+  }
 
-function login(e) {
+  function login(e) {
     e.preventDefault()
-    
+
     console.log("Email:", email)
     console.log("Senha:", senha)
-}
+  }
 
   return (
     <div className="flex flex-row w-full h-screen bg-gray-100">
-      
+
       <main className="flex-1 flex items-center justify-center">
 
         <div className="bg-white border border-gray-300 p-8 rounded-xl shadow-lg w-[450px] h-[250px]">
@@ -41,7 +44,7 @@ function login(e) {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-[23vw] h-[5vh] px-3 py-2 border border-gray-300 rounded-md text-sm"
               />
-            
+
               <p className="text-sm font-medium text-gray-600 mb-1">Senha</p>
               <input
                 type="password"
@@ -79,7 +82,7 @@ function login(e) {
           className="max-w-[350px] w-full h-auto"
         />
       </section>
-      
+
     </div>
   );
 }
