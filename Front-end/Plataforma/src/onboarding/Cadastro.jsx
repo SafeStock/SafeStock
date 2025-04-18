@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import imagemCadastro from "../assets/imagemCadastro.svg";
 import { useNavigate } from 'react-router-dom';
 
 
 export function Cadastro() {
-    useEffect(() => {
-        document.title = "Cadastro";
-      },[]);
       
   const [etapa, setEtapa] = useState(1);
   const [nome, setNome] = useState("");
