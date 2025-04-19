@@ -1,5 +1,6 @@
 package com.example.safestock.model;
 
+import com.example.safestock.model.enums.StatusAlerta;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -11,13 +12,13 @@ public class HistoricoAlertas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime dataHora;
-    private String status;
+    private StatusAlerta status;
     private String descricao;
 
     public HistoricoAlertas() {
     }
 
-    public HistoricoAlertas(LocalDateTime dataHora, String status, String descricao) {
+    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao) {
         this.dataHora = dataHora;
         this.status = status;
         this.descricao = descricao;
@@ -39,11 +40,11 @@ public class HistoricoAlertas {
         this.dataHora = dataHora;
     }
 
-    public String getStatus() {
+    public StatusAlerta getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAlerta status) {
         this.status = status;
     }
 
