@@ -2,14 +2,14 @@ package com.example.safestock.model;
 
 import com.example.safestock.model.enums.CategoriaProduto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table(name="produto")
+@Table(name="Produto")
 @Getter @Setter @AllArgsConstructor @ToString
 public class Produto {
     @Id
@@ -17,6 +17,7 @@ public class Produto {
     private Long id;
 
     @NotBlank(message = "O campo nome não pode estar em branco")
+    @Size(min = 45, message = "O campo senha deve conter no minimo 45 caracteres")
     private String nome;
 
     private CategoriaProduto categoriaProduto;
@@ -28,6 +29,13 @@ public class Produto {
     private int limiteSemanalDeUso;
     private LocalDate dataValidade;
     private LocalDate dataEntrada;
+
+    @ManyToOne
+    @JoinColumn(name = "fkCreche")
+    private Creche creche;
+
+    @OneToMany(mappedBy = "produto")
+    private List<Relatorio> relatorio;
 
     public Produto() {
     }
