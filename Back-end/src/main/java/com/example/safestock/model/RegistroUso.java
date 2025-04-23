@@ -1,20 +1,34 @@
 package com.example.safestock.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
+import javax.management.relation.Relation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "registroUso")
+@Table(name = "RegistroUso")
 public class RegistroUso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String produto;
+
     private LocalDate dataValidade;
+    @NotBlank
     private int quantidade;
     private LocalDateTime dataHoraSaida;
+
+    @ManyToOne
+    @JoinColumn(name = "fkFuncionario")
+    private Funcionario funcionario;
+
+    @OneToMany(mappedBy = "registroUso")
+    private List<Relatorio> relatorio;
 
     public RegistroUso() {
     }

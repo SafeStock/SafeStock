@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
-@Table(name="usuario")
+@Table(name="Funcionario")
 @Getter @Setter @AllArgsConstructor @ToString
 public class Funcionario {
     @Id
@@ -32,6 +34,13 @@ public class Funcionario {
     @NotBlank(message = "O campo telefone não pode ser nulo")
     @Pattern(regexp = "\\d{11}", message = "O campo telefone deve conter 11 caracteres")
     private String telefone;
+
+    @ManyToOne
+    @JoinColumn(name = "fkCreche")
+    private Creche creche;
+
+    @OneToMany(mappedBy = "funcionario")
+    private List<RegistroUso> registroUso;
 
 
     public Funcionario() {};

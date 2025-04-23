@@ -1,19 +1,41 @@
 package com.example.safestock.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
-@Table(name="creche")
-@Getter @Setter @AllArgsConstructor @ToString
+@Table(name="Creche")
+@Getter @Setter @AllArgsConstructor  @ToString
 public class Creche {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "O campo nome não pode estar em branco")
     private String nome;
+
+    @NotBlank(message = "O campo nome não pode estar em branco")
     private String endereco;
+
+    @NotBlank(message = "O campo nome não pode estar em branco")
+    @Pattern(regexp = "\\d{11}", message = "O campo telefone deve conter 11 caracteres")
     private String telefone;
+
+    @NotBlank(message = "O campo nome não pode estar em branco")
+    @Pattern(regexp = "\\d{14}", message = "O campo telefone deve conter 14 caracteres")
     private String cnpj;
+
+    @OneToMany(mappedBy = "creche")
+    private List<Funcionario> funcionario;
+
+    @OneToMany(mappedBy = "creche")
+    private List<Produto> produto;
+
 
     // Construtores
     public Creche() {};
