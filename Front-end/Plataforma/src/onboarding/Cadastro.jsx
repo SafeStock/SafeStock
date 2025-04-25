@@ -1,6 +1,8 @@
 import { useState } from "react";
 import imagemCadastro from "../assets/imagemCadastro.svg";
+import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import { useNavigate } from 'react-router-dom';
+import logo from "../assets/LogocomNome.svg";git 
 
 
 export function Cadastro() {
@@ -49,7 +51,7 @@ export function Cadastro() {
  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
         {/* Formulário 1 */}
         {etapa === 1 && (
@@ -195,6 +197,20 @@ export function Cadastro() {
 
         </div>
       </div>
+
+            <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] z-[-1] absolute">
+              <img 
+              src={imagemObjeto} 
+              alt="Objeto de Cadastro" 
+              className="w-full h-full"/>
+            </section>
+            <section className="absolute top-0 left-0 w-[3vw] h-[6vh] z-[-1] mb-[88vh] mr-[90vw]">
+                    <img
+                      src={logo}
+                      alt="Logo"
+                      className="absolute top-0 left-0 w-[3w] h-[6vh]"
+                    />
+                  </section>
     </div>
   );
 }
