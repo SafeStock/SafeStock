@@ -6,7 +6,7 @@ import logo from "../assets/LogocomNome.svg";
 
 
 export function Cadastro() {
-      
+
   const [etapa, setEtapa] = useState(1);
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
@@ -16,11 +16,11 @@ export function Cadastro() {
   const [senha, setSenha] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
-  const navigate = useNavigate();  
-    
+  const navigate = useNavigate();
+
   function proximo(e) {
     e.preventDefault();
-    console.log({ nome, sobrenome, telefone});
+    console.log({ nome, sobrenome, telefone });
     if (nome && sobrenome && telefone) {
       setEtapa(2);
       setMensagemErro(""); // Limpa a mensagem de erro ao avançar
@@ -43,13 +43,13 @@ export function Cadastro() {
       setTimeout(() => {
         navigate("/");
       }, 2000); // Redireciona após 2 segundos
-    
+
     } else {
       setMensagemErro("Preencha os campos obrigatórios");
-        setColor("#FF0000")
+      setColor("#FF0000")
     }
 
- }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
@@ -106,18 +106,17 @@ export function Cadastro() {
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
 
                 `{console.log(color)}
-              
+
                 <span
-  className={`${
-    mensagemErro ? "opacity-100" : "opacity-0"
-  } transition-opacity duration-300`}
-  style={{ color: mensagemErro ? color : "transparent" }}
->
-  {mensagemErro || "mensagem de erro"}
-</span>
+                  className={`${mensagemErro ? "opacity-100" : "opacity-0"
+                    } transition-opacity duration-300`}
+                  style={{ color: mensagemErro ? color : "transparent" }}
+                >
+                  {mensagemErro || "mensagem de erro"}
+                </span>
               </div>
 
-              <h2 className="flex justify-end w-[100%] text-[#2F4672]">1/2</h2>
+              <h2 className="flex justify-end top-[80vh] w-[35%] text-[#2F4672] absolute">1/2</h2>
             </form>
           </div>
         )}
@@ -176,15 +175,14 @@ export function Cadastro() {
 
               {/* Mensagem de erro */}
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
-              <span
-                className={`${
-                  mensagemErro ?
-                   "opacity-100" : "opacity-0"}
+                <span
+                  className={`${mensagemErro ?
+                      "opacity-100" : "opacity-0"}
                     transition-opacity duration-300`}
-                style={{ color: mensagemErro ? color : "transparent" }}>
+                  style={{ color: mensagemErro ? color : "transparent" }}>
 
-                {mensagemErro || "mensagem de erro"}
-              </span>
+                  {mensagemErro || "mensagem de erro"}
+                </span>
               </div>
 
               <h2 className="flex justify-end w-[100%] text-[#2F4672]">2/2</h2>
@@ -199,19 +197,19 @@ export function Cadastro() {
         </div>
       </div>
 
-            <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] z-[-1] absolute">
-              <img 
-              src={imagemObjeto} 
-              alt="Objeto de Cadastro" 
-              className="w-full h-full"/>
-            </section>
-            <section className="absolute top-0 left-0 w-[3vw] h-[6vh] z-[-1] mb-[88vh] mr-[90vw]">
-                    <img
-                      src={logo}
-                      alt="Logo"
-                      className="absolute top-0 left-0 w-[3w] h-[6vh]"
-                    />
-                  </section>
+      <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] z-[-1] absolute">
+        <img
+          src={imagemObjeto}
+          alt="Objeto de Cadastro"
+          className="w-full h-full" />
+      </section>
+      <section className="absolute top-0 left-0 w-[3vw] h-[6vh] z-[-1] mb-[88vh] mr-[90vw]">
+        <img
+          src={logo}
+          alt="Logo"
+          className="absolute top-0 left-0 w-[3w] h-[6vh]"
+        />
+      </section>
     </div>
   );
 }
