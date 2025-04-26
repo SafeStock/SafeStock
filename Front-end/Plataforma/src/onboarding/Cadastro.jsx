@@ -2,7 +2,7 @@ import { useState } from "react";
 import imagemCadastro from "../assets/imagemCadastro.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import { useNavigate } from 'react-router-dom';
-import logo from "../assets/LogocomNome.svg";git 
+import logo from "../assets/LogocomNome.svg";
 
 
 export function Cadastro() {
