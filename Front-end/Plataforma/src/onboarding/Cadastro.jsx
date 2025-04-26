@@ -20,6 +20,7 @@ export function Cadastro() {
     
   function proximo(e) {
     e.preventDefault();
+    console.log({ nome, sobrenome, telefone});
     if (nome && sobrenome && telefone) {
       setEtapa(2);
       setMensagemErro(""); // Limpa a mensagem de erro ao avançar
