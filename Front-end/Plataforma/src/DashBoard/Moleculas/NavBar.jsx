@@ -1,5 +1,6 @@
 import { BtnRedirecNavBar } from "../Atomos/BtnRedirecNavBar";
 import { DivisionNavBar } from "../Atomos/DivisionNavBar";
+import { Logo } from "../Atomos/Logo";
 
 export function NavBar() {
   return (
@@ -12,6 +13,7 @@ export function NavBar() {
       <BtnRedirecNavBar imagemUrl="/src/assets/UsersGroup.svg"/>
       <BtnRedirecNavBar imagemUrl="/src/assets/Box.svg"/>
       <BtnRedirecNavBar imagemUrl="/src/assets/Attencion.svg"/>
+      <Logo/>
     </div>
   );
 }
