@@ -1,27 +1,31 @@
 package com.example.safestock.controller;
 
+
+import com.example.safestock.dto.*;
 import com.example.safestock.model.Funcionario;
 import com.example.safestock.service.FuncionarioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("api/funcionarios")
 public class FuncionarioController {
-
-    private final FuncionarioService funcionarioService;
-
-    public FuncionarioController(FuncionarioService funcionarioService) {
-        this.funcionarioService = funcionarioService;
-    }
+    @Autowired
+    private FuncionarioService funcionarioService;
 
     @GetMapping
-    public List<Funcionario> listarFuncionarios(){
-        return funcionarioService.listarFuncionarios();
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<FuncionarioListar>> listarFuncionarios(){
+        List<FuncionarioListar> funcionariosEncontrados = this.funcionarioService.listarTodos();
+        if (funcionariosEncontrados.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(funcionariosEncontrados);
     }
 
     @GetMapping("/{id}")
@@ -31,11 +35,21 @@ public class FuncionarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Funcionario> adicionarFuncionario(@Valid @RequestBody Funcionario funcionario){
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> adicionarFuncionario(@RequestBody @Valid Funcionario funcionario){
         Funcionario novaCreche = funcionarioService.salvarFuncionario(funcionario);
-        return ResponseEntity.ok(novaCreche);
+        return ResponseEntity.status(201).build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<TokenDTO> login(@RequestBody FuncionarioLogin funcionarioLogin){
+        final  Funcionario funcionario = FuncionarioMapper.of(funcionarioLogin);
+        TokenDTO funcionarioTokenDto = this.funcionarioService.autenticar(funcionario);
+
+        return  ResponseEntity.status(200).body(funcionarioTokenDto);
+    }
+
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Funcionario> removerFuncionario(@PathVariable Long id){
         if (funcionarioService.buscarFuncionarioPorId(id).isPresent()){
