@@ -11,7 +11,9 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-
+  const irParaTelaFuncionarios = () => {
+    navigate('/dashBoard/TelaFuncionarios')
+  }
 
   const irParaCadastro = () => {
     navigate('/cadastro')
@@ -19,15 +21,18 @@ export function Login() {
 
   function login(e) {
     e.preventDefault()
-
     console.log("Email:", email)
     console.log("Senha:", senha)
+    setTimeout(() => {
+    irParaTelaFuncionarios();
+    }, 2500); // Redireciona após 2 segundos
+  
   }
 
   return (
     <div className="flex flex-row w-full h-screen bg-gray-100 justify-center items-center relative overflow-hidden">
 
-      <main className="flex-1 flex items-center justify-center absolute mr-[26vw] max-w-[1200px]">
+      <main className="flex gap-[10vh] flex items-center justify-center absolute mr-[26vw] max-w-[1200px] ">
 
         <div className="h-[65vh] w-[35.6vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]">
 
@@ -92,7 +97,7 @@ export function Login() {
         />
       </section>
 
-      <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] absolute z-[-1]">
+      <section className="w-[100vw] h-[101vh] ml-[70vw] absolute z-[-1]">
         <img 
         src={imagemObjeto} 
         alt="Objeto de Login" 

@@ -15,8 +15,10 @@ export function useSetAba() {
         document.title = "Cadastro | SafeStock";
         break;
 
-      default:
-        document.title = "SafeStock";
+      case "/dashBoard/TelaFuncionarios":
+        document.title = "Funcionários | SafeStock";
+        break;
+
     }
   }, [location.pathname]);
 }
