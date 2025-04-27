@@ -1,5 +1,4 @@
 import { FotoFundoPadrao } from "../Atomos/FotoFundoPadrao";
-import { NavBarArea } from "./NavBarArea";
 
 export function FundoPadrao({ children }) {
   return (

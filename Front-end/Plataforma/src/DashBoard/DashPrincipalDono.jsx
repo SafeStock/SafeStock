@@ -2,18 +2,18 @@ import { NavBarArea } from "./Celulas/NavBarArea";
 import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 
-export function TelaFuncionarios() {
+export function DashPrincipalDono() {
   return (
     <FundoPadrao>
       <NavBarArea/>
 
       <AreaWorkGeral 
-      NewText="Funcionários" 
-      DisplayPadrao='none' 
-      DisplayFlexParaFuncionarios='flex'
-      DisplayParaDashGeral='none'
+      NewText="Boas Vindas Ariadne!" 
+      DisplayPadrao='flex' 
+      DisplayFlexParaFuncionarios='none'
+      DisplayParaDashGeral='flex'
       />
-      
+
     </FundoPadrao>
   );
 }
