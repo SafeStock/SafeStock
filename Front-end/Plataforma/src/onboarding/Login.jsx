@@ -1,10 +1,11 @@
-import { useState } from "react";
+import {  useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import imagemLogin from "../assets/imagemLogin.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import logo from "../assets/LogocomNome.svg";
 import Animation from "../lotties/Animation - 1745693504754.json";
 import Lottie from "lottie-react";
+
 
 
 export function Login() {
@@ -35,49 +36,55 @@ export function Login() {
     return regexEmail.test(email);
   };
 
+
   async function login(e) {
     e.preventDefault();
-
+  
     if (!email || !senha) {
       setMensagemErro("Preencha todos os campos obrigatórios");
       setColor("#FF0000");
       setStar('*');
       return;
     }
-
+  
     if (!validarEmail(email)) {
       setMensagemErro("Email inválido");
       setColor("#FF0000");
       setStar('*');
       return;
     }
-
+  
     try {
-      const response = await fetch('http://localhost:8080/funcionarios');
-      const usuarios = await response.json();
-
-      const usuarioEncontrado = usuarios.find(user => 
-        user.email.toLowerCase() === email.toLowerCase() && user.senha === senha
-      );
-
-      if (usuarioEncontrado) {
-        setMensagemErro(`Bem-vindo(a), ${usuarioEncontrado.nome}!`);
-        setColor("#2F4700");
-        setStar('');
-        setCarregando(true);
-        setEmail(""); // limpa campos
-        setSenha("");
-        setTimeout(() => {
-          irParaTelaFuncionarios();
-        }, 2200);
-      } else {
-        setMensagemErro("Credenciais inválidas");
-        setColor("#FF0000");
-        setStar('*');
+      const response = await fetch('http://localhost:8080/api/funcionarios/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          senha: senha.trim(),
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Login falhou');
       }
+  
+      const data = await response.json();
+      
+      // Se chegar aqui é porque o login deu certo e você tem o TokenDTO
+      console.log(data); // aqui você vê o token ou o que quiser
+      setMensagemErro(`Login realizado com sucesso!`);
+      setColor("#2F4700");
+      setStar('');
+      setCarregando(true);
+      setEmail(""); // limpa campos
+      setSenha("");
+      irParaTelaFuncionarios();
+  
     } catch (error) {
       console.error(error);
-      setMensagemErro("Erro ao tentar login");
+      setMensagemErro("Credenciais inválidas ou erro no servidor");
       setColor("#FF0000");
       setStar('*');
     }
