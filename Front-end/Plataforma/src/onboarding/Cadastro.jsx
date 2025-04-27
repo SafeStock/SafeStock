@@ -63,21 +63,6 @@ export function Cadastro() {
     return true;
   }
 
-
-  function proximo(e) {
-    e.preventDefault();
-    console.log({ nome, sobrenome, telefone });
-    if (nome && sobrenome && telefone) {
-      setEtapa(2);
-      setMensagemErro(""); // Limpa a mensagem de erro ao avançar
-      setColor("#2F4700"); // Define a cor para Verde
-    } else {
-      setMensagemErro("Preencha os campos obrigatórios");
-      setColor("#FF0000")
-
-    }
-  }
-
   function proximo(e) {
     e.preventDefault();
     if (validarPrimeiraEtapa()) {
@@ -102,7 +87,7 @@ export function Cadastro() {
         senha: senha.trim()
       };
   
-      fetch('http://localhost:8080/funcionarios', {
+      fetch('http://localhost:8080/api/funcionarios/cadastro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

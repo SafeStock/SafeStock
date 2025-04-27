@@ -12,7 +12,7 @@ export function RotasApp() {
 
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
       <Route path="/dashBoard/TelaFuncionarios" element={<TelaFuncionarios/>} />
       <Route path="/dashBoard/" element={<DashPrincipalDono/>} />
