@@ -3,6 +3,7 @@ import { Login } from "../onboarding/Login";
 import { Cadastro } from "../onboarding/Cadastro";
 import { useSetAba } from './setAba';
 import { TelaFuncionarios } from '../DashBoard/TelaFuncionarios';
+import { DashPrincipalDono } from '../DashBoard/DashPrincipalDono';
 
 
 
@@ -14,6 +15,7 @@ export function RotasApp() {
       <Route path="/" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
       <Route path="/dashBoard/TelaFuncionarios" element={<TelaFuncionarios/>} />
+      <Route path="/dashBoard/" element={<DashPrincipalDono/>} />
     </Routes>
   );
 }
