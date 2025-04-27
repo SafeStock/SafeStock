@@ -35,10 +35,11 @@ public class FuncionarioController {
         return funcionario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/cadastro")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> adicionarFuncionario(@RequestBody @Valid Funcionario funcionario){
-        Funcionario novaCreche = funcionarioService.salvarFuncionario(funcionario);
+    public ResponseEntity<Void> adicionarFuncionario(@RequestBody @Valid FuncionarioCadastro funcionarioCadastro){
+        final Funcionario novoFuncionario = FuncionarioMapper.of(funcionarioCadastro);
+        this.funcionarioService.cadastrarFuncionario(novoFuncionario);
         return ResponseEntity.status(201).build();
     }
 
