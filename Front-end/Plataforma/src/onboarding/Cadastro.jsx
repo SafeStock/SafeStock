@@ -18,6 +18,52 @@ export function Cadastro() {
   const [color, setColor] = useState("");
   const navigate = useNavigate();
 
+  function validarPrimeiraEtapa() {
+    if (!nome.trim()) {
+      setMensagemErro("Nome é obrigatório");
+      setColor("#FF0000");
+      return false;
+    }
+    if (!sobrenome.trim()) {
+      setMensagemErro("Sobrenome é obrigatório");
+      setColor("#FF0000");
+      return false;
+    }
+    const telefoneLimpo = telefone.replace(/\D/g, '');
+    if (!telefoneLimpo || telefoneLimpo.length !== 11) {
+      setMensagemErro("O telefone deve conter exatamente 11 números");
+      setColor("#FF0000");
+      return false;
+    }
+    return true;
+  }
+
+  function validarSegundaEtapa() {
+    if (!cargo.trim()) {
+      setMensagemErro("Cargo é obrigatório");
+      setColor("#FF0000");
+      return false;
+    }
+    if (cargo.toLowerCase() !== "dono" && cargo.toLowerCase() !== "secretaria" && cargo.toLowerCase() !== "limpeza") {
+      setMensagemErro("Cargo inválido");
+      setColor("#FF0000");
+      return false;
+    }
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regexEmail.test(email.trim())) {
+      setMensagemErro("Email inválido");
+      setColor("#FF0000");
+      return false;
+    }
+    if (!senha.trim()) {
+      setMensagemErro("Senha é obrigatória");
+      setColor("#FF0000");
+      return false;
+    }
+    return true;
+  }
+
+
   function proximo(e) {
     e.preventDefault();
     console.log({ nome, sobrenome, telefone });
@@ -32,25 +78,55 @@ export function Cadastro() {
     }
   }
 
-  function cadastrar(e) {
-
+  function proximo(e) {
     e.preventDefault();
-    console.log({ nome, sobrenome, telefone, cargo, email, senha });
-    if (cargo && email && senha) {
+    if (validarPrimeiraEtapa()) {
       setEtapa(2);
-      setMensagemErro("Cadastro feito com sucesso!"); // Limpa a mensagem de erro ao avançar
+      setMensagemErro("");
       setColor("#2F4700");
-      setTimeout(() => {
-        navigate("/");
-      }, 2000); // Redireciona após 2 segundos
-
     } else {
       setMensagemErro("Preencha os campos obrigatórios");
       setColor("#FF0000")
     }
-
   }
 
+  function cadastrar(e) {
+    e.preventDefault();
+    if (validarSegundaEtapa()) {
+      const novoUsuario = {
+        nome: nome.trim().toLowerCase(),
+        sobrenome: sobrenome.trim().toLowerCase(),
+        cargo: cargo.trim().toLowerCase(),
+        telefone: telefone.trim(),
+        email: email.trim().toLowerCase(),
+        senha: senha.trim()
+      };
+  
+      fetch('http://localhost:8080/funcionarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(novoUsuario)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Erro no cadastro');
+        return response.json();
+      })
+      .then(() => {
+        setMensagemErro("Cadastro realizado com sucesso!");
+        setColor("#2F4700");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      })
+      .catch(error => {
+        console.error(error);
+        setMensagemErro("Erro ao cadastrar usuário");
+        setColor("#FF0000");
+      });
+    }
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">

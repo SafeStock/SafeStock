@@ -4,7 +4,7 @@ import imagemLogin from "../assets/imagemLogin.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import logo from "../assets/LogocomNome.svg";
 import Animation from "../lotties/Animation - 1745693504754.json";
-
+import Lottie from "lottie-react";
 
 
 export function Login() {
@@ -19,36 +19,68 @@ export function Login() {
 
 
   const irParaTelaFuncionarios = () => {
-    navigate('/dashBoard/TelaFuncionarios')
-  }
+    setTimeout(() => {
+      navigate('/dashBoard/TelaFuncionarios');
+    }, 2000);  
+  };
 
   const irParaCadastro = () => {
     setTimeout(() => {
       navigate('/cadastro');
-    }, 1500); // Redireciona após 2 segundos  
+    }, 2000);  
+  };
 
-  }
+  const validarEmail = (email) => {
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regexEmail.test(email);
+  };
 
-  function login(e) {
-    e.preventDefault()
-    console.log("Email:", email)
-    console.log("Senha:", senha)
-    // Redireciona após 2 segundos
-    if (email && senha) {
-      setMensagemErro(""); // Limpa a mensagem de erro ao avançar
-      setColor("#2F4700");
-      setStar('')
-      setCarregando('True')
-      setTimeout(() => {
-        irParaTelaFuncionarios();
-      }, 2200); // Define a cor para Verde
-    } else {
-      setMensagemErro("Preencha os campos obrigatórios");
-      setColor("#FF0000")
-      setStar('*')
+  async function login(e) {
+    e.preventDefault();
 
+    if (!email || !senha) {
+      setMensagemErro("Preencha todos os campos obrigatórios");
+      setColor("#FF0000");
+      setStar('*');
+      return;
     }
 
+    if (!validarEmail(email)) {
+      setMensagemErro("Email inválido");
+      setColor("#FF0000");
+      setStar('*');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/funcionarios');
+      const usuarios = await response.json();
+
+      const usuarioEncontrado = usuarios.find(user => 
+        user.email.toLowerCase() === email.toLowerCase() && user.senha === senha
+      );
+
+      if (usuarioEncontrado) {
+        setMensagemErro(`Bem-vindo(a), ${usuarioEncontrado.nome}!`);
+        setColor("#2F4700");
+        setStar('');
+        setCarregando(true);
+        setEmail(""); // limpa campos
+        setSenha("");
+        setTimeout(() => {
+          irParaTelaFuncionarios();
+        }, 2200);
+      } else {
+        setMensagemErro("Credenciais inválidas");
+        setColor("#FF0000");
+        setStar('*');
+      }
+    } catch (error) {
+      console.error(error);
+      setMensagemErro("Erro ao tentar login");
+      setColor("#FF0000");
+      setStar('*');
+    }
   }
 
   return (
