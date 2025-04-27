@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import imagemLogin from "../assets/imagemLogin.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import logo from "../assets/LogocomNome.svg";
-import Lottie from "lottie-react";
 import Animation from "../lotties/Animation - 1745693504754.json";
 
 

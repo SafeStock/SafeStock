@@ -19,6 +19,10 @@ export function useSetAba() {
         document.title = "Funcionários | SafeStock";
         break;
 
+        case "/dashBoard/":
+          document.title = "DashBoard | SafeStock";
+          break;
+
     }
   }, [location.pathname]);
 }
