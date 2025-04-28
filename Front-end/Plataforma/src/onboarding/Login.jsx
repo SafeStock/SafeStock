@@ -22,7 +22,7 @@ export function Login() {
   const irParaTelaFuncionarios = () => {
     setTimeout(() => {
       navigate('/dashBoard/TelaFuncionarios');
-    }, 2000);  
+    }, 2200);  
   };
 
   const irParaCadastro = () => {
@@ -65,15 +65,20 @@ export function Login() {
           senha: senha.trim(),
         }),
       });
-  
+    
       if (!response.ok) {
         throw new Error('Login falhou');
       }
-  
+    
       const data = await response.json();
-      
-      // Se chegar aqui é porque o login deu certo e você tem o TokenDTO
-      console.log(data); // aqui você vê o token ou o que quiser
+    
+      // 💾 Salvar o token e o nome no sessionStorage
+      if (data.token) {
+        sessionStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('usuario', data.nome); // ajuste se seu back devolver o nome assim
+      }
+    
+      console.log(data); // aqui você vê o que chegou da API
       setMensagemErro(`Login realizado com sucesso!`);
       setColor("#2F4700");
       setStar('');
@@ -81,7 +86,7 @@ export function Login() {
       setEmail(""); // limpa campos
       setSenha("");
       irParaTelaFuncionarios();
-  
+    
     } catch (error) {
       console.error(error);
       setMensagemErro("Credenciais inválidas ou erro no servidor");
@@ -147,16 +152,6 @@ export function Login() {
                   Esqueceu sua{" "}
                   <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh]">Senha</button>?
                 </p>
-
-                Não tem uma conta?{" "}
-
-                <button
-                  className="text-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer hover:text-[#2F4772] transition-colors duration-500  mb-[3vh]"
-                  onClick={irParaCadastro}
-                >
-                  Cadastre-se
-                </button>
-
 
               </div>
 
