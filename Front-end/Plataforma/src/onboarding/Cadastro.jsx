@@ -17,6 +17,7 @@ export function Cadastro() {
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
   const navigate = useNavigate();
+  const [carregando, setCarregando] = useState(false);
 
   function validarPrimeiraEtapa() {
     if (!nome.trim()) {
@@ -63,6 +64,12 @@ export function Cadastro() {
     return true;
   }
 
+  const irParaLogin = () => {
+    setTimeout(() => {
+      navigate('/login');
+    }, 2200);  
+  };
+
   function proximo(e) {
     e.preventDefault();
     if (validarPrimeiraEtapa()) {
@@ -78,40 +85,50 @@ export function Cadastro() {
   function cadastrar(e) {
     e.preventDefault();
     if (validarSegundaEtapa()) {
+
+      const cargoMap = {
+        dono: 0,
+        secretaria: 1,
+        limpeza: 2
+      };
+
       const novoUsuario = {
         nome: nome.trim().toLowerCase(),
         sobrenome: sobrenome.trim().toLowerCase(),
-        cargo: cargo.trim().toLowerCase(),
+        cargo: cargoMap[cargo.trim().toLowerCase()], // converte string para número
         telefone: telefone.trim(),
         email: email.trim().toLowerCase(),
-        senha: senha.trim()
+        senha: senha.trim(),
+        creche: [null] // ou talvez o ID da creche, se você tiver
       };
-  
+
       fetch('http://localhost:8080/api/funcionarios/cadastro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('authToken')
         },
         body: JSON.stringify(novoUsuario)
       })
-      .then(response => {
+      .then(async response => {
         if (!response.ok) throw new Error('Erro no cadastro');
-        return response.json();
+        
+        const text = await response.text();
+        return text ? JSON.parse(text) : {};
       })
-      .then(() => {
-        setMensagemErro("Cadastro realizado com sucesso!");
-        setColor("#2F4700");
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      })
-      .catch(error => {
-        console.error(error);
-        setMensagemErro("Erro ao cadastrar usuário");
-        setColor("#FF0000");
-      });
+        .then(() => {
+          setMensagemErro("Cadastro realizado com sucesso!");
+          setColor("#2F4700");
+          irParaLogin(); 
+        })
+        .catch(error => {
+          console.error(error);
+          setMensagemErro("Erro ao cadastrar usuário");
+          setColor("#FF0000");
+        });
     }
   }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
@@ -238,7 +255,7 @@ export function Cadastro() {
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
                 <span
                   className={`${mensagemErro ?
-                      "opacity-100" : "opacity-0"}
+                    "opacity-100" : "opacity-0"}
                     transition-opacity duration-300`}
                   style={{ color: mensagemErro ? color : "transparent" }}>
 
