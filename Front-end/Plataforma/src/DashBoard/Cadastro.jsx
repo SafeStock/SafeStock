@@ -15,54 +15,81 @@ export function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
+  const [starNome, setStarNome] = useState("");
+const [starSobrenome, setStarSobrenome] = useState("");
+const [starTelefone, setStarTelefone] = useState("");
+const [starCargo, setStarCargo] = useState("");
+const [starEmail, setStarEmail] = useState("");
+const [starSenha, setStarSenha] = useState("");
   const [color, setColor] = useState("");
   // const navigate = useNavigate();
   // const [carregando, setCarregando] = useState(false);
   
-
   function validarPrimeiraEtapa() {
+    let valid = true;
     if (!nome.trim()) {
-      setMensagemErro("Nome é obrigatório");
-      setColor("#FF0000");
-      return false;
+      setStarNome('*');
+      valid = false;
+    } else {
+      setStarNome('');
     }
+  
     if (!sobrenome.trim()) {
-      setMensagemErro("Sobrenome é obrigatório");
-      setColor("#FF0000");
-      return false;
+      setStarSobrenome('*');
+      valid = false;
+    } else {
+      setStarSobrenome('');
     }
+  
     const telefoneLimpo = telefone.replace(/\D/g, '');
     if (!telefoneLimpo || telefoneLimpo.length !== 11) {
-      setMensagemErro("O telefone deve conter exatamente 11 números");
-      setColor("#FF0000");
-      return false;
+      setStarTelefone('*');
+      valid = false;
+    } else {
+      setStarTelefone('');
     }
-    return true;
+  
+    if (!valid) {
+      setMensagemErro("Preencha os campos obrigatórios");
+      setColor("#FF0000");
+    }
+    return valid;
   }
 
   function validarSegundaEtapa() {
+    let valid = true;
+  
     if (!cargo.trim()) {
-      setMensagemErro("Cargo é obrigatório");
-      setColor("#FF0000");
-      return false;
+      setStarCargo('*');
+      valid = false;
+    } else if (cargo.toLowerCase() !== "dono" && cargo.toLowerCase() !== "secretaria" && cargo.toLowerCase() !== "limpeza") {
+      setStarCargo('*');
+      valid = false;
+    } else {
+      setStarCargo('');
     }
-    if (cargo.toLowerCase() !== "dono" && cargo.toLowerCase() !== "secretaria" && cargo.toLowerCase() !== "limpeza") {
-      setMensagemErro("Cargo inválido");
-      setColor("#FF0000");
-      return false;
-    }
+  
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regexEmail.test(email.trim())) {
-      setMensagemErro("Email inválido");
-      setColor("#FF0000");
-      return false;
+      setStarEmail('*');
+      valid = false;
+    } else {
+      setStarEmail('');
     }
+  
     if (!senha.trim()) {
-      setMensagemErro("Senha é obrigatória");
-      setColor("#FF0000");
-      return false;
+      setStarSenha('*');
+      valid = false;
+    } else {
+      setStarSenha('');
     }
-    return true;
+  
+    if (!valid) {
+      setMensagemErro("Preencha os campos obrigatórios corretamente");
+      setColor("#FF0000");
+    }
+  
+    return valid;
   }
 
   function proximo(e) {
@@ -153,6 +180,11 @@ export function Cadastro() {
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
+
+                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
+                    <span className={`${starNome ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starNome ? color : "transparent" }}>{starNome}</span>
+                  </h2>
+
                 <p className="mt-[3vh]">Sobrenome</p>
                 <input
                   type="text"
@@ -162,6 +194,11 @@ export function Cadastro() {
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
+
+                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
+                    <span className={`${starSobrenome ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starNome ? color : "transparent" }}>{starSobrenome}</span>
+                  </h2>
+
                 <p className="mt-[3vh]">Telefone</p>
                 <input
                   type="text"
@@ -171,6 +208,11 @@ export function Cadastro() {
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
+
+                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
+                    <span className={`${starTelefone ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starNome ? color : "transparent" }}>{starSobrenome}</span>
+                  </h2>
+
               </div>
               <button
                 type="submit"
@@ -224,6 +266,11 @@ export function Cadastro() {
                   <option value="limpeza">Equipe de Limpeza</option>
                 </select>
 
+                
+                <h2 className="flex justify-end absolute left-[80%] top-[35%]">
+                    <span className={`${starCargo ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starCargo ? color : "transparent" }}>{starSobrenome}</span>
+                  </h2>
+
                 <p className="mt-[3vh]">Email</p>
                 <input
                   type="text"
@@ -233,6 +280,12 @@ export function Cadastro() {
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
+
+
+                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
+                    <span className={`${starEmail ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starEmail ? color : "transparent" }}>{starSobrenome}</span>
+                  </h2>
+
                 <p className="mt-[3vh]">Senha</p>
                 <input
                   type="password"
@@ -242,6 +295,11 @@ export function Cadastro() {
                   className="'w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
+
+                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
+                    <span className={`${starSenha ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starSenha ? color : "transparent" }}>{starSobrenome}</span>
+                  </h2>
+
               </div>
               <button
                 type="submit"
