@@ -1,18 +1,33 @@
 import { BtnRedirecNavBar } from "../Atomos/BtnRedirecNavBar";
 import { DivisionNavBar } from "../Atomos/DivisionNavBar";
 import { Logo } from "../Atomos/Logo";
+import { useNavigate } from 'react-router-dom';
+import { useSetAba } from "../../Hooks/setAba";
 
 export function NavBar() {
+
+  const useAba = useSetAba();
+
+  const navigate = useNavigate();
+
+  const handleRedirect = (path) => {
+    navigate(path);
+    useAba;
+    
+  };
+
   return (
     <div className="flex bg-[#3A577B] w-[5.3vw] h-[90vh] rounded-[1vw] shadow-[0px_5px_10px_rgba(0,0,0,0.8)] items-center gap-[3vh] flex-col">
       <DivisionNavBar/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/Home.svg"/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/Blocks.svg"/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/DocEscala.svg"/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/AddNewUser.svg"/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/UsersGroup.svg"/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/Box.svg"/>
-      <BtnRedirecNavBar imagemUrl="/src/assets/Attencion.svg"/>
+
+      <BtnRedirecNavBar imagemUrl="/src/assets/Home.svg" onClick={() => handleRedirect('/DashBoard')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/Blocks.svg" onClick={() => handleRedirect('/blocks')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/DocEscala.svg" onClick={() => handleRedirect('/doc')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/AddNewUser.svg" onClick={() => handleRedirect('/cadastro')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/UsersGroup.svg" onClick={() => handleRedirect('/dashBoard/TelaFuncionarios')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/Box.svg" onClick={() => handleRedirect('/box')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/Attencion.svg" onClick={() => handleRedirect('')} />
+
       <Logo/>
     </div>
   );
