@@ -79,6 +79,13 @@ export function Cadastro() {
     }
   }
 
+  const recarregar = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); 
+  };
+
+
   function cadastrar(e) {
     e.preventDefault();
     if (validarSegundaEtapa()) {
@@ -116,9 +123,7 @@ export function Cadastro() {
         .then(() => {
           setMensagemErro("Cadastro realizado com sucesso!");
           setColor("#2F4700");
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);  
+           recarregar();
         })
         .catch(error => {
           console.error(error);
@@ -166,7 +171,7 @@ export function Cadastro() {
                 />
                 <p className="mt-[3vh]">Telefone</p>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="1140020922"
                   value={telefone}
                   onChange={(e) => setTelefone(e.target.value)}
