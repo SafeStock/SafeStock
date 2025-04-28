@@ -38,7 +38,7 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
         String requestTokenHeader = request.getHeader("Authorization");
 
         if (Objects.nonNull(requestTokenHeader) && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
+            jwtToken = requestTokenHeader.substring(7); // Remove o prefixo "Bearer "
 
             try {
                 username = jwtTokenManager.getUsernameFromToken(jwtToken);
@@ -48,16 +48,32 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
 
                 LOGGER.trace("[Falha Autenticacao] - stack trace: ", exception);
 
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                // Resposta estruturada para o erro de expiração do token
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Status 401 (não autorizado)
+                response.setContentType("application/json"); // Definindo o tipo de conteúdo da resposta
+
+                // Criando um JSON de resposta
+                String jsonResponse = "{\"message\": \"Token expirado. Por favor, faça login novamente.\"}";
+
+                // Enviando a resposta de erro
+                response.getWriter().write(jsonResponse);
+                return; // Importante para interromper o fluxo e não continuar o filtro
+            } catch (Exception exception) {
+                // Outras exceções podem ser tratadas aqui
+                LOGGER.error("[Falha Autenticacao] - Erro no processamento do token: {}", exception.getMessage(), exception);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"message\": \"Erro interno no servidor.\"}");
+                return;
             }
         }
 
+        // Se o token for válido e o usuário não estiver autenticado, adiciona o usuário no contexto de segurança
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            addUsernameInContext(request,username,jwtToken);
+            addUsernameInContext(request, username, jwtToken);
         }
 
+        // Continua a cadeia de filtros, permitindo que a requisição siga para o próximo filtro
         filterChain.doFilter(request, response);
-
     }
 
     private void addUsernameInContext(HttpServletRequest request, String username, String jwtToken){
