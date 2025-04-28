@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Login } from "../onboarding/Login";
-import { Cadastro } from "../onboarding/Cadastro";
+import { Cadastro } from '../DashBoard/Cadastro';
 import { useSetAba } from './setAba';
 import { TelaFuncionarios } from '../DashBoard/TelaFuncionarios';
 import { DashPrincipalDono } from '../DashBoard/DashPrincipalDono';
