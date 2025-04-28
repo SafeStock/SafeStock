@@ -155,7 +155,7 @@ const [starSenha, setStarSenha] = useState("");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
-      <div className="absolute left-[0vw]">
+      <div className="absolute left-[-0.515vw]">
       <NavBarArea/>
       </div>
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
