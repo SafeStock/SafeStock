@@ -1,13 +1,31 @@
+import { useEffect, useState } from "react";
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 
 export function UserInformation() {
-    return (
+  const [funcionarios, setFuncionarios] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/funcionarios") // coloca aqui sua rota de listagem
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao buscar funcionários");
+        }
+        return response.json();
+      })
+      .then((data) => setFuncionarios(data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  return (
     <div className="h-[60vh] w-[72vw] flex flex-col items-center overflow-y-auto scrollbar-custom">
-        <UserInformationDiv Nome="Samuel Teodoro Souza" Email="Samuel.Teodoro@Souza"/>
-        <UserInformationDiv Nome="Yasmim Guiniver" Email="Yasmim.G.@Gmail"/>
-        <UserInformationDiv Nome="Pedro Paulo" Email="Pedro.P.Novaes@Ymail"/>
-        <UserInformationDiv Nome="Samuel Teodoro Souza" Email="Samuel.Teodoro@Souza"/>
-        <UserInformationDiv Nome="Mayara Damas" Email="MayMay.Dam@Outlook"/>    
+      {funcionarios.map((funcionario, index) => (
+        <UserInformationDiv
+          key={index}
+          Nome={`${funcionario.nome}`}
+          Sobrenome={`${funcionario.sobrenome}`}
+          Email={funcionario.email}
+        />
+      ))}
     </div>
-    );
+  );
 }
