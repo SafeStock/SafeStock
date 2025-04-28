@@ -161,13 +161,11 @@ export function Login() {
 
             </>
           ) : (
-            <div>
+            <div className="flex flex-col items-center justify-center h-full w-full ">
               <Lottie
                 animationData={Animation}
                 loop
-                autoplay
-                width={300} 
-                height={300}
+                autopla
               />
 
             </div>
