@@ -1,7 +1,7 @@
 import { useState } from "react";
-import imagemCadastro from "../assets/imagemCadastro.svg";
+// import imagemCadastro from "../assets/imagemCadastro.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { NavBarArea } from "./Celulas/NavBarArea";
 
 
@@ -16,7 +16,7 @@ export function Cadastro() {
   const [senha, setSenha] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const [carregando, setCarregando] = useState(false);
   
 
@@ -64,12 +64,6 @@ export function Cadastro() {
     }
     return true;
   }
-
-  const irParaLogin = () => {
-    setTimeout(() => {
-      navigate('/login');
-    }, 2200);  
-  };
 
   function proximo(e) {
     e.preventDefault();
@@ -120,7 +114,9 @@ export function Cadastro() {
         .then(() => {
           setMensagemErro("Cadastro realizado com sucesso!");
           setColor("#2F4700");
-          irParaLogin(); 
+          setTimeout(()=>{
+          setMensagemErro("");  
+          },1500)
         })
         .catch(error => {
           console.error(error);
@@ -139,12 +135,12 @@ export function Cadastro() {
         {/* Formulário 1 */}
         {etapa === 1 && (
           <div
-            className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[65vh] w-[65vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
               onSubmit={proximo}
-              className="justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]"
+              className="justify-center flex flex-col items-center gap-[3vh] text-[#2F4672]"
             >
               <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
               <div className="w-[80%] flex flex-col gap-[1vh] text-[2.5vh]">
@@ -272,11 +268,6 @@ export function Cadastro() {
           </div>
         )}
 
-        {/* Imagem */}
-        <div className="w-80">
-          <img src={imagemCadastro} alt="Cadastro" className="max-w-full" />
-
-        </div>
       </div>
 
       <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] z-[-1] absolute">
