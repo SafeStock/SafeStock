@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import imagemCadastro from "../assets/imagemCadastro.svg";
+import imagemCadastro from "../assets/imagemCadastro.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 // import { useNavigate } from 'react-router-dom';
 import { NavBarArea } from "./Celulas/NavBarArea";
@@ -15,82 +15,57 @@ export function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
-  const [starNome, setStarNome] = useState("");
-const [starSobrenome, setStarSobrenome] = useState("");
-const [starTelefone, setStarTelefone] = useState("");
-const [starCargo, setStarCargo] = useState("");
-const [starEmail, setStarEmail] = useState("");
-const [starSenha, setStarSenha] = useState("");
   const [color, setColor] = useState("");
-  // const navigate = useNavigate();
+  
   // const [carregando, setCarregando] = useState(false);
   
+
   function validarPrimeiraEtapa() {
-    let valid = true;
     if (!nome.trim()) {
-      setStarNome('*');
-      valid = false;
-    } else {
-      setStarNome('');
+      setMensagemErro("Nome é obrigatório");
+      setColor("#FF0000");
+      return false;
     }
-  
     if (!sobrenome.trim()) {
-      setStarSobrenome('*');
-      valid = false;
-    } else {
-      setStarSobrenome('');
+      setMensagemErro("Sobrenome é obrigatório");
+      setColor("#FF0000");
+      return false;
     }
-  
     const telefoneLimpo = telefone.replace(/\D/g, '');
     if (!telefoneLimpo || telefoneLimpo.length !== 11) {
-      setStarTelefone('*');
-      valid = false;
-    } else {
-      setStarTelefone('');
-    }
-  
-    if (!valid) {
-      setMensagemErro("Preencha os campos obrigatórios");
+      setMensagemErro("O telefone deve conter exatamente 11 números");
       setColor("#FF0000");
+      return false;
     }
-    return valid;
+    return true;
   }
 
   function validarSegundaEtapa() {
-    let valid = true;
-  
     if (!cargo.trim()) {
-      setStarCargo('*');
-      valid = false;
-    } else if (cargo.toLowerCase() !== "dono" && cargo.toLowerCase() !== "secretaria" && cargo.toLowerCase() !== "limpeza") {
-      setStarCargo('*');
-      valid = false;
-    } else {
-      setStarCargo('');
+      setMensagemErro("Cargo é obrigatório");
+      setColor("#FF0000");
+      return false;
     }
-  
+    if (cargo.toLowerCase() !== "dono" && cargo.toLowerCase() !== "secretaria" && cargo.toLowerCase() !== "limpeza") {
+      setMensagemErro("Cargo inválido");
+      setColor("#FF0000");
+      return false;
+    }
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regexEmail.test(email.trim())) {
-      setStarEmail('*');
-      valid = false;
-    } else {
-      setStarEmail('');
-    }
-  
-    if (!senha.trim()) {
-      setStarSenha('*');
-      valid = false;
-    } else {
-      setStarSenha('');
-    }
-  
-    if (!valid) {
-      setMensagemErro("Preencha os campos obrigatórios corretamente");
+      setMensagemErro("Email inválido");
       setColor("#FF0000");
+      return false;
     }
-  
-    return valid;
+    if (!senha.trim()) {
+      setMensagemErro("Senha é obrigatória");
+      setColor("#FF0000");
+      return false;
+    }
+    return true;
   }
+
+  
 
   function proximo(e) {
     e.preventDefault();
@@ -141,9 +116,9 @@ const [starSenha, setStarSenha] = useState("");
         .then(() => {
           setMensagemErro("Cadastro realizado com sucesso!");
           setColor("#2F4700");
-          setTimeout(()=>{
-          setMensagemErro("");  
-          },1500)
+          setTimeout(() => {
+      
+          }, 2000);  
         })
         .catch(error => {
           console.error(error);
@@ -162,12 +137,12 @@ const [starSenha, setStarSenha] = useState("");
         {/* Formulário 1 */}
         {etapa === 1 && (
           <div
-            className="h-[65vh] w-[65vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
               onSubmit={proximo}
-              className="justify-center flex flex-col items-center gap-[3vh] text-[#2F4672]"
+              className="justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]"
             >
               <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
               <div className="w-[80%] flex flex-col gap-[1vh] text-[2.5vh]">
@@ -180,11 +155,6 @@ const [starSenha, setStarSenha] = useState("");
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
-
-                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
-                    <span className={`${starNome ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starNome ? color : "transparent" }}>{starNome}</span>
-                  </h2>
-
                 <p className="mt-[3vh]">Sobrenome</p>
                 <input
                   type="text"
@@ -194,11 +164,6 @@ const [starSenha, setStarSenha] = useState("");
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
-
-                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
-                    <span className={`${starSobrenome ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starNome ? color : "transparent" }}>{starSobrenome}</span>
-                  </h2>
-
                 <p className="mt-[3vh]">Telefone</p>
                 <input
                   type="text"
@@ -208,11 +173,6 @@ const [starSenha, setStarSenha] = useState("");
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
-
-                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
-                    <span className={`${starTelefone ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starNome ? color : "transparent" }}>{starSobrenome}</span>
-                  </h2>
-
               </div>
               <button
                 type="submit"
@@ -266,11 +226,6 @@ const [starSenha, setStarSenha] = useState("");
                   <option value="limpeza">Equipe de Limpeza</option>
                 </select>
 
-                
-                <h2 className="flex justify-end absolute left-[80%] top-[35%]">
-                    <span className={`${starCargo ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starCargo ? color : "transparent" }}>{starSobrenome}</span>
-                  </h2>
-
                 <p className="mt-[3vh]">Email</p>
                 <input
                   type="text"
@@ -280,12 +235,6 @@ const [starSenha, setStarSenha] = useState("");
                   className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
-
-
-                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
-                    <span className={`${starEmail ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starEmail ? color : "transparent" }}>{starSobrenome}</span>
-                  </h2>
-
                 <p className="mt-[3vh]">Senha</p>
                 <input
                   type="password"
@@ -295,11 +244,6 @@ const [starSenha, setStarSenha] = useState("");
                   className="'w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
                   focus:border-[#2F4672] transition-colors duration-200"
                 />
-
-                  <h2 className="flex justify-end absolute left-[80%] top-[35%]">
-                    <span className={`${starSenha ? "opacity-100" : "opacity-0"} transition-opacity duration-300`} style={{ color: starSenha ? color : "transparent" }}>{starSobrenome}</span>
-                  </h2>
-
               </div>
               <button
                 type="submit"
@@ -326,6 +270,11 @@ const [starSenha, setStarSenha] = useState("");
           </div>
         )}
 
+        {/* Imagem */}
+        <div className="w-80">
+          <img src={imagemCadastro} alt="Cadastro" className="max-w-full" />
+
+        </div>
       </div>
 
       <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] z-[-1] absolute">
