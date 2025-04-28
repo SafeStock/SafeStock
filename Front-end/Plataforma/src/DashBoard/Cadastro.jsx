@@ -1,8 +1,8 @@
 import { useState } from "react";
 import imagemCadastro from "../assets/imagemCadastro.svg";
 import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
-import { useNavigate } from 'react-router-dom';
-import logo from "../assets/LogocomNome.svg";
+// import { useNavigate } from 'react-router-dom';
+import { NavBarArea } from "./Celulas/NavBarArea";
 
 
 export function Cadastro() {
@@ -16,7 +16,7 @@ export function Cadastro() {
   const [senha, setSenha] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
-  const navigate = useNavigate();
+  
   // const [carregando, setCarregando] = useState(false);
   
 
@@ -65,11 +65,7 @@ export function Cadastro() {
     return true;
   }
 
-  const irParaLogin = () => {
-    setTimeout(() => {
-      navigate('/login');
-    }, 2200);  
-  };
+  
 
   function proximo(e) {
     e.preventDefault();
@@ -120,7 +116,9 @@ export function Cadastro() {
         .then(() => {
           setMensagemErro("Cadastro realizado com sucesso!");
           setColor("#2F4700");
-          irParaLogin(); 
+          setTimeout(() => {
+      
+          }, 2000);  
         })
         .catch(error => {
           console.error(error);
@@ -132,6 +130,9 @@ export function Cadastro() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
+      <div className="absolute left-[-0.515vw]">
+      <NavBarArea/>
+      </div>
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
         {/* Formulário 1 */}
         {etapa === 1 && (
@@ -281,13 +282,6 @@ export function Cadastro() {
           src={imagemObjeto}
           alt="Objeto de Cadastro"
           className="w-full h-full" />
-      </section>
-      <section className="absolute top-0 left-0 w-[3vw] h-[6vh] z-[-1] mb-[88vh] mr-[90vw]">
-        <img
-          src={logo}
-          alt="Logo"
-          className="absolute top-0 left-0 w-[3w] h-[6vh]"
-        />
       </section>
     </div>
   );
