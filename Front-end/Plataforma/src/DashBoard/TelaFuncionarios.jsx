@@ -3,6 +3,7 @@ import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 
 export function TelaFuncionarios() {
+
   return (
     <FundoPadrao>
       <NavBarArea/>

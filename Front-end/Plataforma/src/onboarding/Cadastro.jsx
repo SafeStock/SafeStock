@@ -17,7 +17,8 @@ export function Cadastro() {
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
   const navigate = useNavigate();
-  const [carregando, setCarregando] = useState(false);
+  // const [carregando, setCarregando] = useState(false);
+  
 
   function validarPrimeiraEtapa() {
     if (!nome.trim()) {

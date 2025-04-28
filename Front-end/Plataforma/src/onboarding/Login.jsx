@@ -25,11 +25,7 @@ export function Login() {
     }, 2200);  
   };
 
-  const irParaCadastro = () => {
-    setTimeout(() => {
-      navigate('/cadastro');
-    }, 2000);  
-  };
+  
 
   const validarEmail = (email) => {
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
