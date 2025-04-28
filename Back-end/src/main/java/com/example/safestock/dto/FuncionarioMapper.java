@@ -42,6 +42,7 @@ public class FuncionarioMapper {
 
         funcionarioListar.setId(funcionario.getId());
         funcionarioListar.setEmail(funcionario.getEmail());
+        funcionarioListar.setSobrenome(funcionario.getSobrenome());
         funcionarioListar.setNome(funcionario.getNome());
 
         return funcionarioListar;

@@ -117,7 +117,7 @@ export function Cadastro() {
           setMensagemErro("Cadastro realizado com sucesso!");
           setColor("#2F4700");
           setTimeout(() => {
-      
+            window.location.reload();
           }, 2000);  
         })
         .catch(error => {

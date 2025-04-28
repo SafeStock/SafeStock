@@ -12,7 +12,10 @@ export function UserInformation() {
         }
         return response.json();
       })
-      .then((data) => setFuncionarios(data))
+      .then((data) => {
+        console.log(data);
+        setFuncionarios(data);
+      })
       .catch((error) => console.error(error));
   }, []);
 
@@ -20,10 +23,9 @@ export function UserInformation() {
     <div className="h-[60vh] w-[72vw] flex flex-col items-center overflow-y-auto scrollbar-custom">
       {funcionarios.map((funcionario, index) => (
         <UserInformationDiv
-          key={index}
-          Nome={`${funcionario.nome}`}
-          Sobrenome={`${funcionario.sobrenome}`}
-          Email={funcionario.email}
+        key={index}
+        Nome={`${funcionario.nome} ${funcionario.sobrenome ?? ""}`}
+        Email={funcionario.email}
         />
       ))}
     </div>
