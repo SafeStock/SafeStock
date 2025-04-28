@@ -51,6 +51,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/webjars/**"),
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/actuator/*"),
+            new AntPathRequestMatcher("/api/funcionarios/**"),
             new AntPathRequestMatcher("/api/funcionarios/login/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
@@ -110,10 +111,13 @@ public class SecurityConfiguracao {
         return new BCryptPasswordEncoder();
     }
 
+    private static final String CLIENT_URL = "http://localhost:5173";
+
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
         configuracao.applyPermitDefaultValues();
+        configuracao.setAllowedOrigins(Arrays.asList(CLIENT_URL));
         configuracao.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
@@ -126,6 +130,7 @@ public class SecurityConfiguracao {
                         HttpMethod.TRACE.name()));
 
         configuracao.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
+        configuracao.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource origem = new UrlBasedCorsConfigurationSource();
         origem.registerCorsConfiguration("/**", configuracao);
