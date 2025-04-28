@@ -9,6 +9,9 @@ public class FuncionarioListar {
     @Schema(description = "Nome do usuário", example = "John Doe")
     private String nome;
 
+    @Schema(description = "Sobrenome do usuário", example = "John Doe")
+    private String sobrenome;
+
     @Schema(description = "Email do usuário", example = "John@doe.com")
     private String email;
 
@@ -36,5 +39,11 @@ public class FuncionarioListar {
         this.email = email;
     }
 
+    public String getSobrenome() {
+        return sobrenome;
+    }
 
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
 }
