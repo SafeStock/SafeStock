@@ -19,10 +19,17 @@ export function useSetAba() {
         document.title = "Funcionários | SafeStock";
         break;
 
-        case "/dashBoard/":
-          document.title = "DashBoard | SafeStock";
-          break;
+      case "/dashBoard/":
+        document.title = "DashBoard | SafeStock";
+        break;
 
+      case "/dashBoard/HistoricoAlertas":
+         document.title = "Historico de Alertas | SafeStock";
+        break;  
+
+      case "/dashBoard/HistoricoUso":
+        document.title = "Historico de Uso | SafeStock";
+       break;    
     }
   }, [location.pathname]);
 }
