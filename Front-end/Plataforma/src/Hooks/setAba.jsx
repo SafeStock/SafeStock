@@ -7,29 +7,33 @@ export function useSetAba() {
 
   useEffect(() => {
     switch (location.pathname) {
-      case "/":
+      case "/login":
         document.title = "Login | SafeStock";
         break;
 
-      case "/cadastro":
+      case "/dashboard/cadastro":
         document.title = "Cadastro | SafeStock";
         break;
 
-      case "/dashBoard/TelaFuncionarios":
+      case "/dashboard/telafuncionarios":
         document.title = "Funcionários | SafeStock";
         break;
 
-      case "/dashBoard/":
+      case "/dashboard/":
         document.title = "DashBoard | SafeStock";
         break;
 
-      case "/dashBoard/HistoricoAlertas":
-         document.title = "Historico de Alertas | SafeStock";
-        break;  
+      case "/dashboard/historicoalertas":
+        document.title = "Historico de Alertas | SafeStock";
+        break;
 
-      case "/dashBoard/HistoricoUso":
+      case "/dashboard/historicouso":
         document.title = "Historico de Uso | SafeStock";
-       break;    
+        break;
+
+      case "/dashboard/dashboardlimpeza":
+        document.title = "DashBord | SafeStock";
+        break;
     }
   }, [location.pathname]);
 }
