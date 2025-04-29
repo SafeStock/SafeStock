@@ -21,7 +21,7 @@ export function Login() {
 
   const irParaTelaFuncionarios = () => {
     setTimeout(() => {
-      navigate('/dashBoard/TelaFuncionarios');
+      navigate('/dashboard/telafuncionarios');
     }, 2200);  
   };
 
