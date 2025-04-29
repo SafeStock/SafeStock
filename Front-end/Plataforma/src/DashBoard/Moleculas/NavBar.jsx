@@ -25,8 +25,8 @@ export function NavBar() {
       <BtnRedirecNavBar imagemUrl="/src/assets/DocEscala.svg" onClick={() => handleRedirect('/doc')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/AddNewUser.svg" onClick={() => handleRedirect('/cadastro')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/UsersGroup.svg" onClick={() => handleRedirect('/dashBoard/TelaFuncionarios')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/Box.svg" onClick={() => handleRedirect('/box')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/Attencion.svg" onClick={() => handleRedirect('')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/Box.svg" onClick={() => handleRedirect('/dashBoard/HistoricoUso')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/Attencion.svg" onClick={() => handleRedirect('/dashBoard/HistoricoAlertas')} />
 
       <Logo/>
     </div>
