@@ -34,7 +34,17 @@ export function DivElementKPIDonoBigLeft(){
 export function DivElementKPIDonoLittleRight(){
     return(
         <div className="w-[97%] h-[25%] bg-[white] rounded-[2vh] mt-[2vh]
-        shadow-[0_5px_10px_rgba(0,0,0,0.4)] flex flex-row items-center justify-center">
+        shadow-[0_5px_10px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center">
+            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[22.5px] font-[inter] font-[600]">
+            Status de abastecimento
+            </div>
+            <div className="w-full h-[40%] flex justify-center items-center">
+                <div className="bg-[#E8F0F1] w-[70%] h-[85%] rounded-[40px] overflow-hidden">
+                <div className="bg-[#9AC7D9] w-[55%] h-full rounded-[40px]">
+                    <p className="absolute font-[400] font-[inter] text-[20px] ml-[10vw] mt">50%</p>
+                </div>
+                </div>
+            </div>
         </div>
     )
 }
