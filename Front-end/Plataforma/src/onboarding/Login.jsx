@@ -18,12 +18,16 @@ export function Login() {
   const [star, setStar] = useState("");
   const [carregando, setCarregando] = useState(false);
 
+  const irParaDashboard = (cargo) => {
+  setTimeout(() => {
+    if (cargo === "limpeza") {
+      navigate('/dashboard/dashboardlimpeza');
+    } else {
+      navigate('/dashboard');
+    }
+  }, 2200);
+};
 
-  const irParaTelaFuncionarios = () => {
-    setTimeout(() => {
-      navigate('/dashboard/telafuncionarios');
-    }, 2200);  
-  };
 
   const validarEmail = (email) => {
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,7 +84,7 @@ export function Login() {
       setCarregando(true);
       setEmail(""); // limpa campos
       setSenha("");
-      irParaTelaFuncionarios();
+      irParaDashboard(data.cargo);
     
     } catch (error) {
       console.error(error);
