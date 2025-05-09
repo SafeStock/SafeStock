@@ -1,11 +1,14 @@
 package com.example.safestock.dto;
 
+import com.example.safestock.model.enums.CargoFuncionario;
+
 public class TokenDTO {
 
     private Long id;
     private String nome;
     private String email;
     private String token;
+    private CargoFuncionario cargo;
 
     public Long getId() {
         return id;
@@ -37,5 +40,13 @@ public class TokenDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public CargoFuncionario getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(CargoFuncionario cargo) {
+        this.cargo = cargo;
     }
 }
