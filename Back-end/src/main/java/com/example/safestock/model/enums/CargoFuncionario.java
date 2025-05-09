@@ -1,9 +1,8 @@
 package com.example.safestock.model.enums;
 
 public enum CargoFuncionario {
+    dono,
     administracao,
-    equipe_de_limpeza,
-    dono;
-
+    limpeza,
 
 }

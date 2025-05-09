@@ -33,6 +33,7 @@ public class FuncionarioMapper {
         tokenDTO.setEmail(funcionario.getEmail());
         tokenDTO.setNome(funcionario.getNome());
         tokenDTO.setToken(token);
+        tokenDTO.setCargo(funcionario.getCargo());
 
         return tokenDTO;
     }
