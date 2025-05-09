@@ -69,7 +69,8 @@ export function Login() {
       // 💾 Salvar o token e o nome no sessionStorage
       if (data.token) {
         sessionStorage.setItem('authToken', data.token);
-        sessionStorage.setItem('usuario', data.nome); // ajuste se seu back devolver o nome assim
+        sessionStorage.setItem('usuario', data.nome);
+        sessionStorage.setItem('cargo', data.cargo); // ajuste se seu back devolver o nome assim
       }
     
       console.log(data); // aqui você vê o que chegou da API
