@@ -14,14 +14,22 @@ export function DivisionDivElementKPIDonoLittle() {
 
 export function DivisionDivElementKPIDonoBig() {
     return (
-    <div className="w-full h-[3%]">      
-    </div>
+        <div className="w-full h-[3%]">      
+        </div>
     )    
-    }
+}
 
-    export function DivisionDivElementKPIDonoBigRight() {
-        return (
+export function DivisionDivElementKPIDonoBigRight() {
+    return (
         <div className="w-full h-[2.4%]">      
         </div>
-        )    
-        }
+    )    
+}
+
+export function DivisionDivElementKPIDonoLittleRightDiv() {
+    return (
+        <div className="w-full h-[0.7vh]">      
+        </div>
+    )    
+}
+
