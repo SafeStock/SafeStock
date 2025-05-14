@@ -5,6 +5,8 @@ import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import { NavBarArea } from "./Celulas/NavBarArea";
 
 
+
+
 export function Cadastro() {
 
   const [etapa, setEtapa] = useState(1);
@@ -16,9 +18,10 @@ export function Cadastro() {
   const [senha, setSenha] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
   const [color, setColor] = useState("");
-  
+  // const [display, setDisplay] = useState(false);
+
   // const [carregando, setCarregando] = useState(false);
-  
+
 
   function validarPrimeiraEtapa() {
     if (!nome.trim()) {
@@ -65,14 +68,17 @@ export function Cadastro() {
     return true;
   }
 
-  
+
 
   function proximo(e) {
     e.preventDefault();
     if (validarPrimeiraEtapa()) {
-      setEtapa(2);
-      setMensagemErro("");
-      setColor("#2F4700");
+      setTimeout(() => {
+        setEtapa(2);
+        setMensagemErro("");
+        setColor("#2F4700");
+      }, 2000);
+
     } else {
       setMensagemErro("Preencha os campos obrigatórios");
       setColor("#FF0000")
@@ -82,7 +88,7 @@ export function Cadastro() {
   const recarregar = () => {
     setTimeout(() => {
       window.location.reload();
-    }, 2000); 
+    }, 2000);
   };
 
 
@@ -114,16 +120,16 @@ export function Cadastro() {
         },
         body: JSON.stringify(novoUsuario)
       })
-      .then(async response => {
-        if (!response.ok) throw new Error('Erro no cadastro');
-        
-        const text = await response.text();
-        return text ? JSON.parse(text) : {};
-      })
+        .then(async response => {
+          if (!response.ok) throw new Error('Erro no cadastro');
+
+          const text = await response.text();
+          return text ? JSON.parse(text) : {};
+        })
         .then(() => {
           setMensagemErro("Cadastro realizado com sucesso!");
           setColor("#2F4700");
-           recarregar();
+          recarregar();
         })
         .catch(error => {
           console.error(error);
@@ -136,7 +142,7 @@ export function Cadastro() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
       <div className="absolute left-[-0.515vw]">
-      <NavBarArea/>
+        <NavBarArea />
       </div>
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
         {/* Formulário 1 */}
@@ -186,6 +192,10 @@ export function Cadastro() {
               >
                 Próximo
               </button>
+
+              <div>
+
+              </div>
 
               {/* Mensagem de erro */}
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
