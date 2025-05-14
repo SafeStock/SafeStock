@@ -151,7 +151,6 @@ export function Login() {
                   Esqueceu sua{" "}
                   <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh]">Senha</button>?
                 </p>
-
               </div>
 
               <div className="text-[2.5vh] w-[100%] flex justify-center">
