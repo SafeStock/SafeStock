@@ -5,7 +5,9 @@ import { AreaWorkDashDono } from "./AreaWorkDashDono";
 export function AreaWorkGeral({
     NewText,
       DisplayFlexParaFuncionarios,
-      DisplayParaDashGeral
+      DisplayParaDashGeral,
+      DisplayHistoricoUso,
+      DisplayHistoricoAlerta
     }) {
 
     return(
