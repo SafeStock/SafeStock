@@ -10,7 +10,6 @@ export function TelaFuncionarios() {
 
       <AreaWorkGeral 
       NewText="Funcionários" 
-      DisplayPadrao='none' 
       DisplayFlexParaFuncionarios='flex'
       DisplayParaDashGeral='none'
       />

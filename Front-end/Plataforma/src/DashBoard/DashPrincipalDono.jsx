@@ -12,7 +12,6 @@ export function DashPrincipalDono() {
 
       <AreaWorkGeral
         NewText={`Boas Vindas, ${nome}!`}
-        DisplayPadrao='flex'
         DisplayFlexParaFuncionarios='none'
         DisplayParaDashGeral='flex'
       />
