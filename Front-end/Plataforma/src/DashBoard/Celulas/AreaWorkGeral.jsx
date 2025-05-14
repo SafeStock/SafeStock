@@ -4,7 +4,6 @@ import { AreaWorkDashDono } from "./AreaWorkDashDono";
 
 export function AreaWorkGeral({
     NewText,
-     DisplayPadrao,
       DisplayFlexParaFuncionarios,
       DisplayParaDashGeral
     }) {
@@ -14,7 +13,6 @@ export function AreaWorkGeral({
 
             <AreaTitle 
             texto={NewText} 
-            NewDisplay={DisplayPadrao}
             />
 
             <AreaWork 
