@@ -12,6 +12,8 @@ export function TelaFuncionarios() {
       NewText="Funcionários" 
       DisplayFlexParaFuncionarios='flex'
       DisplayParaDashGeral='none'
+      DisplayHistoricoAlerta='none'
+      DisplayHistoricoUso='none'
       />
       
     </FundoPadrao>
