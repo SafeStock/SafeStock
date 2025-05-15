@@ -13,9 +13,9 @@ export function CadastroProdutosEtapa2({ formData, setFormData }) {
     }
 
     const inputClass =
-        "w-[20vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none mb-[2vh] "
+        "w-[20vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none mb-[2vh] "
 
-    const labelClass = "block text-sm font-medium text-gray-600 text-[#2F4672] mb-[0,2rem]";
+    const labelClass = "block text-sm font-medium text-gray-600 text-[#2F4672] mb-[0.5rem] ";
 
     const bottomClass = "cursor-pointer text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[0.8vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)]  hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition duration-200 mb-[3vh] mt-[1vh] w-[40%] h-[4.5vh] mx-auto";
 
@@ -34,7 +34,7 @@ export function CadastroProdutosEtapa2({ formData, setFormData }) {
                     <div>
                         <form onSubmit={enviar} className={form}>
                             <div className="content">
-                            <label htmlFor="limiteDeUso" className={labelClass}>Limite de uso</label>
+                            <label htmlFor="limiteDeUso" className={labelClass}>Limite de uso: </label>
                             <input
                                 type="text"
                                 id="limiteDeUso"
