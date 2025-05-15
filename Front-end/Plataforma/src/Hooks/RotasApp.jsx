@@ -17,12 +17,11 @@ export function RotasApp() {
 
    const [formData, setFormData] = useState({
     nome: '',
-    email: '',
-    telefone: '',
-    endereco: '',
-    cidade: '',
-    estado: '',
-    cep: ''
+    categoria: '',
+    quantidade: '',
+    limiteDeUso: '',
+    dataValidade: '',
+    dataEntrada: ''
   });
 
   return (
