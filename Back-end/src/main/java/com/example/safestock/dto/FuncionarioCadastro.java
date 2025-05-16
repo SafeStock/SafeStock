@@ -22,7 +22,6 @@ public class FuncionarioCadastro {
     @Schema(description = "Email do usuário", example = "raygrs@gmail.com")
     private String email;
 
-
     @Schema(description = "Senha do usuário", example = "0424542@jj")
     private String senha;
 

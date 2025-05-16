@@ -32,6 +32,8 @@ public class FuncionarioMapper {
         tokenDTO.setId(funcionario.getId());
         tokenDTO.setEmail(funcionario.getEmail());
         tokenDTO.setNome(funcionario.getNome());
+        tokenDTO.setSobrenome(funcionario.getSobrenome());
+        tokenDTO.setTelefone(funcionario.getTelefone());
         tokenDTO.setToken(token);
         tokenDTO.setCargo(funcionario.getCargo());
 
@@ -47,6 +49,26 @@ public class FuncionarioMapper {
         funcionarioListar.setNome(funcionario.getNome());
 
         return funcionarioListar;
+    }
+
+    public static FuncionarioRemover of(Long id) {
+        FuncionarioRemover remover = new FuncionarioRemover();
+        remover.setId(id);
+        return remover;
+    }
+
+    public static Funcionario of(FuncionarioAtualizar funcionarioAtualizar) {
+        Funcionario funcionario = new Funcionario();
+
+        funcionario.setId(funcionarioAtualizar.getId());
+        funcionario.setNome(funcionarioAtualizar.getNome());
+        funcionario.setSobrenome(funcionarioAtualizar.getSobrenome());
+        funcionario.setEmail(funcionarioAtualizar.getEmail());
+        funcionario.setSenha(funcionarioAtualizar.getSenha());
+        funcionario.setTelefone(funcionarioAtualizar.getTelefone());
+        funcionario.setCargo(funcionarioAtualizar.getCargo());
+
+        return funcionario;
     }
 
 }
