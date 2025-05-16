@@ -70,30 +70,25 @@ public class FuncionarioService {
         this.funcionarioRepository = funcionarioRepository;
     }
 
-    public List<Funcionario> listarFuncionarios() {
-        return funcionarioRepository.findAll();
-    }
-
-    public Optional<Funcionario> buscarFuncionarioPorId(Long id) {
-        return funcionarioRepository.findById(id);
-    }
-
-    public Funcionario salvarFuncionario(Funcionario funcionario) {
-        return funcionarioRepository.save(funcionario);
-    }
-
-    public void removerFuncionarioPorId(Long id) {
+    public void deletarFuncionario(Long id) {
         funcionarioRepository.deleteById(id);
+    }
+
+    public Optional<FuncionarioListar> buscarFuncionarioListarPorId(Long id) {
+        return funcionarioRepository.findById(id)
+                .map(FuncionarioMapper::of);
     }
 
     public Optional<Funcionario> atualizarFuncionario(Long id, Funcionario novoFuncionario) {
         return funcionarioRepository.findById(id).map(funcionario -> {
             funcionario.setNome(novoFuncionario.getNome());
             funcionario.setEmail(novoFuncionario.getEmail());
-            funcionario.setSenha(novoFuncionario.getSenha());
+            funcionario.setSobrenome(novoFuncionario.getSobrenome());
+            funcionario.setSenha(passwordEncoder.encode(novoFuncionario.getSenha()));
             funcionario.setTelefone(novoFuncionario.getTelefone());
             funcionario.setCargo(novoFuncionario.getCargo());
             return funcionarioRepository.save(funcionario);
         });
     }
+
 }

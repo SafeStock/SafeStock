@@ -30,10 +30,22 @@ public class FuncionarioController {
         return ResponseEntity.status(200).body(funcionariosEncontrados);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Funcionario> buscarFuncionarioPorId(@PathVariable Long id){
-        Optional<Funcionario> funcionario = funcionarioService.buscarFuncionarioPorId(id);
-        return funcionario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @DeleteMapping("/deletar/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioRemover> deletarFuncionarioPorId(@PathVariable Long id) {
+        if (funcionarioService.buscarFuncionarioListarPorId(id).isPresent()) {
+            funcionarioService.deletarFuncionario(id);
+            FuncionarioRemover removido = FuncionarioMapper.of(id);
+            return ResponseEntity.ok(removido);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/listar/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioListar> buscarFuncionarioListarPorId(@PathVariable Long id){
+        Optional<FuncionarioListar> funcionarioDTO = funcionarioService.buscarFuncionarioListarPorId(id);
+        return funcionarioDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/cadastro")
@@ -52,17 +64,13 @@ public class FuncionarioController {
         return  ResponseEntity.status(200).body(funcionarioTokenDto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Funcionario> removerFuncionario(@PathVariable Long id){
-        if (funcionarioService.buscarFuncionarioPorId(id).isPresent()){
-            funcionarioService.removerFuncionarioPorId(id);
-        }
-        return ResponseEntity.notFound().build();
-    }
+    @PutMapping("/atualizar/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody FuncionarioAtualizar funcionarioAtualizar) {
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody Funcionario novoFuncionario) {
-        return funcionarioService.atualizarFuncionario(id, novoFuncionario)
+        Funcionario funcionario = FuncionarioMapper.of(funcionarioAtualizar);
+
+        return funcionarioService.atualizarFuncionario(id, funcionario)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
