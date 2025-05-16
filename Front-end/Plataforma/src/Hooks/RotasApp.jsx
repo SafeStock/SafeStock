@@ -8,9 +8,21 @@ import { HistoricoAlertas } from '../DashBoard/HistoricoAlertas';
 import { HistoricoUso } from '../DashBoard/HistoricoUso';
 import { DashLimpeza } from '../DashBoard/DashLimpeza';
 import { PrivateRoute } from '../components/PrivateRoute'; // ajuste o caminho se necessário
+import { CadastroProdutosEtapa1 } from '../DashBoard/CadastroProdutosEtapa1';
+import { CadastroProdutosEtapa2 } from '../DashBoard/CadastroProdutoEtapa2';
+import { useState } from 'react';
 
 export function RotasApp() {
   useSetAba();
+
+   const [formData, setFormData] = useState({
+    nome: '',
+    categoria: '',
+    quantidade: '',
+    limiteDeUso: '',
+    dataValidade: '',
+    dataEntrada: ''
+  });
 
   return (
     <Routes>
@@ -35,6 +47,11 @@ export function RotasApp() {
         <Route path="/dashboard/dashboardlimpeza" element={<DashLimpeza />} />
         <Route path="/dashboard/historicouso" element={<HistoricoUso />} />
         <Route path="/dashboard/historicoalertas" element={<HistoricoAlertas />} />
+        <Route path="/etapa1" element={<CadastroProdutosEtapa1 formData={formData} setFormData={setFormData} />} />
+        <Route path="/etapa2" element={<CadastroProdutosEtapa2 formData={formData} setFormData={setFormData} />} />
+        <Route path="/produtos" element={<DashPrincipalDono />} />
+
+        
       </Route>
 
     </Routes>
