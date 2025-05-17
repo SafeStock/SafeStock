@@ -1,3 +1,4 @@
+import { Children } from "react";
 import { DivisionDivElementKPIDonoLittle } from "./Divisions";
 import { DivisionDivElementKPIDonoLittleRightDiv } from "./Divisions";
 import { useNavigate } from "react-router-dom";
@@ -34,15 +35,30 @@ export function DivElementKPIDonoBigLeft({tamanho, displayAlerta}){
         <div className="w-[97%] bg-[white] rounded-[2vh] 
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] items-center justify-center" style={{height: tamanho}}>
 
-
-
-            <div className="w-[100%] w-[100%] flex flex-col" style={{display: displayAlerta}}>
-            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[21px] bg-[black] font-[inter] font-[600]">
+            <div className="w-[100%] h-[100%] flex flex-col " style={{display: displayAlerta}}>
+            <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-end text-[23px] font-[inter] font-[600]">
             Histórico de Alertas
-            
             </div>
-            <div className="w-[100%] h-[17.7vh] flex justify-center items-center bg-[red]">
-                
+            <div className="w-[100%] h-[16vh] flex justify-center items-center">
+                <div className="h-full w-full flex flex-col justify-center items-center">
+
+                    <AlertaInformationDiv tamanho="20vw">
+                         <div className="text-[#547A81] font-[raleway] font-[600] text-[21.5px] w-full h-[30%] 
+                         flex justify-center items-center">
+                            Alerta
+                            </div>
+                        <AlertExibition alert="Produto 1 - Vencido"/>
+                    </AlertaInformationDiv>
+                </div>
+                <div className="h-full w-full flex flex-col justify-center items-center">
+                    <AlertaInformationDiv tamanho="20vw">
+                        <div className="text-[#547A81] font-[raleway] font-[600] text-[21.5px] w-full h-[30%] 
+                         flex justify-center items-center">
+                            Status
+                        </div>
+                        <StatusAlertExibition cor="#E10000" status="Critico"/>
+                    </AlertaInformationDiv>
+                </div>
             </div>
             </div>
         </div>
@@ -55,13 +71,13 @@ export function DivElementKPIDonoLittleRight(){
     return(
         <div className="w-[97%] h-[25%] bg-[white] rounded-[2vh] mt-[2vh]
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
-            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[22.5px] font-[inter] font-[600]">
+            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[25px] font-[inter] font-[600]">
             Status de abastecimento
             </div>
             <div className="w-full h-[40%] flex justify-center items-center">
                 <div className="bg-[#E8F0F1] w-[70%] h-[85%] rounded-[40px] overflow-hidden">
                 <div className="bg-[#9AC7D9] w-[50%] h-full rounded-[40px]">
-                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[26px] ml-[10vw] mt-[1.4vh]">50%</p>
+                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[28px] ml-[9.5vw] mt-[1.1vh]">50%</p>
                 </div>
                 </div>
             </div>
@@ -99,8 +115,9 @@ export function DivElementKPIDonoBigRight(){
                         Data Saida
                     </div>
                 </div>
-                <div className="mt-[1vh] flex flex-col items-center w-[95%] h-[35vh] overflow-y-auto z-[0]">
-                    <ProdutoInformationDiv/>
+                <div className="mt-[1vh] flex flex-col items-center w-[100%] h-[35vh] overflow-y-auto z-[0] scrollbar-custom ">
+                    <ProdutoInformationDiv/>     <ProdutoInformationDiv/>
+
                 </div>
             </div>
             <div className="w-full h-[18%] flex justify-center items-center flex justify-around">
@@ -120,12 +137,43 @@ export function DivElementKPIDonoBigRight(){
 
 
 
+
+
 export function ProdutoInformationDiv(){
     return(
         <div>
         <DivisionDivElementKPIDonoLittleRightDiv/>
         <div className="w-[31vw] h-[8vh] shadow-[0_0_5px_rgba(0,0,0,0.4)] rounded-[2vh] z-[1]">
         </div>
+        <DivisionDivElementKPIDonoLittleRightDiv/>
+        </div>
+    )
+}
+
+
+export function AlertaInformationDiv({tamanho, children}){
+    return(
+        <div>
+        <div className="h-[13vh] z-[1]" style={{width: tamanho}}>
+            {children}
+        </div>
+        </div>
+    )
+}
+
+export function AlertExibition({ alert }){
+    return(
+        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center">
+            "{alert}"
+        </div>
+    )
+}
+
+export function StatusAlertExibition({cor, status}){
+    return(
+        <div className="w-full h-[6vh] text-[px] flex flex-row justify-center items-center ">
+            <div className="w-[2vw] h-[4vh] rounded-[50%] mr-[1vw]" style={{background: cor}}></div>
+            {status}
         </div>
     )
 }
