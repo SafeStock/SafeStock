@@ -1,7 +1,6 @@
 import { NavBarArea } from "./Celulas/NavBarArea";
 import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
-import { Modal } from "./Atomos/Modal";
 
 export function DashLimpeza() {
 
@@ -11,7 +10,6 @@ export function DashLimpeza() {
 
 
     <FundoPadrao>
-      <Modal/>
       <NavBarArea />
 
       <AreaWorkGeral

@@ -9,9 +9,6 @@ export function HistoricoAlertas() {
       <NavBarArea/>
       <AreaWorkGeral
               NewText={`Historico de Alertas`}
-              DisplayPadrao='flex'
-              DisplayFlexParaFuncionarios='none'
-              DisplayParaDashGeral='none'
             />
     </FundoPadrao>
   );

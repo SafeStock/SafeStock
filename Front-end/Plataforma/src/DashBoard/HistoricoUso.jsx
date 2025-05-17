@@ -11,11 +11,7 @@ export function HistoricoUso() {
       
       <AreaWorkGeral
               NewText={`Historico de Uso`}
-              DisplayPadrao='flex'
-              DisplayFlexParaFuncionarios='none'
-              DisplayParaDashGeral='none'
               DisplayHistoricoUso='flex'
-              DisplayHistoricoAlerta='none'
             />
             <AreaSubTitle title1="Produto"/>
     </FundoPadrao>

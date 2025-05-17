@@ -1,18 +1,29 @@
-import { useState } from "react";
+// Modal.jsx
+export function Modal({ isOpen, onClose }) {
+  if (!isOpen) return null;
 
-export function Modal(){
+  return (
+    <div
+      onClick={onClose}
+      className="w-full h-full flex items-center justify-center fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-[1000]"
+    >
+      <div
+        className="w-[40vw] h-[80vh] bg-[white] rounded-[2vw] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()} // Impede fechar clicando dentro
+      >
 
-    const [display, setDisplay] = useState('flex');
+        <div className="flex items-center justify-end w-full h-[7vh]">
+        <button
+          className="text-[30px] font-[inter] text-[#BDBDBD] border-none bg-transparent cursor-pointer mr-[1.5vw]"
+          onClick={onClose}
+        >
+          x
+        </button>
+        </div>
 
-    const MudarDisplay = () => {
-        setDisplay(display === 'flex' ? 'none' : 'flex');
-    }
 
-    return(
-    <div onClick={MudarDisplay} className="w-full h-full items-center justify-center fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-[1000]" style={{display: display}}>
-                <div className="w-[40vw] h-[80vh] bg-[white] rounded-[2vw]">
-                    <button className="text-[20px] border-none bg-transparent" onClick={MudarDisplay}>x</button>
-                </div>
-    </div>    
-)
+
+      </div>
+    </div>
+  );
 }
