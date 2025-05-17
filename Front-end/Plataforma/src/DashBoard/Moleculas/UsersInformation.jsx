@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 
-export function UserInformation() {
+export function UserInformation({ abrirModal }) {
   const [funcionarios, setFuncionarios] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/funcionarios") // coloca aqui sua rota de listagem
+    fetch("http://localhost:8080/api/funcionarios")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro ao buscar funcionários");
@@ -23,10 +23,12 @@ export function UserInformation() {
     <div className="h-[60vh] w-[72vw] flex flex-col items-center overflow-y-auto scrollbar-custom">
       {funcionarios.map((funcionario, index) => (
         <UserInformationDiv
-        key={index}
-        Nome={`${funcionario.nome} ${funcionario.sobrenome ?? ""}`}
-        Email={funcionario.email}
+          key={index}
+          Nome={`${funcionario.nome} ${funcionario.sobrenome ?? ""}`}
+          Email={funcionario.email}
+          abrirModal={abrirModal} // ✅ Adicione aqui!
         />
+
       ))}
     </div>
   );

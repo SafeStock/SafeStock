@@ -1,31 +1,24 @@
-import { AreaTitle } from "../Moleculas/AreaTitle";
+import { AreaTittle } from "../Moleculas/AreaTittle";
 import { AreaWork } from "../Celulas/AreaWork";
 import { AreaWorkDashDono } from "./AreaWorkDashDono";
 
 export function AreaWorkGeral({
-    NewText,
-      DisplayFlexParaFuncionarios,
-      DisplayParaDashGeral,
-      DisplayHistoricoUso,
-      DisplayHistoricoAlerta
-    }) {
+  NewText,
+  DisplayFlexParaFuncionarios,
+  DisplayParaDashGeral,
+  abrirModal
+}) {
+  return (
+    <div className="h-[100vh] w-full bg-transparent items-center flex flex-col">
+      
+      <AreaTittle texto={NewText} />
 
-    return(
-        <div className="h-[100vh] w-full bg-transparent items-center flex flex-col">
+      <AreaWork
+        displayFuncionarios={DisplayFlexParaFuncionarios}
+        abrirModal={abrirModal} // ← Passa para o componente filho
+      />
 
-            <AreaTitle 
-            texto={NewText} 
-            />
-
-            <AreaWork 
-            displayFuncionarios={DisplayFlexParaFuncionarios}
-            />
-
-            <AreaWorkDashDono
-            displayParaDash={DisplayParaDashGeral} 
-            />
-
-            
-        </div>
-    )
+      <AreaWorkDashDono displayParaDash={DisplayParaDashGeral} />
+    </div>
+  );
 }
