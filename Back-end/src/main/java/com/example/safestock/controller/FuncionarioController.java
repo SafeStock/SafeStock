@@ -68,7 +68,7 @@ public class FuncionarioController {
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody FuncionarioAtualizar funcionarioAtualizar) {
 
-        Funcionario funcionario = FuncionarioMapper.of(funcionarioAtualizar);
+        Funcionario funcionario = FuncionarioMapper.of(id, funcionarioAtualizar); // <- corrigido aqui
 
         return funcionarioService.atualizarFuncionario(id, funcionario)
                 .map(ResponseEntity::ok)

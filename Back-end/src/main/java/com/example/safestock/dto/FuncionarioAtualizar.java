@@ -22,7 +22,7 @@ public class FuncionarioAtualizar {
     @Schema(description = "Telefone do usuário", example = "11987652341")
     private String telefone;
 
-    @Schema(description = "Sobrenome do usuário", example = "Dono")
+    @Schema(description = "Cargo do usuário", example = "Dono")
     private CargoFuncionario cargo;
 
     public Long getId() {
