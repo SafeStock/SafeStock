@@ -7,7 +7,7 @@ export function CadastroProdutosEtapa1({ formData, setFormData }) {
 
     const proximo = (e) => {
         e.preventDefault();
-        navigate('/etapa2');
+        navigate('/cadastroEtapa2');
     };
 
     const inputClass =
