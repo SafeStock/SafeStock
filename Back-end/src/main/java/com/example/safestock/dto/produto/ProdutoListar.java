@@ -1,4 +1,4 @@
-package com.example.safestock.dto;
+package com.example.safestock.dto.produto;
 
 import com.example.safestock.model.Creche;
 import com.example.safestock.model.Relatorio;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ProdutoDTO {
+public class ProdutoListar {
 
     @Schema(description = "Id do produto", example = "1")
     private Long id;
@@ -40,60 +40,12 @@ public class ProdutoDTO {
     @Schema(description = "Relatorio do produto", example = "1")
     private List<Relatorio> relatorio;
 
-    public Long getId() {
-        return id;
+    public List<Relatorio> getRelatorio() {
+        return relatorio;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public CategoriaProduto getCategoriaProduto() {
-        return categoriaProduto;
-    }
-
-    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
-        this.categoriaProduto = categoriaProduto;
-    }
-
-    public String getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(String quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public int getLimiteSemanalDeUso() {
-        return limiteSemanalDeUso;
-    }
-
-    public void setLimiteSemanalDeUso(int limiteSemanalDeUso) {
-        this.limiteSemanalDeUso = limiteSemanalDeUso;
-    }
-
-    public LocalDate getDataValidade() {
-        return dataValidade;
-    }
-
-    public void setDataValidade(LocalDate dataValidade) {
-        this.dataValidade = dataValidade;
-    }
-
-    public LocalDate getDataEntrada() {
-        return dataEntrada;
-    }
-
-    public void setDataEntrada(LocalDate dataEntrada) {
-        this.dataEntrada = dataEntrada;
+    public void setRelatorio(List<Relatorio> relatorio) {
+        this.relatorio = relatorio;
     }
 
     public Creche getCreche() {
@@ -104,11 +56,59 @@ public class ProdutoDTO {
         this.creche = creche;
     }
 
-    public List<Relatorio> getRelatorio() {
-        return relatorio;
+    public LocalDate getDataEntrada() {
+        return dataEntrada;
     }
 
-    public void setRelatorio(List<Relatorio> relatorio) {
-        this.relatorio = relatorio;
+    public void setDataEntrada(LocalDate dataEntrada) {
+        this.dataEntrada = dataEntrada;
+    }
+
+    public LocalDate getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(LocalDate dataValidade) {
+        this.dataValidade = dataValidade;
+    }
+
+    public int getLimiteSemanalDeUso() {
+        return limiteSemanalDeUso;
+    }
+
+    public void setLimiteSemanalDeUso(int limiteSemanalDeUso) {
+        this.limiteSemanalDeUso = limiteSemanalDeUso;
+    }
+
+    public String getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(String quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public CategoriaProduto getCategoriaProduto() {
+        return categoriaProduto;
+    }
+
+    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+        this.categoriaProduto = categoriaProduto;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

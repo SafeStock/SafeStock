@@ -1,9 +1,11 @@
 package com.example.safestock.controller;
 
-import com.example.safestock.model.Funcionario;
+import com.example.safestock.dto.produto.*;
 import com.example.safestock.model.Produto;
 import com.example.safestock.service.ProdutoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,26 +16,41 @@ import java.util.Optional;
 @RequestMapping("api/produtos")
 public class ProdutoController {
 
-    private final ProdutoService produtoService;
+    @Autowired
+    private ProdutoService produtoService;
 
-    public ProdutoController(ProdutoService produtoService) {
-        this.produtoService = produtoService;
-    }
-
-    @PostMapping
-    public  ResponseEntity<Produto> cadastrarProduto(@Valid @RequestBody Produto produto){
-        Produto novoProduto = produtoService.cadastrarProduto(produto);
-        return ResponseEntity.ok(novoProduto);
+    @PostMapping("/cadastro_produto")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> cadastrarProduto(@RequestBody @Valid ProdutoCadastro produtoCadastro){
+        final Produto novoProduto = ProdutoMapper.of(produtoCadastro);
+        this.produtoService.cadastrarProduto(novoProduto);
+        return ResponseEntity.status(201).build();
     }
 
     @GetMapping
-    public List<Produto> listarProdutos(){
-        return produtoService.listarProdutos();
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ProdutoListar>> listarProdutos(){
+        List<ProdutoListar> produtosEncontrados = this.produtoService.listarTodos();
+        if (produtosEncontrados.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(produtosEncontrados);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Produto> buscarProdutoPorId(@PathVariable Long id){
         Optional<Produto> produto = produtoService.buscarProdutoPorId(id);
         return produto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/atualizar_produto/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoAtualizar produtoAtualizar) {
+
+        Produto produto = ProdutoMapper.of(id, produtoAtualizar);
+
+        return produtoService.atualizarProduto(id, produto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
