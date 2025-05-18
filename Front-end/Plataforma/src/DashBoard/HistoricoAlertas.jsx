@@ -8,8 +8,12 @@ export function HistoricoAlertas() {
     <FundoPadrao>
       <NavBarArea/>
       <AreaWorkGeral
-              NewText={`Historico de Alertas`}
+              NewText= "Historico de Alertas"
+              DisplayHistoricoAlerta= "flex"
+              DisplayHistoricoUso= "none"
+              DisplayFlexParaFuncionarios= "none"
             />
     </FundoPadrao>
   );
 }
+
