@@ -6,6 +6,8 @@ export function AreaWorkGeral({
   NewText,
   DisplayFlexParaFuncionarios,
   DisplayParaDashGeral,
+  DisplayHistoricoAlerta,
+  DisplayHistoricoUso,
   abrirModal
 }) {
   return (
@@ -15,6 +17,8 @@ export function AreaWorkGeral({
 
       <AreaWork
         displayFuncionarios={DisplayFlexParaFuncionarios}
+        displayHistoricoAlerta={DisplayHistoricoAlerta}
+        displayHistoricoUso={DisplayHistoricoUso}
         abrirModal={abrirModal} // ← Passa para o componente filho
       />
 
