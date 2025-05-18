@@ -4,7 +4,7 @@ import React from 'react';
 export function AreaSubTitle({ title1, title2, title3, title4, title5 }) {
     return (
 
-        <div className="h-[8vh] w-[40vw] flex flex-row justify-center items-end text-[#3A577B] text-[17px]  mr-[7.5vw]">
+        <div className="h-[8vh] w-[60vw] flex flex-row justify-center items-end text-[#3A577B] text-[17px]  mr-[7.5vw]">
             <h2>{title1}</h2>
             <h2 className="ml-[7.5vw]">{title2}</h2>
             <h2 className="ml-[7.5vw]">{title3}</h2>

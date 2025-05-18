@@ -8,7 +8,6 @@ export function HistoricoUso() {
   return (
     <FundoPadrao>
       <NavBarArea/>
-      
       <AreaWorkGeral
               NewText={`Historico de Uso`}
               DisplayPadrao='flex'
@@ -17,7 +16,6 @@ export function HistoricoUso() {
               DisplayHistoricoUso='flex'
               DisplayHistoricoAlerta='none'
             />
-            <AreaSubTitle title1="Produto"/>
     </FundoPadrao>
     
   );

@@ -12,6 +12,8 @@ export function HistoricoAlertas() {
               DisplayPadrao='flex'
               DisplayFlexParaFuncionarios='none'
               DisplayParaDashGeral='none'
+              DisplayHistoricoUso='none'
+              DisplayHistoricoAlerta='flex'
             />
     </FundoPadrao>
   );

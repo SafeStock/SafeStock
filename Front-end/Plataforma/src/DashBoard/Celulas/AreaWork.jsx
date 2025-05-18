@@ -9,8 +9,7 @@ export function AreaWork({displayFuncionarios}) {
     overflow-y-auto rounded-[20px] 
     shadow-[0_0_5px_rgba(0,0,0,0.7)] bg-[white]">
       <UserInformation />
-    
-    </div>
+    </div>displayFuncionarios
     </div>
   );
 }
