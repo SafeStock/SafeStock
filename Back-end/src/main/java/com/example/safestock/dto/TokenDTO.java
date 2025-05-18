@@ -6,7 +6,9 @@ public class TokenDTO {
 
     private Long id;
     private String nome;
+    private String sobrenome;
     private String email;
+    private String telefone;
     private String token;
     private CargoFuncionario cargo;
 
@@ -48,5 +50,21 @@ public class TokenDTO {
 
     public void setCargo(CargoFuncionario cargo) {
         this.cargo = cargo;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
     }
 }

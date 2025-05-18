@@ -100,7 +100,7 @@ export function Login() {
       <main className="flex flex-column justify-center items-center absolute mr-[26vw] max-w-[1200px]">
 
 
-        <div className="h-[63vh]  w-[35.6vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5.5vh] ">
+        <div className="h-[55vh]  w-[25vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5.5vh] ">
           {!carregando ? (
             <>
               <header className="mb-6 text-center">
@@ -115,7 +115,7 @@ export function Login() {
                     placeholder="emailexemplo@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-[28vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none mb-[2vh] "
+                    className="w-[25vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none mb-[2vh] "
                   />
 
                   <h2 className=" flex justify-end left-[80%] absolute  top-[35%]">
@@ -129,7 +129,7 @@ export function Login() {
                     placeholder="******"
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
-                    className="w-[28vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                    className="w-[25vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
                   />
                   <h2 className=" flex justify-end left-[80%] absolute  top-[49.5%]">
                     <span className={`${star ? "opacity-100" : "opacity-0"
@@ -149,12 +149,11 @@ export function Login() {
               <div className="mt-4 text-sm text-center text-gray-600 ">
                 <p>
                   Esqueceu sua{" "}
-                  <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh]">Senha</button>?
+                  <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh] ">Senha</button>?
                 </p>
-
               </div>
 
-              <div className="text-[2.5vh] w-[100%] flex justify-center">
+              <div className="text-[2.5vh] w-[100%] flex justify-center ">
                 <span
                   className={`${mensagemErro ? "opacity-100" : "opacity-0"
                     } transition-opacity duration-300`}
@@ -166,11 +165,11 @@ export function Login() {
 
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full w-full ">
+            <div className="flex flex-col items-center justify-center h-full w-full">
               <Lottie
                 animationData={Animation}
                 loop
-                autopla
+                autoplay
               />
 
             </div>

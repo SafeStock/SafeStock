@@ -3,7 +3,7 @@ package com.example.safestock.dto;
 import com.example.safestock.model.enums.CargoFuncionario;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class FuncionarioListar {
+public class FuncionarioAtualizar {
     @Schema(description = "Id do usuário", example = "1")
     private Long id;
 
@@ -13,14 +13,17 @@ public class FuncionarioListar {
     @Schema(description = "Sobrenome do usuário", example = "John Doe")
     private String sobrenome;
 
-    @Schema(description = "Cargo do usuário", example = "Dono")
-    private CargoFuncionario cargo;
-
     @Schema(description = "Email do usuário", example = "John@doe.com")
     private String email;
 
+    @Schema(description = "Senha do usuário", example = "0424542@jj")
+    private String senha;
+
     @Schema(description = "Telefone do usuário", example = "11987652341")
     private String telefone;
+
+    @Schema(description = "Cargo do usuário", example = "Dono")
+    private CargoFuncionario cargo;
 
     public Long getId() {
         return id;
@@ -30,12 +33,28 @@ public class FuncionarioListar {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public CargoFuncionario getCargo() {
+        return cargo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setCargo(CargoFuncionario cargo) {
+        this.cargo = cargo;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getEmail() {
@@ -54,19 +73,11 @@ public class FuncionarioListar {
         this.sobrenome = sobrenome;
     }
 
-    public CargoFuncionario getCargo() {
-        return cargo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setCargo(CargoFuncionario cargo) {
-        this.cargo = cargo;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }
