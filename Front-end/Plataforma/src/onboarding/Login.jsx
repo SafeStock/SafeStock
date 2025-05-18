@@ -149,12 +149,12 @@ export function Login() {
               <div className="mt-4 text-sm text-center text-gray-600 ">
                 <p>
                   Esqueceu sua{" "}
-                  <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh]">Senha</button>?
+                  <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh] ">Senha</button>?
                 </p>
 
               </div>
 
-              <div className="text-[2.5vh] w-[100%] flex justify-center">
+              <div className="text-[2.5vh] w-[100%] flex justify-center ">
                 <span
                   className={`${mensagemErro ? "opacity-100" : "opacity-0"
                     } transition-opacity duration-300`}
@@ -166,11 +166,11 @@ export function Login() {
 
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full w-full ">
+            <div className="flex flex-col items-center justify-center h-full w-full">
               <Lottie
                 animationData={Animation}
                 loop
-                autopla
+                autoplay
               />
 
             </div>
