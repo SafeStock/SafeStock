@@ -2,12 +2,12 @@ import { color } from 'framer-motion';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export function CadastroProdutosEtapa1({ formData, setFormData }) {
+export function CadastroProdutosEtapa1({ formData, setFormData, titulo }) {
     const navigate = useNavigate();
 
     const proximo = (e) => {
         e.preventDefault();
-        navigate('/cadastroEtapa2');
+        navigate('/cadastroProduto2');
     };
 
     const inputClass =
@@ -27,7 +27,7 @@ export function CadastroProdutosEtapa1({ formData, setFormData }) {
     return (
         <div className={mainContaner}>
             <div className={container}>
-                <h2 className={title}>Cadastro de produtos</h2>
+                <h2 className={title}>{titulo}</h2>
                 <form onSubmit={proximo} className={form}>
                     <div className='content'>
                         <label htmlFor="nome" className={labelClass}>

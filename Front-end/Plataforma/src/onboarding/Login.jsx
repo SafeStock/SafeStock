@@ -100,7 +100,7 @@ export function Login() {
       <main className="flex flex-column justify-center items-center absolute mr-[26vw] max-w-[1200px]">
 
 
-        <div className="h-[63vh]  w-[35.6vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5.5vh] ">
+        <div className="h-[55vh]  w-[25vw] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5.5vh] ">
           {!carregando ? (
             <>
               <header className="mb-6 text-center">
@@ -115,7 +115,7 @@ export function Login() {
                     placeholder="emailexemplo@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-[28vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none mb-[2vh] "
+                    className="w-[25vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none mb-[2vh] "
                   />
 
                   <h2 className=" flex justify-end left-[80%] absolute  top-[35%]">
@@ -129,7 +129,7 @@ export function Login() {
                     placeholder="******"
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
-                    className="w-[28vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
+                    className="w-[25vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
                   />
                   <h2 className=" flex justify-end left-[80%] absolute  top-[49.5%]">
                     <span className={`${star ? "opacity-100" : "opacity-0"
