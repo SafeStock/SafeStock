@@ -27,7 +27,7 @@ public class Funcionario {
     @Email
     private String email;
 
-    @NotBlank(message = "O campo senha não pode ser nulo")
+        @NotBlank(message = "O campo senha não pode ser nulo")
     @Size(min = 4, message = "O campo senha deve conter no minimo 4 caracteres")
     private String senha;
 

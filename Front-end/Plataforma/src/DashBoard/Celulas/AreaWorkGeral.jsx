@@ -1,6 +1,8 @@
 import { AreaTittle } from "../Moleculas/AreaTittle";
 import { AreaWork } from "../Celulas/AreaWork";
 import { AreaWorkDashDono } from "./AreaWorkDashDono";
+import { AreaWorkHistoricoUso } from "../Celulas/AreaWorkHistoricoUso";
+import { AreaWorkHistoricoAlerta } from "../Celulas/AreaWorkHistoricoAlerta";
 
 export function AreaWorkGeral({
   NewText,
@@ -21,8 +23,8 @@ export function AreaWorkGeral({
         displayHistoricoUso={DisplayHistoricoUso}
         abrirModal={abrirModal} // ← Passa para o componente filho
       />
-
       <AreaWorkDashDono displayParaDash={DisplayParaDashGeral} />
     </div>
   );
 }
+
