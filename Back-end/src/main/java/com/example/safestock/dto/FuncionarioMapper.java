@@ -57,10 +57,10 @@ public class FuncionarioMapper {
         return remover;
     }
 
-    public static Funcionario of(FuncionarioAtualizar funcionarioAtualizar) {
+    public static Funcionario of(Long id, FuncionarioAtualizar funcionarioAtualizar) {
         Funcionario funcionario = new Funcionario();
 
-        funcionario.setId(funcionarioAtualizar.getId());
+        funcionario.setId(id);
         funcionario.setNome(funcionarioAtualizar.getNome());
         funcionario.setSobrenome(funcionarioAtualizar.getSobrenome());
         funcionario.setEmail(funcionarioAtualizar.getEmail());

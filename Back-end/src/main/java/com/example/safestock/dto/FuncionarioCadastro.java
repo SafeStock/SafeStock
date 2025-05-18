@@ -15,7 +15,7 @@ public class FuncionarioCadastro {
     @Schema(description = "Segundo nome do usuário", example = "Reis")
     private  String sobrenome;
 
-    @Schema(description = "Sobrenome do usuário", example = "Dono")
+    @Schema(description = "Cargo do usuário", example = "Dono")
     private CargoFuncionario cargo;
 
     @Email
