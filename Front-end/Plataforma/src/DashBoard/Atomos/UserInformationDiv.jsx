@@ -1,4 +1,4 @@
-export function UserInformationDiv({ Nome = "Nome Padr찾o", Email = "Email Padr찾o", abrirModal }) {
+export function UserInformationDiv({ id, Nome = "Nome Padr찾o", Email = "Email Padr찾o", abrirModal, confirmarExclusao  }) {
   return (
     <div>
       <div className="w-full h-[2vh]"></div>
@@ -21,7 +21,12 @@ export function UserInformationDiv({ Nome = "Nome Padr찾o", Email = "Email Padr�
           <img src="/src/assets/ModifyUser.svg" className="h-[4.8vh] w-[2.4vw] m-[2vh]" />
         </button>
 
-        <img src="/src/assets/RemoveUser.svg" className="h-[4.6vh] w-[2.3vw] m-[2vh]" />
+        <button
+        onClick={() => confirmarExclusao(id)}
+        className="h-[4.9vh] w-[2.5vw] flex justify-center items-center bg-transparent border-none cursor-pointer"
+        >
+          <img src="/src/assets/RemoveUser.svg" className="h-[4.6vh] w-[2.3vw] m-[2vh]" />
+        </button>
       </div>
     </div>
   );
