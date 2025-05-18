@@ -24,7 +24,7 @@ export function NavBar() {
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/dashboard.svg" onClick={() => handleRedirect('/dashboard')} />
       {/* <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/dashboard.svg" onClick={() => handleRedirect('/dashboard/dashboardlimpeza')} /> */}
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/funcionarios.svg" onClick={() => handleRedirect('/dashboard/telafuncionarios')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/produtos.svg" onClick={() => handleRedirect('/cadastroEtapa1')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/produtos.svg" onClick={() => handleRedirect('/cadastroProduto1')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoUso.svg" onClick={() => handleRedirect('/dashboard/historicouso')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/exportarRelatorio.svg" onClick={() => handleRedirect('/dashboard')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoAlertas.svg" onClick={() => handleRedirect('/dashboard/historicoalertas')} />

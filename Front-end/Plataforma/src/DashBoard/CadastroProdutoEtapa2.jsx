@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export function CadastroProdutosEtapa2({ formData, setFormData }) {
+export function CadastroProdutosEtapa2({ formData, setFormData, titulo }) {
     const navigate = useNavigate();
 
     // AQUI ENVIA PARA O BANCO DE DADOS
@@ -30,7 +30,7 @@ export function CadastroProdutosEtapa2({ formData, setFormData }) {
         <>
             <div className={mainContaner}>
                 <div className={container}>
-                    <h2 className={title}>Cadastro de produtos</h2>
+                    <h2 className={title}>{titulo}</h2>
                     <div>
                         <form onSubmit={enviar} className={form}>
                             <div className="content">
