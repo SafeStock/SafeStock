@@ -5,8 +5,6 @@ import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import { NavBarArea } from "./Celulas/NavBarArea";
 
 
-
-
 export function Cadastro() {
 
   const [etapa, setEtapa] = useState(1);
