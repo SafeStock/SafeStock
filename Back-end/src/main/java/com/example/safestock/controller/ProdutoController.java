@@ -19,7 +19,7 @@ public class ProdutoController {
     @Autowired
     private ProdutoService produtoService;
 
-    @PostMapping("/cadastro_produto")
+    @PostMapping("/cadastro")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> cadastrarProduto(@RequestBody @Valid ProdutoCadastro produtoCadastro){
         final Produto novoProduto = ProdutoMapper.of(produtoCadastro);
@@ -43,7 +43,7 @@ public class ProdutoController {
         return produto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/atualizar_produto/{id}")
+    @PutMapping("/atualizar/{id}")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoAtualizar produtoAtualizar) {
 
@@ -52,5 +52,16 @@ public class ProdutoController {
         return produtoService.atualizarProduto(id, produto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<ProdutoRemover> deletarProdutos(@PathVariable Long id) {
+        if (produtoService.buscarProdutoPorId(id).isPresent()) {
+            produtoService.deletarProdutos(id);
+            ProdutoRemover removido = ProdutoMapper.of(id);
+            return ResponseEntity.ok(removido);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

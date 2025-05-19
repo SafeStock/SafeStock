@@ -3,6 +3,7 @@ import { AreaWork } from "../Celulas/AreaWork";
 import { AreaWorkDashDono } from "./AreaWorkDashDono";
 import { AreaWorkHistoricoUso } from "../Celulas/AreaWorkHistoricoUso";
 import { AreaWorkHistoricoAlerta } from "../Celulas/AreaWorkHistoricoAlerta";
+import { AreaWorkProdutos } from "../Celulas/AreaWorkProdutos";
 
 export function AreaWorkGeral({
   NewText,
@@ -10,6 +11,7 @@ export function AreaWorkGeral({
   DisplayParaDashGeral,
   DisplayHistoricoAlerta,
   DisplayHistoricoUso,
+  DisplayParaProdutos,
   abrirModal
 }) {
   return (
@@ -23,6 +25,12 @@ export function AreaWorkGeral({
         displayHistoricoUso={DisplayHistoricoUso}
         abrirModal={abrirModal} // ← Passa para o componente filho
       />
+
+      <AreaWorkProdutos 
+      displayParaProdutos={DisplayParaProdutos} 
+      abrirModal={abrirModal}
+      />
+      
       <AreaWorkDashDono displayParaDash={DisplayParaDashGeral} />
     </div>
   );

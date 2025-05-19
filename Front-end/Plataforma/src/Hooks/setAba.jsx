@@ -34,6 +34,10 @@ export function useSetAba() {
       case "/dashboard/dashboardlimpeza":
         document.title = "DashBord | SafeStock";
         break;
+
+      case "/dashboard/telaprodutos":
+        document.title = "Produtos | SafeStock";
+        break;  
     }
   }, [location.pathname]);
 }
