@@ -43,4 +43,8 @@ public class ProdutoService {
         });
     }
 
+    public void deletarProdutos(Long id) {
+        produtoRepository.deleteById(id);
+    }
+
 }

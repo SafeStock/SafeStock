@@ -14,6 +14,7 @@ export function TelaProdutos() {
 
       <AreaWorkGeral
         NewText="Produtos"
+        DisplayParaProdutos="flex"
         DisplayFlexParaFuncionarios="none"
         DisplayHistoricoAlerta="none"
         DisplayHistoricoUso="none"

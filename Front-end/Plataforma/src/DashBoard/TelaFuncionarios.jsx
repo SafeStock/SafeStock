@@ -15,6 +15,7 @@ export function TelaFuncionarios() {
       <AreaWorkGeral
         NewText="Funcionários"
         DisplayFlexParaFuncionarios="flex"
+        DisplayParaProdutos="none"
         DisplayHistoricoAlerta="none"
         DisplayHistoricoUso="none"
         abrirModal={() => setModalAberto(true)} // envia a função
