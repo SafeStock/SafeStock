@@ -3,6 +3,7 @@ import { Login } from "../onboarding/Login";
 import { Cadastro } from '../DashBoard/Cadastro';
 import { useSetAba } from './setAba';
 import { TelaFuncionarios } from '../DashBoard/TelaFuncionarios';
+import { TelaProdutos } from '../DashBoard/TelaProdutos';
 import { DashPrincipalDono } from '../DashBoard/DashPrincipalDono';
 import { HistoricoAlertas } from '../DashBoard/HistoricoAlertas';
 import { HistoricoUso } from '../DashBoard/HistoricoUso';
@@ -24,6 +25,7 @@ export function RotasApp() {
         <Route path="/dashboard/historicouso" element={<HistoricoUso />} />
         <Route path="/dashboard/" element={<DashPrincipalDono />} />
         <Route path="/dashboard/telafuncionarios" element={<TelaFuncionarios />} />
+        <Route path="/dashboard/telaprodutos" element={<TelaProdutos />} />
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={["administracao"]} />}>
@@ -31,6 +33,7 @@ export function RotasApp() {
         <Route path="/dashboard/telafuncionarios" element={<TelaFuncionarios />} />
         <Route path="/dashboard/historicoalertas" element={<HistoricoAlertas />} />
         <Route path="/dashboard/historicouso" element={<HistoricoUso />} />
+        <Route path="/dashboard/telaprodutos" element={<TelaProdutos />} />
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={["limpeza"]} />}>
@@ -38,6 +41,7 @@ export function RotasApp() {
         <Route path="/dashboard/historicouso" element={<HistoricoUso />} />
         <Route path="/dashboard/historicoalertas" element={<HistoricoAlertas />} />
         <Route path="/produtos" element={<DashPrincipalDono />} />
+        <Route path="/dashboard/telaprodutos" element={<TelaProdutos />} />
 
 
         {/* Rota para registro de uso */}
