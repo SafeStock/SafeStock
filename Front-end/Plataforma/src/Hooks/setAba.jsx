@@ -19,19 +19,19 @@ export function useSetAba() {
         document.title = "Funcionários | SafeStock";
         break;
 
-      case "/dashboard/":
+      case "/dashboard":
         document.title = "DashBoard | SafeStock";
         break;
 
       case "/dashboard/historicoalertas":
-        document.title = "Historico de Alertas | SafeStock";
+        document.title = "Historico | SafeStock";
         break;
 
       case "/dashboard/historicouso":
-        document.title = "Historico de Uso | SafeStock";
+        document.title = "Historico | SafeStock";
         break;
 
-      case "/dashboard/dashboardlimpeza":
+      case "limpeza":
         document.title = "DashBord | SafeStock";
         break;
 
