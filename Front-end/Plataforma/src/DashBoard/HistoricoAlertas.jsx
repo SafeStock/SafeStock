@@ -4,12 +4,12 @@ import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 export function HistoricoAlertas() {
 
   return (
-    <div className="relative left-[18vh]">
+    <div className=" relative left-[18vh] overflow-hidden">
       <AreaWorkGeral
         NewText={`Historico de Alertas`}
+        titles={["Numzei"]}
       />
+
     </div>
-
-
   );
 }

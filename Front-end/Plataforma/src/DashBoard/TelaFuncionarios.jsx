@@ -5,6 +5,8 @@ export function TelaFuncionarios() {
     <div className="relative left-[18vh]">
       <AreaWorkGeral
         NewText={`Funcionários`}
+        titles={["Nome","SobreNome"]}
+
       />
     </div>
   );

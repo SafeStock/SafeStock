@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+
 export function AreaSubTitle({ titles = [] }) {
   return (
     <div className="w-[75vw] flex flex-row justify-around items-end text-[#3A577B] text-[17px]">
@@ -8,6 +9,7 @@ export function AreaSubTitle({ titles = [] }) {
       ))}
     </div>
   );
+
 }
 
 AreaSubTitle.propTypes = {

@@ -11,3 +11,4 @@ export function AreaWorkGeral({ NewText, titles }) {
     </div>
   );
 }
+

@@ -42,14 +42,44 @@ export function UserInformation() {
     }
   };
 
+  const capitalizar = (texto) => {
+    if (!texto) return "";
+    return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+  };
+
+  // ✅ Função para formatar nome completo
+  const formatarNome = (nome, sobrenome) => {
+    return `${capitalizar(nome)} ${capitalizar(sobrenome)}`;
+  };
+
+  const formatarTelefone = (telefone) => {
+    if (!telefone) return "Não informado";
+    return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  };
+
+  const formatarCargo = (cargo) => {
+    switch (cargo) {
+      case "dono":
+        return "Dono";
+      case "administracao":
+        return "Adm";
+      case "limpeza":
+        return "Limpeza";
+      default:
+        return "Cargo Desconhecido";
+    }
+  };
+
   return (
-    <div className="h-[60vh] w-[72vw] flex flex-col items-center overflow-y-auto scrollbar-custom">
+    <div className="h-[60vh] w-[87vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
       {funcionarios.map((funcionario, index) => (
         <UserInformationDiv
           key={index}
           id={funcionario.id}
-          Nome={`${funcionario.nome} ${funcionario.sobrenome ?? ""}`}
+          Nome={formatarNome(funcionario.nome, funcionario.sobrenome)}
+          Cargo={formatarCargo(funcionario.cargo)}
           Email={funcionario.email}
+          Telefone={formatarTelefone(funcionario.telefone)}
           confirmarExclusao={confirmarExclusao}
         />
 
