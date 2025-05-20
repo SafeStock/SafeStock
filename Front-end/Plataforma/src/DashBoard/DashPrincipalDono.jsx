@@ -1,21 +1,13 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
-import { FundoPadrao } from "./Celulas/FundoPadrao";
-import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
+import { AreaTittle } from "./Moleculas/AreaTittle"
+import { AreaWorkDashDono } from "./Celulas/AreaWorkDashDono"
 
 export function DashPrincipalDono() {
-
-  const nome = sessionStorage.getItem('usuario');
+  const nome = sessionStorage.getItem('usuario')
 
   return (
-    <FundoPadrao>
-      <NavBarArea />
-
-      <AreaWorkGeral
-        NewText={`Boas Vindas, ${nome}!`}
-        DisplayFlexParaFuncionarios='none'
-        DisplayParaDashGeral='flex'
-      />
-
-    </FundoPadrao>
-  );
+    <div className=" relative left-[13vh] h-[100vh] w-full bg-transparent items-center flex flex-col ">
+      <AreaTittle texto={`Boas Vindas, ${nome}!`} />
+      <AreaWorkDashDono />
+    </div>
+  )
 }

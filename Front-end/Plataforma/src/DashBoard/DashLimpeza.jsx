@@ -14,9 +14,6 @@ export function DashLimpeza() {
 
       <AreaWorkGeral
         NewText={`Boas Vindas, ${nome}!`}
-        DisplayPadrao='flex'
-        DisplayFlexParaFuncionarios='none'
-        DisplayParaDashGeral='flex'
       />
 
     </FundoPadrao>

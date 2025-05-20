@@ -1,15 +1,15 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
 import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 
 export function HistoricoAlertas() {
 
   return (
-    <FundoPadrao>
-      <NavBarArea/>
+    <div className="relative left-[18vh]">
       <AreaWorkGeral
-              NewText={`Historico de Alertas`}
-            />
-    </FundoPadrao>
+        NewText={`Historico de Alertas`}
+      />
+    </div>
+
+
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 
-export function UserInformation({ abrirModal }) {
+export function UserInformation() {
   const [funcionarios, setFuncionarios] = useState([]);
 
   const buscarFuncionarios = () => {
@@ -50,7 +50,6 @@ export function UserInformation({ abrirModal }) {
           id={funcionario.id}
           Nome={`${funcionario.nome} ${funcionario.sobrenome ?? ""}`}
           Email={funcionario.email}
-          abrirModal={abrirModal} // ✅ Adicione aqui!
           confirmarExclusao={confirmarExclusao}
         />
 
