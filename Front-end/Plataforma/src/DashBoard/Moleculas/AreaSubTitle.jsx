@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export function AreaSubTitle({ titles = [] }) {
   return (
-    <div className="w-[75vw] flex flex-row justify-around items-end text-[#3A577B] text-[17px]">
+    <div className="ml-[4.7vw] w-[58vw] flex flex-row justify-around items-end text-[#3A577B] text-[17px]">
       {titles.map((title, index) => (
         <h2 key={index}>{title}</h2>
       ))}

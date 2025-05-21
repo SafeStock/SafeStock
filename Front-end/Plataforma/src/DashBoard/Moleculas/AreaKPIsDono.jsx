@@ -9,7 +9,7 @@ import { DivElementKPIDonoBigRight } from "../Atomos/DivElementKPIDono"
 export function AreaKPIsDonoLateralEsquerda(){
 
     return(
-        <div className="h-[95%] w-[56%] flex flex-col justify-center items-center bg-transparent">
+        <div className="h-[95%] w-[56%] flex flex-col justify-center items-center ml-[9vw] ">
             <div className="h-[30%] w-full flex flex-row justify-center items-center">
                 <DivElementKPIDonoLittleLeft
                 ImgUrl={"/src/assets/Stonks.svg"}
