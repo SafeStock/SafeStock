@@ -1,24 +1,19 @@
-import { useState } from "react";
-import { NavBarArea } from "./Celulas/NavBarArea";
-import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
+import { useState } from "react";
 import { Modal } from "./Atomos/Modal";
 
 export function TelaFuncionarios() {
-  const [modalAberto, setModalAberto] = useState(false);
+
+    const [modalAberto, setModalAberto] = useState(false);
 
   return (
-    <FundoPadrao>
+    <div className="flex justify-end items-end">
       <Modal isOpen={modalAberto} onClose={() => setModalAberto(false)} />
-      <NavBarArea />
-
       <AreaWorkGeral
-        NewText="Funcionários"
-        DisplayFlexParaFuncionarios="flex"
-        DisplayHistoricoAlerta="none"
-        DisplayHistoricoUso="none"
-        abrirModal={() => setModalAberto(true)} // envia a função
+        NewText={`Funcionários`}
+        titles={["Nome","SobreNome"]}
+        abrirModal={() => setModalAberto(true)}
       />
-    </FundoPadrao>
+    </div>
   );
 }

@@ -1,19 +1,15 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
 import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 
 export function HistoricoAlertas() {
 
   return (
-    <FundoPadrao>
-      <NavBarArea/>
+    <div className="flex justify-end items-end">
       <AreaWorkGeral
-              NewText= "Historico de Alertas"
-              DisplayHistoricoAlerta= "flex"
-              DisplayHistoricoUso= "none"
-              DisplayFlexParaFuncionarios= "none"
-            />
-    </FundoPadrao>
+        NewText={`Historico de Alertas`}
+        titles={["Numzei"]}
+      />
+
+    </div>
   );
 }
-

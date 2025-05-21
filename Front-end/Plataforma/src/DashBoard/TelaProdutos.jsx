@@ -2,20 +2,16 @@ import { NavBarArea } from "./Celulas/NavBarArea";
 import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 
-export function DashLimpeza() {
 
-  const nome = sessionStorage.getItem('usuario');
+export function TelaProdutos() {
+  
 
   return (
-
-
-    <FundoPadrao>
-      <NavBarArea />
-
+    <div className="flex justify-end items-end">
       <AreaWorkGeral
-        NewText={`Boas Vindas, ${nome}!`}
+        NewText="Produtos"
+        titles={["Produto"]}
       />
-
-    </FundoPadrao>
+    </div>
   );
 }

@@ -80,8 +80,8 @@ export function UserInformation({ abrirModal }) {
           Cargo={formatarCargo(funcionario.cargo)}
           Email={funcionario.email}
           Telefone={formatarTelefone(funcionario.telefone)}
-          abrirModal={abrirModal}
           confirmarExclusao={confirmarExclusao}
+          abrirModal={abrirModal}
         />
 
       ))}
