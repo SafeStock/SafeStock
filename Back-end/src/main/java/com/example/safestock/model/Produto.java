@@ -105,4 +105,14 @@ public class Produto {
     public void setDataEntrada(LocalDate dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
+
+    public Creche getCreche() {return creche;}
+
+    public void setCreche(Creche creche) {this.creche = creche;}
+
+    public List<Relatorio> getRelatorio() {return relatorio;}
+
+    public void setRelatorio(List<Relatorio> relatorio) {this.relatorio = relatorio;}
+
+
 }
