@@ -71,7 +71,7 @@ export function UserInformation({ abrirModal }) {
   };
 
   return (
-    <div className="h-[60vh] w-[87vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
+    <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
       {funcionarios.map((funcionario, index) => (
         <UserInformationDiv
           key={index}
@@ -85,6 +85,7 @@ export function UserInformation({ abrirModal }) {
         />
 
       ))}
+
     </div>
   );
 }

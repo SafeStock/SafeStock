@@ -4,7 +4,7 @@ import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 export function HistoricoAlertas() {
 
   return (
-    <div className="flex justify-end items-end">
+    <div className="flex">
       <AreaWorkGeral
         NewText={`Historico de Alertas`}
         titles={["Numzei"]}

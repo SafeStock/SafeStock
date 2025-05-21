@@ -3,7 +3,7 @@ import { AreaKPIsLateralDireita } from "../Moleculas/AreaKPIsDono";
 
 export function AreaWorkDashDono() {
   return (
-    <div className="flex justify-center items-center h-[80vh] w-[90vw]">
+    <div className="flex justify-center items-center h-[82vh] w-[100vw]">
       <AreaKPIsDonoLateralEsquerda />
       <AreaKPIsLateralDireita />
     </div>

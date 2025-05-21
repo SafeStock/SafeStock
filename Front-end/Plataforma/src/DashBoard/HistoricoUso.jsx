@@ -2,10 +2,10 @@ import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 export function HistoricoUso() {
   return (
 
-    <div className="flex justify-end items-end">
+    <div className="flex">
       <AreaWorkGeral
         NewText={`Historico de Uso`}
-        titles={["Nome", "Sobrenome", "Cargo", "Email", "Telefone", "Fome"]}
+        titles={["Nome", "Cargo", "Email", "Telefone"]}
       />
     </div>
   );

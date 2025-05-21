@@ -5,10 +5,11 @@ export function AreaWorkGeral({ NewText, titles, abrirModal}) {
   return (
     <div className="flex flex-col tamanho-variavel bg-transparent">
       <AreaTittle texto={NewText} />
-      <div className="flex flex-1">
+      <div className="flex w-[100vw] h-[85vh] items-center justify-center">
         <AreaWork 
         titles={titles} 
-        abrirModal={abrirModal}/>
+        abrirModal={abrirModal}
+      />
       </div>
     </div>
   );

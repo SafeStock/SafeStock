@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export function DivElementKPIDonoLittleLeft({ImgUrl, Titulo, Qtd}){
     return(
-        <div className="w-[11.5vw] h-[20vh] rounded-[2vh] items-center flex flex-col overflow-hidden shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+        <div className="w-[12.4vw] h-[20vh] rounded-[2vh] items-center flex flex-col overflow-hidden shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
             <div className="w-full h-[48.5%] flex items-center justify-center">
             <div className="w-[65%] h-full flex flex-row items-end justify-around">
                     <img src={ImgUrl} className="w-[42.5%] h-[80%]"/>
@@ -69,7 +69,7 @@ export function DivElementKPIDonoBigLeft({tamanho, displayAlerta}){
 
 export function DivElementKPIDonoLittleRight(){
     return(
-        <div className="w-[97%] h-[25%] bg-[white] rounded-[2vh] mt-[2vh]
+        <div className="w-[95%] h-[25%] bg-[white] rounded-[2vh] mt-[2vh]
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
             <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[25px] font-[inter] font-[600]">
             Status de abastecimento
@@ -95,7 +95,7 @@ export function DivElementKPIDonoBigRight(){
     }
 
     return(
-        <div className="w-[97%] h-[70%] bg-[white] rounded-[2vh] 
+        <div className="w-[95%] h-[70%] bg-[white] rounded-[2vh] 
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
             <div className="w-full h-[15%] flex justify-center items-center">
                 <p className="text-[#3A577B] font-[600] text-[25px] font-[inter]">Histórico de uso</p>

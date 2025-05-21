@@ -7,11 +7,11 @@ export function TelaFuncionarios() {
     const [modalAberto, setModalAberto] = useState(false);
 
   return (
-    <div className="flex justify-end items-end">
+    <div className="flex">
       <Modal isOpen={modalAberto} onClose={() => setModalAberto(false)} />
       <AreaWorkGeral
         NewText={`Funcionários`}
-        titles={["Nome","SobreNome"]}
+        titles={["Nome","Cargo", "E-mail", "Telefone"]}
         abrirModal={() => setModalAberto(true)}
       />
     </div>
