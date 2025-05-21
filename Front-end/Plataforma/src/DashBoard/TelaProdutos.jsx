@@ -7,14 +7,11 @@ export function TelaProdutos() {
   
 
   return (
-    <FundoPadrao>
-      
-      <NavBarArea />
-
+    <div className="flex justify-end items-end">
       <AreaWorkGeral
         NewText="Produtos"
         titles={["Produto"]}
       />
-    </FundoPadrao>
+    </div>
   );
 }
