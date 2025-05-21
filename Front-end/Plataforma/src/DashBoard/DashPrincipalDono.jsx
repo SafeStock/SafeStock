@@ -5,7 +5,7 @@ export function DashPrincipalDono() {
   const nome = sessionStorage.getItem('usuario')
 
   return (
-    <div className=" relative left-[13vh] h-[100vh] w-full bg-transparent items-center flex flex-col ">
+    <div className="h-full overflow-x-hidden w-[100vw] bg-transparent flex flex-col justify-end items-end">
       <AreaTittle texto={`Boas Vindas, ${nome}!`} />
       <AreaWorkDashDono />
     </div>

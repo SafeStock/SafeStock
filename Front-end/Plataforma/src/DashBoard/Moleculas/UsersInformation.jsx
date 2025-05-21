@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 
-export function UserInformation() {
+export function UserInformation({ abrirModal }) {
   const [funcionarios, setFuncionarios] = useState([]);
 
   const buscarFuncionarios = () => {
@@ -81,6 +81,7 @@ export function UserInformation() {
           Email={funcionario.email}
           Telefone={formatarTelefone(funcionario.telefone)}
           confirmarExclusao={confirmarExclusao}
+          abrirModal={abrirModal}
         />
 
       ))}
