@@ -7,7 +7,7 @@ export function TelaProdutos() {
   
 
   return (
-    <div className="flex justify-end items-end">
+    <div className="flex">
       <AreaWorkGeral
         NewText="Produtos"
         titles={["Produto"]}
