@@ -5,7 +5,8 @@ export function HistoricoUso() {
     <div className="flex">
       <AreaWorkGeral
         NewText={`Historico de Uso`}
-        titles={["Nome", "Cargo", "Email", "Telefone"]}
+        titles={["Produto", "Quantidade", "Data de Validade", "Data de Saída"]}
+        tabela=""
       />
     </div>
   );

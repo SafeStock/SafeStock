@@ -1,7 +1,8 @@
 import { AreaTittle } from "../Moleculas/AreaTittle";
 import { AreaWork } from "./AreaWork";
 
-export function AreaWorkGeral({ NewText, titles, abrirModal}) {
+export function AreaWorkGeral({ NewText, titles, abrirModal, tabela}) {
+  
   return (
     <div className="flex flex-col tamanho-variavel bg-transparent">
       <AreaTittle texto={NewText} />
@@ -9,6 +10,7 @@ export function AreaWorkGeral({ NewText, titles, abrirModal}) {
         <AreaWork 
         titles={titles} 
         abrirModal={abrirModal}
+        tabela={tabela} 
       />
       </div>
     </div>

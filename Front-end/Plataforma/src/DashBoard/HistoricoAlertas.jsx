@@ -7,7 +7,7 @@ export function HistoricoAlertas() {
     <div className="flex">
       <AreaWorkGeral
         NewText={`Historico de Alertas`}
-        titles={["Numzei"]}
+        titles={["Alerta", "Status", "Data e Hora"]}
       />
 
     </div>
