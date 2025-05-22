@@ -2,24 +2,26 @@ import { Children } from "react";
 import { DivisionDivElementKPIDonoLittle } from "./Divisions";
 import { DivisionDivElementKPIDonoLittleRightDiv } from "./Divisions";
 import { useNavigate } from "react-router-dom";
+import GraficoEstoqueBAr from "./GraficoEstoqueBar";
+import GraficoEstoqueBar from "./GraficoEstoqueBar";
 
 
 
 export function DivElementKPIDonoLittleLeft({ImgUrl, Titulo, Qtd}){
     return(
-        <div className="w-[12.4vw] h-[20vh] rounded-[2vh] items-center flex flex-col overflow-hidden shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
             <div className="w-full h-[48.5%] flex items-center justify-center">
             <div className="w-[65%] h-full flex flex-row items-end justify-around">
                     <img src={ImgUrl} className="w-[42.5%] h-[80%]"/>
                     <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
-                    <h1 className="mb-[20%] text-[5vh]">{Qtd}</h1>
+                    <h1 className="text-[5vh] font-[inter]">{Qtd}</h1>
                 </div>
                 </div>
             </div>
              <DivisionDivElementKPIDonoLittle/>
             <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[65%] h-full">
-                    <p className="text-[1.7vh] text-center">
+                <div className="w-[75%] h-full">
+                    <p className="text-[15px] mt-[1vh] text-center">
                     {Titulo}
                     </p>
                 </div>
@@ -30,10 +32,18 @@ export function DivElementKPIDonoLittleLeft({ImgUrl, Titulo, Qtd}){
 
 
 
-export function DivElementKPIDonoBigLeft({tamanho, displayAlerta}){
+export function DivElementKPIDonoBigLeft({tamanho, displayAlerta = "none" , displayGrafico = "none" }){
     return(
         <div className="w-[97%] bg-[white] rounded-[2vh] 
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] items-center justify-center" style={{height: tamanho}}>
+
+            <div className="w-[100%] flex flex-col " style={{display: displayGrafico}}>
+            <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-end text-[23px] font-[inter] font-[600]">
+            Movimentação do Estoque
+            </div>
+                  <GraficoEstoqueBar />
+            </div>
+
 
             <div className="w-[100%] h-[100%] flex flex-col " style={{display: displayAlerta}}>
             <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-end text-[23px] font-[inter] font-[600]">
@@ -69,7 +79,7 @@ export function DivElementKPIDonoBigLeft({tamanho, displayAlerta}){
 
 export function DivElementKPIDonoLittleRight(){
     return(
-        <div className="w-[95%] h-[25%] bg-[white] rounded-[2vh] mt-[2vh]
+        <div className="w-[95%] h-[18vh] bg-[white] rounded-[2vh] mt-[1vh]
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
             <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[25px] font-[inter] font-[600]">
             Status de abastecimento
@@ -95,7 +105,7 @@ export function DivElementKPIDonoBigRight(){
     }
 
     return(
-        <div className="w-[95%] h-[70%] bg-[white] rounded-[2vh] 
+        <div className="w-[95%] h-[74%] bg-[white] rounded-[2vh] 
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
             <div className="w-full h-[15%] flex justify-center items-center">
                 <p className="text-[#3A577B] font-[600] text-[25px] font-[inter]">Histórico de uso</p>

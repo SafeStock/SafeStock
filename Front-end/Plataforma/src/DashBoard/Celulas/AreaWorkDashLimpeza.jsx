@@ -1,11 +1,11 @@
 import { AreaKPIsDonoLateralEsquerda } from "../Moleculas/AreaKPIsDono";
 import { AreaKPIsLateralDireita } from "../Moleculas/AreaKPIsDono";
 
-export function AreaWorkDashDono() {
-  return (
-    <div className="flex justify-center items-start h-[85vh] w-[100vw]">
+export function AreaWorkDashLimpez() {
+    return(
+    <div className="flex justify-center items-center h-[82vh] w-[100vw]">
       <AreaKPIsDonoLateralEsquerda />
       <AreaKPIsLateralDireita />
     </div>
-  );
+    )
 }
