@@ -129,6 +129,9 @@ public class SecurityConfiguracao {
                         HttpMethod.HEAD.name(),
                         HttpMethod.TRACE.name()));
 
+        configuracao.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuracao.setAllowCredentials(false);
+
         configuracao.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
         configuracao.addAllowedHeader("*");
 
