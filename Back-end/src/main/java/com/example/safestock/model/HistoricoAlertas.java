@@ -4,6 +4,7 @@ import com.example.safestock.model.enums.StatusAlerta;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "HistoricoAlertas")
@@ -15,13 +16,17 @@ public class HistoricoAlertas {
     private StatusAlerta status;
     private String descricao;
 
+    @OneToMany(mappedBy = "alerta")
+    private List<Relatorio> relatorio;
+
     public HistoricoAlertas() {
     }
 
-    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao) {
+    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao, List<Relatorio> relatorio) {
         this.dataHora = dataHora;
         this.status = status;
         this.descricao = descricao;
+        this.relatorio = relatorio;
     }
 
     public Long getId() {
@@ -54,5 +59,13 @@ public class HistoricoAlertas {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<Relatorio> getRelatorio() {
+        return relatorio;
+    }
+
+    public void setRelatorio(List<Relatorio> relatorio) {
+        this.relatorio = relatorio;
     }
 }

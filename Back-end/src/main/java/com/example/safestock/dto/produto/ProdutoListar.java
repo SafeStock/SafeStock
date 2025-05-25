@@ -21,7 +21,7 @@ public class ProdutoListar {
     @Schema(description = "Categoria do produto", example = "Chão")
     private CategoriaProduto categoriaProduto;
 
-    @Size(min = 1, max = 4)
+    @Size(min = 0, max = 4)
     @Schema(description = "Quantidade do produto", example = "25")
     private String quantidade;
 
