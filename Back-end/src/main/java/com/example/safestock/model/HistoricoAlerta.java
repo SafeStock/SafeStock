@@ -19,3 +19,4 @@ public class HistoricoAlerta {
     @OneToMany(mappedBy = "alerta")
     private List<Relatorio> relatorio;
 }
+
