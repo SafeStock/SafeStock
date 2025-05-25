@@ -12,7 +12,7 @@ export function TelaProdutos() {
         NewText="Produtos"
         titles={["Produto"]}
         tabela="produtos"
-        campos={["nome", "categoria","quantidade"]}
+        campos={["nome", "categoriaProduto","quantidade"]}
         
       />
     </div>
