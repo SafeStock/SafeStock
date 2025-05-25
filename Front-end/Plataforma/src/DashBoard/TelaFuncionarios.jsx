@@ -13,7 +13,8 @@ export function TelaFuncionarios() {
         NewText={`Funcionários`}
         titles={["Nome","Cargo", "E-mail", "Telefone"]}
         abrirModal={() => setModalAberto(true)}
-        tabela="funcionarios"
+        tabela={"funcionarios"}
+        campos={["nome","cargo", "email", "telefone"]}
       />
     </div>
   );

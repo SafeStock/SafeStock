@@ -8,6 +8,8 @@ export function HistoricoAlertas() {
       <AreaWorkGeral
         NewText={`Historico de Alertas`}
         titles={["Alerta", "Status", "Data e Hora"]}
+        tabela={"historicoAlertas"}
+        campos={["data_hora","descricao","status"]}
       />
 
     </div>
