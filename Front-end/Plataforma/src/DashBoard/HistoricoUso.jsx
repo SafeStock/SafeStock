@@ -6,7 +6,8 @@ export function HistoricoUso() {
       <AreaWorkGeral
         NewText={`Historico de Uso`}
         titles={["Produto", "Quantidade", "Data de Validade", "Data de Saída"]}
-        tabela=""
+        tabela="registroUso"
+        campos={["produto","dataValidade","dataHoraSaida"]}
       />
     </div>
   );

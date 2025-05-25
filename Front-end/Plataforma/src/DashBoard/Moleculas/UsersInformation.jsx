@@ -1,19 +1,39 @@
 import { useEffect, useState } from "react";
+import React from 'react';
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
+import { data } from "react-router-dom";
 
-export function UserInformation({ abrirModal, tabela}) {
+export function UserInformation({ abrirModal, tabela, campos }) {
   const [dados, setDados] = useState([]);
+  const token = sessionStorage.getItem('authToken');
+  console.log(data);
 
   const buscarDados = () => {
-    fetch(`http://localhost:8080/api/${tabela}`)
-      .then((response) => {
+    if (!token || token.trim() === "") {
+      console.warn("Token inválido ou não informado");
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/${tabela}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Erro ao buscar ${tabela}`);
+          const text = await response.text();
+          throw new Error(`Erro ao buscar ${tabela}: ${response.status} - ${text}`);
+
         }
         return response.json();
+        
+
       })
+
       .then((data) => {
         setDados(data);
+        console.log(data);
       })
       .catch((error) => console.error(error));
   };
@@ -42,63 +62,48 @@ export function UserInformation({ abrirModal, tabela}) {
     }
   };
 
-  // Funções auxiliares podem ser adaptadas conforme a tabela
-  const capitalizar = (texto) => {
-    if (!texto) return "";
-    return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
-  };
+  // // Funções auxiliares podem ser adaptadas conforme a tabela
+  // const capitalizar = (texto) => {
+  //   if (!texto) return "";
+  //   return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+  // };
 
-  const formatarNome = (nome, sobrenome) => {
-    return `${capitalizar(nome)} ${capitalizar(sobrenome)}`;
-  };
+  // const formatarNome = (nome, sobrenome) => {
+  //   return `${capitalizar(nome)} ${capitalizar(sobrenome)}`;
+  // };
 
-  const formatarTelefone = (telefone) => {
-    if (!telefone) return "Não informado";
-    return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  };
+  // const formatarTelefone = (telefone) => {
+  //   if (!telefone) return "Não informado";
+  //   return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  // };
 
-  const formatarCargo = (cargo) => {
-    switch (cargo) {
-      case "dono":
-        return "Dono";
-      case "administracao":
-        return "Adm";
-      case "limpeza":
-        return "Limpeza";
-      default:
-        return "Cargo Desconhecido";
-    }
-  };
+  // const formatarCargo = (cargo) => {
+  //   switch (cargo) {
+  //     case "dono":
+  //       return "Dono";
+  //     case "administracao":
+  //       return "Adm";
+  //     case "limpeza":
+  //       return "Limpeza";
+  //     default:
+  //       return "Cargo Desconhecido";
+  //   }
+  // };
 
-  // Exemplo de renderização para funcionarios
-  if (tabela === "funcionarios") {
-    return (
-      <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
-        {dados.map((funcionario, index) => (
-          <UserInformationDiv
-            key={index}
-            id={funcionario.id}
-            Nome={formatarNome(funcionario.nome, funcionario.sobrenome)}
-            Cargo={formatarCargo(funcionario.cargo)}
-            Email={funcionario.email}
-            Telefone={formatarTelefone(funcionario.telefone)}
-            confirmarExclusao={confirmarExclusao}
-            abrirModal={abrirModal}
-          />
-        ))}
-      </div>
-    );
-  }
+  
+ 
+   return (
+  <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
+    {dados.map((item, index) => (
+      <UserInformationDiv
+        key={index}
+        id={item.id}
+        valores={campos.map((campo) => item[campo])}
+        abrirModal={() => abrirModal(item)}
+        confirmarExclusao={confirmarExclusao}
+      />
+    ))}
+  </div>
+);
 
-  // Exemplo genérico para outras tabelas
-  return (
-    <div>
-      {dados.map((item, idx) => (
-        <div key={idx}>
-          {JSON.stringify(item)}
-          <button onClick={() => confirmarExclusao(item.id)}>Excluir</button>
-        </div>
-      ))}
-    </div>
-  );
 }
