@@ -9,7 +9,7 @@ export function HistoricoAlertas() {
         NewText={`Historico de Alertas`}
         titles={["Alerta", "Status", "Data e Hora"]}
         tabela={"historicoAlertas"}
-        campos={["data_hora","descricao","status"]}
+        campos={["status","descricao","dataHora"]}
       />
 
     </div>
