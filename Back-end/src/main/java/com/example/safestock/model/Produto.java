@@ -22,8 +22,8 @@ public class Produto {
 
     private CategoriaProduto categoriaProduto;
 
-    @NotBlank(message = "O campo quantidade não pode estar em branco")
-    private String quantidade;
+    @NotNull(message = "O campo quantidade não pode estar em branco")
+    private int quantidade;
 
 
     private int limiteSemanalDeUso;
@@ -40,7 +40,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String nome, CategoriaProduto categoriaProduto, String quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDate dataEntrada) {
+    public Produto(String nome, CategoriaProduto categoriaProduto, int quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDate dataEntrada) {
         this.nome = nome;
         this.categoriaProduto = categoriaProduto;
         this.quantidade = quantidade;
@@ -65,11 +65,11 @@ public class Produto {
         this.nome = nome;
     }
 
-    public String getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(String quantidade) {
+    public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
 

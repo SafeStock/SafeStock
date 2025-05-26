@@ -11,9 +11,6 @@ export function TelaProdutos() {
       <AreaWorkGeral
         NewText="Produtos"
         titles={["Produto"]}
-        tabela="produtos"
-        campos={["nome", "categoriaProduto","quantidade"]}
-        
       />
     </div>
   );
