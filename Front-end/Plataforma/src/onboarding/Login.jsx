@@ -67,9 +67,9 @@ export function Login() {
       if (!response.ok) {
         throw new Error('Login falhou');
       }
-    
+
       const data = await response.json();
-    
+
       // 💾 Salvar o token e o nome no sessionStorage
       if (data.token) {
         sessionStorage.setItem('authToken', data.token);
@@ -77,6 +77,8 @@ export function Login() {
         sessionStorage.setItem('cargo', data.cargo); // ajuste se seu back devolver o nome assim
       }
     
+      console.log(sessionStorage.getItem('authToken'));
+
       console.log(data); // aqui você vê o que chegou da API
       setMensagemErro(`Login realizado com sucesso!`);
       setColor("#2F4700");

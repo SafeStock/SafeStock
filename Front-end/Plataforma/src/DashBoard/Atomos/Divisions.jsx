@@ -14,7 +14,7 @@ export function DivisionDivElementKPIDonoLittle() {
 
 export function DivisionDivElementKPIDonoBig() {
     return (
-        <div className="w-full h-[3%]">      
+        <div className="w-full h-full">      
         </div>
     )    
 }

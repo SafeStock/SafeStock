@@ -114,7 +114,7 @@ public class SecurityConfiguracao {
     private static final String CLIENT_URL = "http://localhost:5173";
 
     @Bean
-    public CorsConfigurationSource configurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
         configuracao.applyPermitDefaultValues();
         configuracao.setAllowedOrigins(Arrays.asList(CLIENT_URL));
