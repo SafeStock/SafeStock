@@ -34,6 +34,7 @@ export function UserInformation({ abrirModal, tabela, campos }) {
       .then((data) => {
         setDados(data);
         console.log(data);
+        console.log(dados)
       })
       .catch((error) => console.error(error));
   };
@@ -44,9 +45,14 @@ export function UserInformation({ abrirModal, tabela, campos }) {
 
   const confirmarExclusao = (id) => {
     const confirmacao = window.confirm(`Tem certeza que deseja excluir este item?`);
+    console.log(id);
     if (confirmacao) {
       fetch(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
         method: "DELETE",
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
       })
         .then((response) => {
           if (!response.ok) {

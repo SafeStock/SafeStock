@@ -14,7 +14,6 @@ export function NavBar() {
   const handleRedirect = (path) => {
     navigate(path);
     useAba;
-    
   };
 
   return (
@@ -27,7 +26,9 @@ export function NavBar() {
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoUso.svg" onClick={() => handleRedirect('historicouso')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/exportarRelatorio.svg" onClick={() => handleRedirect('/dashboard')} />
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoAlertas.svg" onClick={() => handleRedirect('historicoalertas')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/logout.svg" onClick={() => handleRedirect('/login')} />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/logout.svg" onClick={() => {sessionStorage.clear(); handleRedirect('/login');
+  }} 
+/>
       
 
       <Logo/>
