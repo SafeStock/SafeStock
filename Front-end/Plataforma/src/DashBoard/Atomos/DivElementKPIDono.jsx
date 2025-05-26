@@ -166,7 +166,7 @@ export function ProdutoInformationDiv(){
 export function AlertaInformationDiv({tamanho, children}){
     return(
         <div>
-        <div className="h-[13vh] z-[1]" style={{width: tamanho}}>
+        <div className=" h-[13vh] z-[1]" style={{width: tamanho}}>
             {children}
         </div>
         </div>
@@ -175,7 +175,7 @@ export function AlertaInformationDiv({tamanho, children}){
 
 export function AlertExibition({ alert }){
     return(
-        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center">
+        <div className="bg-[red] w-full h-[6vh] text-[19px] flex justify-center items-center">
             "{alert}"
         </div>
     )
@@ -183,8 +183,8 @@ export function AlertExibition({ alert }){
 
 export function StatusAlertExibition({cor, status}){
     return(
-        <div className="w-full h-[6vh] text-[px] flex flex-row justify-center items-center ">
-            <div className="w-[2vw] h-[4vh] rounded-[50%] mr-[1vw]" style={{background: cor}}></div>
+        <div className="bg-[red] w-full h-[6vh] text-[px] flex flex-row justify-center items-center ">
+            <div className="w-[3vh] h-[3vh] rounded-[50%] mr-[1vw]" style={{background: cor}}></div>
             {status}
         </div>
     )

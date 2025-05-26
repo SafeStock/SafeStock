@@ -26,5 +26,5 @@ public class Relatorio {
 
     @ManyToOne
     @JoinColumn(name = "fkAlerta")
-    private HistoricoAlerta alerta;
+    private HistoricoAlertas alerta;
 }

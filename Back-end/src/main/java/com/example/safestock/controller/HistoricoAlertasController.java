@@ -1,6 +1,5 @@
 package com.example.safestock.controller;
 
-import com.example.safestock.model.Funcionario;
 import com.example.safestock.model.HistoricoAlertas;
 import com.example.safestock.service.HistoricoAlertasService;
 import jakarta.validation.Valid;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/historicoAlertas")
+@RequestMapping("api/historicoAlertas")
 public class HistoricoAlertasController {
     private final HistoricoAlertasService historicoAlertasService;
 

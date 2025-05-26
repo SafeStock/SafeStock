@@ -38,8 +38,13 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
         String requestTokenHeader = request.getHeader("Authorization");
 
         if (Objects.nonNull(requestTokenHeader) && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7); // Remove o prefixo "Bearer "
-
+            jwtToken = requestTokenHeader.substring(7); // Remove o prefixo "Bearer"
+            if (jwtToken.chars().filter(ch -> ch == '.').count() != 2) {
+                LOGGER.error("[Falha Autenticacao] - Token JWT mal formado: {}", jwtToken);
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"message\": \"Token JWT mal formado.\"}");
+                return; // interrompe o processamento do filtro para evitar exceção
+            }
             try {
                 username = jwtTokenManager.getUsernameFromToken(jwtToken);
             } catch (ExpiredJwtException exception) {

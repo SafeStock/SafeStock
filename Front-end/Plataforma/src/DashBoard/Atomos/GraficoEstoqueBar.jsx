@@ -1,29 +1,54 @@
+import { useState, useEffect } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
-const data = [
-  { name: 'Candida', esperado: 22, atual: 1 },
-  { name: 'Detergente', esperado: 28, atual: 1 },
-  { name: 'Alvejante', esperado: 16, atual: 1 },
-  { name: 'Álcool', esperado: 30, atual: 0 },
-  { name: 'Luva Vinil', esperado: 13, atual: 1 },
-  { name: 'Suplefex', esperado: 20, atual: 8 },
-];
-
 export default function GraficoEstoqueBar() {
-  return (
-    <div className="w-full rounded-2xl  p-6 font-[inter]">
+  const [dadosGrafico, setDadosGrafico] = useState([]);
 
+  const token = sessionStorage.getItem('authToken');
+
+  const buscarDados = () => {
+    fetch("http://localhost:8080/api/produtos", {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const dadosFormatados = data.map((item) => ({
+          name: item.nome,        // ou o campo que representa o nome no seu backend
+          esperado: item.limiteSemanalDeUso,
+          atual: item.quantidade
+        }));
+        setDadosGrafico(dadosFormatados);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar dados do gráfico:", err);
+      });
+  };
+
+  useEffect(() => {
+    buscarDados();
+  }, []);
+
+  return (
+
+    <div className="w-full bg-white rounded-2xl shadow p-6 font-[inter]">
       <ResponsiveContainer width="95%" height={240}>
-        <BarChart data={data} barCategoryGap="25%">
-          <CartesianGrid stroke="#e0e0e0" vertical={false} />
+        <BarChart data={dadosGrafico} barCategoryGap="20%">
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" tick={{ fill: '#2f4563' }} />
           <YAxis tick={{ fill: '#2f4300' }} />
           <Tooltip />
           <Legend
             formatter={(value) => (
-              <span className="text-[#2f4563] font-extrabold text-[14px]">{value === 'esperado' ? 'Esperado' : 'Atual'}</span>
+
+              <span className="text-[#2f4563] font-medium">
+                {value === 'esperado' ? 'Esperado' : 'Atual'}
+              </span>
             )}
           />
           <Bar dataKey="esperado" stackId="estoque" fill="#a9d3e9" />
