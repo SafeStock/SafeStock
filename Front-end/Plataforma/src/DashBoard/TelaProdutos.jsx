@@ -13,8 +13,6 @@ export function TelaProdutos() {
         titles={["Produto"]}
         tabela="produtos"
         campos={["nome", "categoriaProduto","quantidade"]}
-      
-        
       />
     </div>
   );
