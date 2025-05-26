@@ -71,4 +71,28 @@ public class RegistroUso {
     public void setDataHoraSaida(LocalDateTime dataHoraSaida) {
         this.dataHoraSaida = dataHoraSaida;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Funcionario getFuncionario() {
+        return funcionario;
+    }
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public List<Relatorio> getRelatorio() {
+        return relatorio;
+    }
+
+    public void setRelatorio(List<Relatorio> relatorio) {
+        this.relatorio = relatorio;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.safestock.service;
 
 import com.example.safestock.dto.FuncionarioListar;
+import com.example.safestock.repository.RegistroUsoRepository;
 import org.springframework.security.core.Authentication;
 import com.example.safestock.config.GerenciadorTokenJwt;
 import com.example.safestock.dto.FuncionarioMapper;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +35,9 @@ public class FuncionarioService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RegistroUsoRepository registroUsoRepository;
 
     public void cadastrarFuncionario(Funcionario novoFuncionario){
         String senhaCriptografada = passwordEncoder.encode(novoFuncionario.getSenha());
@@ -70,7 +75,9 @@ public class FuncionarioService {
         this.funcionarioRepository = funcionarioRepository;
     }
 
+    @Transactional
     public void deletarFuncionario(Long id) {
+        registroUsoRepository.deleteByFuncionarioId(id);
         funcionarioRepository.deleteById(id);
     }
 
