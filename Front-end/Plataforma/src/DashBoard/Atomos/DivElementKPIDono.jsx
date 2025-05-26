@@ -87,7 +87,7 @@ export function DivElementKPIDonoLittleRight(){
             <div className="w-full h-[40%] flex justify-center items-center">
                 <div className="bg-[#E8F0F1] w-[70%] h-[85%] rounded-[40px] overflow-hidden">
                 <div className="bg-[#9AC7D9] w-[50%] h-full rounded-[40px]">
-                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[28px] ml-[9.5vw] mt-[1.1vh]">50%</p>
+                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[28px] ml-[9.5vw] mt-[0.8vh]">50%</p>
                 </div>
                 </div>
             </div>
@@ -126,8 +126,10 @@ export function DivElementKPIDonoBigRight(){
                     </div>
                 </div>
                 <div className="mt-[1vh] flex flex-col items-center w-[100%] h-[35vh] overflow-y-auto z-[0] scrollbar-custom ">
-                    <ProdutoInformationDiv/>     <ProdutoInformationDiv/>
-
+                    <ProdutoInformationDiv/>     
+                    <ProdutoInformationDiv/>
+                    <ProdutoInformationDiv/>
+                    <ProdutoInformationDiv/>    
                 </div>
             </div>
             <div className="w-full h-[18%] flex justify-center items-center flex justify-around">
@@ -153,7 +155,7 @@ export function ProdutoInformationDiv(){
     return(
         <div>
         <DivisionDivElementKPIDonoLittleRightDiv/>
-        <div className="bg-[red] w-[31vw] h-[8vh] shadow-[0_0_5px_rgba(0,0,0,0.4)] rounded-[2vh] z-[1]]">
+        <div className="w-[31vw] h-[7.3vh] shadow-[0_0_5px_rgba(0,0,0,0.4)] rounded-[2vh] z-[1]">
         </div>
         <DivisionDivElementKPIDonoLittleRightDiv/>
         </div>

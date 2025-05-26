@@ -35,15 +35,17 @@ export default function GraficoEstoqueBar() {
   }, []);
 
   return (
+
     <div className="w-full bg-white rounded-2xl shadow p-6 font-[inter]">
       <ResponsiveContainer width="95%" height={240}>
         <BarChart data={dadosGrafico} barCategoryGap="20%">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" tick={{ fill: '#2f4563' }} />
-          <YAxis tick={{ fill: '#2f4563' }} />
+          <YAxis tick={{ fill: '#2f4300' }} />
           <Tooltip />
           <Legend
             formatter={(value) => (
+
               <span className="text-[#2f4563] font-medium">
                 {value === 'esperado' ? 'Esperado' : 'Atual'}
               </span>
