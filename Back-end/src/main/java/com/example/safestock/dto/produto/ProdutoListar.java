@@ -23,7 +23,7 @@ public class ProdutoListar {
 
     @Size(min = 1, max = 4)
     @Schema(description = "Quantidade do produto", example = "25")
-    private String quantidade;
+    private int quantidade;
 
     @Schema(description = "Limite de uso do produto", example = "5")
     private int limiteSemanalDeUso;
@@ -80,11 +80,11 @@ public class ProdutoListar {
         this.limiteSemanalDeUso = limiteSemanalDeUso;
     }
 
-    public String getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(String quantidade) {
+    public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
 

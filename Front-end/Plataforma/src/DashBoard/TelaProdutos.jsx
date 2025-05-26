@@ -11,7 +11,7 @@ export function TelaProdutos() {
       <AreaWorkGeral
         NewText="Produtos"
         titles={["Produto"]}
-        
+        tabela="Produto"
       />
     </div>
   );
