@@ -39,10 +39,14 @@ export default function GraficoEstoqueBar() {
     <div className="w-full bg-white rounded-2xl shadow p-6 font-[inter]">
       <ResponsiveContainer width="95%" height={240}>
         <BarChart data={dadosGrafico} barCategoryGap="20%">
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid stroke="#e0e0e0" vertical={false}/>
           <XAxis dataKey="name" tick={{ fill: '#2f4563' }} />
           <YAxis tick={{ fill: '#2f4300' }} />
-          <Tooltip />
+          <Tooltip  
+          contentStyle={{ background: 'white', borderRadius: '13px', border: '1px solid #b0b0b0', boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.4)' }} 
+          position={{ x: 570, y: 175 }}
+          cursor={{ fill: 'transparent' }}
+          />
           <Legend
             formatter={(value) => (
 
@@ -51,8 +55,8 @@ export default function GraficoEstoqueBar() {
               </span>
             )}
           />
-          <Bar dataKey="esperado" stackId="estoque" fill="#a9d3e9" />
-          <Bar dataKey="atual" stackId="estoque" fill="#2f4563" />
+          <Bar dataKey="esperado" stackId="estoque" fill="#a9d3e9" activeBar={false} />
+          <Bar dataKey="atual" stackId="estoque" fill="#2f4563" activeBar={false} />
         </BarChart>
       </ResponsiveContainer>
     </div>

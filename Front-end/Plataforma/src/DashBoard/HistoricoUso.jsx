@@ -7,7 +7,7 @@ export function HistoricoUso() {
         NewText={`Historico de Uso`}
         titles={["Produto", "Quantidade", "Data de Validade", "Data de Saída"]}
         tabela="registroUso"
-        campos={["produto","dataValidade","dataHoraSaida"]}
+        campos={["produto","quantidade","dataValidade","dataHoraSaida"]}
       />
     </div>
   );
