@@ -26,7 +26,15 @@ export function UserInformation({ abrirModal, tabela, campos }) {
           throw new Error(`Erro ao buscar ${tabela}: ${response.status} - ${text}`);
 
         }
-        return response.json();
+        return response.text().then((text) => {
+  console.log("Resposta crua da API:", text);
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("Erro ao fazer parse do JSON:", e);
+    throw e;
+  }
+});
         
 
       })

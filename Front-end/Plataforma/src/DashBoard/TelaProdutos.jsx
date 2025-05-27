@@ -10,9 +10,9 @@ export function TelaProdutos() {
     <div className="flex">
       <AreaWorkGeral
         NewText="Produtos"
-        titles={["Produto"]}
+        titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
         tabela="produtos"
-        campos={["nome", "categoriaProduto","quantidade"]}
+        campos={["nome", "categoriaProduto","quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
       />
     </div>
   );

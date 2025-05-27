@@ -1,7 +1,10 @@
 package com.example.safestock.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import javax.management.relation.Relation;
@@ -19,15 +22,19 @@ public class RegistroUso {
     private String produto;
 
     private LocalDate dataValidade;
-    @NotBlank
+
+    @Positive(message = "A quantidade deve ser maior que zero")
     private int quantidade;
+
     private LocalDateTime dataHoraSaida;
 
     @ManyToOne
     @JoinColumn(name = "fkFuncionario")
+    @JsonBackReference
     private Funcionario funcionario;
 
     @OneToMany(mappedBy = "registroUso")
+    @JsonManagedReference
     private List<Relatorio> relatorio;
 
     public RegistroUso() {
