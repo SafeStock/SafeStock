@@ -3,7 +3,7 @@ import React from 'react';
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 import { data } from "react-router-dom";
 
-export function UserInformation({ abrirModal, tabela, campos }) {
+export function UserInformation({ abrirModal, tabela, campos}) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
   console.log(data);
@@ -26,16 +26,9 @@ export function UserInformation({ abrirModal, tabela, campos }) {
           throw new Error(`Erro ao buscar ${tabela}: ${response.status} - ${text}`);
 
         }
-        return response.text().then((text) => {
-  console.log("Resposta crua da API:", text);
-  try {
-    return JSON.parse(text);
-  } catch (e) {
-    console.error("Erro ao fazer parse do JSON:", e);
-    throw e;
-  }
-});
-        
+        return response.json();
+
+
 
       })
 
@@ -58,14 +51,14 @@ export function UserInformation({ abrirModal, tabela, campos }) {
       fetch(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
         method: "DELETE",
         headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Erro ao excluir`);
-          }
+          }   
           alert("Excluído com sucesso!");
           buscarDados();
         })
@@ -104,20 +97,19 @@ export function UserInformation({ abrirModal, tabela, campos }) {
   //   }
   // };
 
-  
- 
-   return (
-  <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
-    {dados.map((item, index) => (
-      <UserInformationDiv
-        key={index}
-        id={item.id}
-        valores={campos.map((campo) => item[campo])}
-        abrirModal={() => abrirModal(item)}
-        confirmarExclusao={confirmarExclusao}
-      />
-    ))}
-  </div>
-);
+  return (
+    <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
+      {dados.map((item, index) => (
+        <UserInformationDiv
+          key={index}
+          id={item.id}
+          valores={campos.map((campo) => item[campo])}
+          abrirModal={() => abrirModal(item)}
+          confirmarExclusao={confirmarExclusao}
+          mostrarIcone={tabela === "funcionarios"} // Só mostra o ícone na tela de funcionários
+        />
+      ))}
+    </div>
+  );
 
 }

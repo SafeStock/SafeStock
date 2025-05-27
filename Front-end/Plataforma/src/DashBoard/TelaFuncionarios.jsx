@@ -16,6 +16,8 @@ export function TelaFuncionarios() {
         tabela={"funcionarios"}
         campos={["nome","cargo", "email", "telefone"]}
       />
+
+      
     </div>
   );
 }
