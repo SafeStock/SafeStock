@@ -3,7 +3,7 @@ import React from 'react';
 import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 import { data } from "react-router-dom";
 
-export function UserInformation({ abrirModal, tabela, campos }) {
+export function UserInformation({ abrirModal, tabela, campos}) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
   console.log(data);
@@ -27,6 +27,7 @@ export function UserInformation({ abrirModal, tabela, campos }) {
 
         }
         return response.json();
+
 
 
       })
@@ -57,7 +58,7 @@ export function UserInformation({ abrirModal, tabela, campos }) {
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Erro ao excluir`);
-          }
+          }   
           alert("Excluído com sucesso!");
           buscarDados();
         })
@@ -95,8 +96,6 @@ export function UserInformation({ abrirModal, tabela, campos }) {
   //       return "Cargo Desconhecido";
   //   }
   // };
-
-
 
   return (
     <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
