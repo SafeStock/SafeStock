@@ -14,6 +14,8 @@ export function Formulario({ titulo, campos, onSubmit, navigateTo = "/dashboard"
     // Torne a função async para suportar funções assíncronas em onSubmit
     const enviar = async (e) => {
         e.preventDefault();
+        setIsModalOpen(true);
+        
         if (onSubmit) {
             await onSubmit(form);
         }
