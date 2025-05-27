@@ -37,7 +37,7 @@ export function DivElementKPIDonoBigLeft({tamanho, displayAlerta = "none" , disp
         <div className="w-[97%] bg-[white] rounded-[2vh] 
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] items-center justify-center" style={{height: tamanho}}>
 
-            <div className="w-[100%] flex flex-col " style={{display: displayGrafico}}>
+            <div className="w-[100%] flex flex-col h-[38vh]" style={{display: displayGrafico}}>
             <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-end text-[23px] font-[inter] font-[600]">
             Movimentação do Estoque
             </div>
@@ -86,8 +86,8 @@ export function DivElementKPIDonoLittleRight(){
             </div>
             <div className="w-full h-[40%] flex justify-center items-center">
                 <div className="bg-[#E8F0F1] w-[70%] h-[85%] rounded-[40px] overflow-hidden">
-                <div className="bg-[#9AC7D9] w-[50%] h-full rounded-[40px]">
-                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[28px] ml-[9.5vw] mt-[0.8vh]">50%</p>
+                <div className="bg-[#9AC7D9] w-[50%] h-full ">
+                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[28px] ml-[9.8vw] mt-[0.8vh]">50%</p>
                 </div>
                 </div>
             </div>
@@ -175,7 +175,7 @@ export function AlertaInformationDiv({tamanho, children}){
 
 export function AlertExibition({ alert }){
     return(
-        <div className="bg-[red] w-full h-[6vh] text-[19px] flex justify-center items-center">
+        <div className=" w-full h-[6vh] text-[19px] flex justify-center items-center">
             "{alert}"
         </div>
     )
@@ -183,7 +183,7 @@ export function AlertExibition({ alert }){
 
 export function StatusAlertExibition({cor, status}){
     return(
-        <div className="bg-[red] w-full h-[6vh] text-[px] flex flex-row justify-center items-center ">
+        <div className=" w-full h-[6vh] text-[px] flex flex-row justify-center items-center ">
             <div className="w-[3vh] h-[3vh] rounded-[50%] mr-[1vw]" style={{background: cor}}></div>
             {status}
         </div>
