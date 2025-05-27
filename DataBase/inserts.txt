@@ -29,9 +29,9 @@ INSERT INTO Historico_Alerta (data_Hora, status, descricao) VALUES
 ('2025-05-25 09:45:00', '0', 'Validade expirada'),
 ('2025-05-25 10:15:00', '1', 'Validade próxima do vencimento');
 
-INSERT INTO Registro_Uso (produto, data_Validade, quantidade, data_Hora_Saida, fk_Funcionario) VALUES
-('Detergente Limpeza Geral', '2025-06-01', 10, '2025-05-24 10:00:00', 1),
-('Desinfetante de Piso', '2025-06-10', 5, '2025-05-24 10:30:00', 2),
-('Multiuso Cozinha', '2025-06-20', 8, '2025-05-24 11:00:00', 3),
-('Limpa Vidros', '2025-06-30', 6, '2025-05-24 11:30:00', 4),
-('Álcool Gel', '2025-07-01', 12, '2025-05-25 09:45:00', 5);
+INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade, fk_Funcionario) VALUES
+('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10, 1),
+('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5, 2),
+('2025-05-24 11:00:00', '2025-06-20', 'Multiuso', 8, 3),
+('2025-05-24 11:30:00', '2025-06-30', 'Limpa Vidros', 6, 4),
+('2025-05-25 09:45:00', '2025-07-01', 'Álcool Gel', 12, 5);
