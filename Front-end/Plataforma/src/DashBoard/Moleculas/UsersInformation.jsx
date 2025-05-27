@@ -27,7 +27,7 @@ export function UserInformation({ abrirModal, tabela, campos }) {
 
         }
         return response.json();
-        
+
 
       })
 
@@ -50,9 +50,9 @@ export function UserInformation({ abrirModal, tabela, campos }) {
       fetch(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
         method: "DELETE",
         headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       })
         .then((response) => {
           if (!response.ok) {
@@ -96,20 +96,21 @@ export function UserInformation({ abrirModal, tabela, campos }) {
   //   }
   // };
 
-  
- 
-   return (
-  <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
-    {dados.map((item, index) => (
-      <UserInformationDiv
-        key={index}
-        id={item.id}
-        valores={campos.map((campo) => item[campo])}
-        abrirModal={() => abrirModal(item)}
-        confirmarExclusao={confirmarExclusao}
-      />
-    ))}
-  </div>
-);
+
+
+  return (
+    <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
+      {dados.map((item, index) => (
+        <UserInformationDiv
+          key={index}
+          id={item.id}
+          valores={campos.map((campo) => item[campo])}
+          abrirModal={() => abrirModal(item)}
+          confirmarExclusao={confirmarExclusao}
+          mostrarIcone={tabela === "funcionarios"} // Só mostra o ícone na tela de funcionários
+        />
+      ))}
+    </div>
+  );
 
 }

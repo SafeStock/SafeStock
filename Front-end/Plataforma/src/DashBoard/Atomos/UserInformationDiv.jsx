@@ -3,12 +3,15 @@ export function UserInformationDiv({
   valores = [],
   abrirModal,
   confirmarExclusao,
+  mostrarIcone = true, // nova prop, padrão true
 }) {
   return (
     <div>
       <div className="w-full h-[2vh]"></div>
       <div className="h-[12vh] w-[77vw] flex flex-row justify-start items-center shadow-[0_0_10px_rgba(0,0,0,0.5)] bg-white rounded-[20px]">
-        <img src="/src/assets/UserIconAdded.svg" className="h-[6vh] w-[3vw] ml-[5vh]" />
+        {mostrarIcone && (
+          <img src="/src/assets/UserIconAdded.svg" className="h-[6vh] w-[3vw] ml-[5vh]" />
+        )}
 
         <div className="h-full w-[52vw] flex flex-row justify-center items-center text-[2vh] text-[#3A577B] relative left-[4vw]">
           {valores.map((valor, index) => (
