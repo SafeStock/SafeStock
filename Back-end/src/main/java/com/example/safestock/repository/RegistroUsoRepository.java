@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RegistroUsoRepository extends JpaRepository<RegistroUso, Long> {
+
+    void deleteByFuncionarioId(Long funcionarioId);
 }
