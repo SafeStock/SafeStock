@@ -29,6 +29,7 @@ export function UserInformation({ abrirModal, tabela, campos}) {
         return response.json();
 
 
+
       })
 
       .then((data) => {
