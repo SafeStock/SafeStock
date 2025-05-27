@@ -16,9 +16,9 @@ INSERT INTO Funcionario (nome, sobrenome, cargo, email, senha, telefone, fk_Crec
 
 
 INSERT INTO Produto (nome, categoria_Produto, quantidade, limite_Semanal_De_Uso, data_Validade, data_Entrada, fk_Creche) VALUES
-('Detergente Limpeza Geral', 0, '50', 30, '2025-06-01', '2025-05-01', 1),
-('Desinfetante de Piso', 1, '40', 20, '2025-06-10', '2025-05-05', 1),
-('Multiuso Cozinha', 2, '60', 35, '2025-06-20', '2025-05-10', 1),
+('Detergente', 0, '50', 30, '2025-06-01', '2025-05-01', 1),
+('Desinfetante', 1, '40', 20, '2025-06-10', '2025-05-05', 1),
+('Multiuso', 2, '60', 35, '2025-06-20', '2025-05-10', 1),
 ('Limpa Vidros', 0, '30', 15, '2025-06-30', '2025-05-15', 2),
 ('Álcool Gel', 2, '70', 50, '2025-07-01', '2025-05-20', 2);
 
@@ -29,9 +29,9 @@ INSERT INTO Historico_Alerta (data_Hora, status, descricao) VALUES
 ('2025-05-25 09:45:00', '0', 'Validade expirada'),
 ('2025-05-25 10:15:00', '1', 'Validade próxima do vencimento');
 
-INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade, fk_Funcionario) VALUES
-('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10, 1),
-('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5, 2),
-('2025-05-24 11:00:00', '2025-06-20', 'Multiuso', 8, 3),
-('2025-05-24 11:30:00', '2025-06-30', 'Limpa Vidros', 6, 4),
-('2025-05-25 09:45:00', '2025-07-01', 'Álcool Gel', 12, 5);
+INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade) VALUES
+('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10),
+('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5),
+('2025-05-24 11:00:00', '2025-06-20', 'Multiuso', 8),
+('2025-05-24 11:30:00', '2025-06-30', 'Limpa Vidros', 6),
+('2025-05-25 09:45:00', '2025-07-01', 'Álcool Gel', 12);
