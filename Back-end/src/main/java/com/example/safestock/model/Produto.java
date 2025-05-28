@@ -3,6 +3,7 @@ package com.example.safestock.model;
 import com.example.safestock.model.enums.CategoriaProduto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ public class Produto {
 
     @ManyToOne
     @JoinColumn(name = "fkCreche")
+    @JsonBackReference(value = "creche-produto")
     private Creche creche;
 
     @OneToMany(mappedBy = "produto")

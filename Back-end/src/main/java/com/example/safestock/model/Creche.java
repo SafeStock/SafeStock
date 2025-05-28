@@ -1,5 +1,6 @@
 package com.example.safestock.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -34,6 +35,7 @@ public class Creche {
     private List<Funcionario> funcionario;
 
     @OneToMany(mappedBy = "creche")
+    @JsonManagedReference(value = "creche-produto")
     private List<Produto> produto;
 
 

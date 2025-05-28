@@ -1,6 +1,7 @@
 package com.example.safestock.model;
 
 import com.example.safestock.model.enums.CargoFuncionario;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -37,6 +38,7 @@ public class Funcionario {
 
     @ManyToOne
     @JoinColumn(name = "fkCreche")
+    @JsonBackReference(value = "creche-funcionario")
     private Creche creche;
 
     @OneToMany(mappedBy = "funcionario")

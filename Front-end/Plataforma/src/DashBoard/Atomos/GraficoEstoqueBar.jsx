@@ -18,7 +18,7 @@ export default function GraficoEstoqueBar() {
       .then((res) => res.json())
       .then((data) => {
         const dadosFormatados = data.map((item) => ({
-          name: item.nome,        // ou o campo que representa o nome no seu backend
+          name: item.nome,
           esperado: item.limiteSemanalDeUso,
           atual: item.quantidade
         }));
@@ -32,6 +32,11 @@ export default function GraficoEstoqueBar() {
 
   useEffect(() => {
     buscarDados();
+    const interval = setInterval(() => {
+      buscarDados();
+    }, 5000); 
+
+    return () => clearInterval(interval); // limpa intervalo ao desmontar componente
   }, []);
 
   return (
@@ -62,3 +67,4 @@ export default function GraficoEstoqueBar() {
     </div>
   );
 }
+

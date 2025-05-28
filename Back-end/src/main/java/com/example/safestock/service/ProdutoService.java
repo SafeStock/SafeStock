@@ -24,8 +24,14 @@ public class ProdutoService {
 
     public List<ProdutoListar> listarTodos(){
         List<Produto> produtoEncontrado = produtoRepository.findAll();
-        return produtoEncontrado.stream().map(ProdutoMapper::of).toList();
+        System.out.println("Produtos encontrados: " + produtoEncontrado.size());
+        produtoEncontrado.forEach(produto -> System.out.println(produto.getNome()));
+
+        return produtoEncontrado.stream()
+                .map(ProdutoMapper::of)
+                .toList();
     }
+
 
     public Optional<Produto> buscarProdutoPorId(Long id ){
         return produtoRepository.findById(id);
