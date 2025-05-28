@@ -1,6 +1,5 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
-import { FundoPadrao } from "./Celulas/FundoPadrao";
-import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
+import { AreaTittle } from "./Moleculas/AreaTittle";
+import { AreaWorkDashLimpeza } from "./Celulas/AreaWorkDashLimpeza";
 
 export function DashLimpeza() {
 
@@ -9,13 +8,9 @@ export function DashLimpeza() {
   return (
 
 
-    <FundoPadrao>
-      <NavBarArea />
-
-      <AreaWorkGeral
-        NewText={`Boas Vindas, ${nome}!`}
-      />
-
-    </FundoPadrao>
+    <div className="h-full overflow-x-hidden w-[100vw] bg-transparent flex flex-col justify-end items-end">
+      <AreaTittle texto={`Boas Vindas, ${nome}!`} />
+      <AreaWorkDashLimpeza />
+    </div>
   );
 }
