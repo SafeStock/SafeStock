@@ -3,7 +3,8 @@ export function UserInformationDiv({
   valores = [],
   abrirModal,
   confirmarExclusao,
-  mostrarIcone = true, // nova prop, padrão true
+  mostrarIcone = true,
+  mostrarIconesAlteracao = true, // nova prop
 }) {
   return (
     <div>
@@ -24,22 +25,23 @@ export function UserInformationDiv({
             </div>
           ))}
         </div>
+        {mostrarIconesAlteracao && (
+          <div className="h-full w-[6vw] flex flex-row justify-center items-center gap-[1vh] relative right-[-11vw]">
+            <button
+              onClick={() => abrirModal(id)}
+              className="h-[4.9vh] w-[2.5vw] flex justify-center items-center bg-transparent border-none cursor-pointer"
+            >
+              <img src="/src/assets/ModifyUser.svg" className="h-[4.8vh] w-[2.4vw]" />
+            </button>
 
-        <div className="h-full w-[6vw] flex flex-row justify-center items-center gap-[1vh] relative right-[-5vw]">
-          <button
-            onClick={() => abrirModal(id)}
-            className="h-[4.9vh] w-[2.5vw] flex justify-center items-center bg-transparent border-none cursor-pointer"
-          >
-            <img src="/src/assets/ModifyUser.svg" className="h-[4.8vh] w-[2.4vw]" />
-          </button>
-
-          <button
-            onClick={() => confirmarExclusao(id)}
-            className="h-[4.9vh] w-[2.5vw] flex justify-center items-center bg-transparent border-none cursor-pointer"
-          >
-            <img src="/src/assets/RemoveUser.svg" className="h-[4.6vh] w-[2.3vw]" />
-          </button>
-        </div>
+            <button
+              onClick={() => confirmarExclusao(id)}
+              className="h-[4.9vh] w-[2.5vw] flex justify-center items-center bg-transparent border-none cursor-pointer"
+            >
+              <img src="/src/assets/RemoveUser.svg" className="h-[4.6vh] w-[2.3vw]" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
