@@ -108,7 +108,8 @@ export function UserInformation({ abrirModal, tabela, campos }) {
           abrirModal={() => abrirModal(item)}
           confirmarExclusao={confirmarExclusao}
           mostrarIcone={tabela === "funcionarios"}
-          mostrarIconesAlteracao={tabela !== "historicoAlertas"} // Só mostra o ícone na tela de funcionários
+          mostrarIconesAlteracao={tabela !== "historicoAlertas"}
+          campos={campos} // Só mostra o ícone na tela de funcionários
         />
       ))}
     </div>
