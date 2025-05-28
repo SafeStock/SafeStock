@@ -45,7 +45,7 @@ export function UserInformationDiv({
                   ? formatarData(valor, true)
                   : valor !== undefined
                   ? valor.toString()
-                  : "-"}
+                  : "/"}
               </h2>
             </div>
           ))}
