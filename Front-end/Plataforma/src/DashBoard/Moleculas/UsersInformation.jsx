@@ -1,12 +1,70 @@
 import { useEffect, useState } from "react";
-import React from 'react';
-import { UserInformationDiv } from "../Atomos/UserInformationDiv";
 import { data } from "react-router-dom";
+import { UserInformationTable } from "../Celulas/UserInformationTable";
 
-export function UserInformation({ abrirModal, tabela, campos}) {
+
+export function UserInformation({ abrirModal, tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
   console.log(data);
+
+
+
+  const formatarTelefone = (telefone) => {
+    if (!telefone) return "";
+    // Remove tudo que não for número
+    const numeros = telefone.replace(/\D/g, "");
+    if (numeros.length === 11) {
+      // Formato (11) 99999-9999
+      return numeros.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    } else if (numeros.length === 10) {
+      // Formato (11) 9999-9999
+      return numeros.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    }
+    return telefone; // retorna como veio se não bater o padrão
+  };
+  function formatarDataOuDataHora(dataString) {
+    if (!dataString) return "";
+
+    const data = new Date(dataString);
+    if (isNaN(data)) return dataString; // Se não for data válida, retorna original
+
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const ano = data.getFullYear();
+
+    const horas = data.getHours();
+    const minutos = data.getMinutes();
+
+    if (horas === 0 && minutos === 0) {
+      // Só data
+      return `${dia}-${mes}-${ano}`;
+    } else {
+      // Data com hora e minutos
+      const hh = String(horas).padStart(2, "0");
+      const mm = String(minutos).padStart(2, "0");
+      return `${dia}-${mes}-${ano} ${hh}:${mm}`;
+    }
+  }
+
+
+  const formatarCargo = (cargo) => {
+    if (!cargo) return "";
+    switch (cargo.toLowerCase()) {
+      case "dono":
+        return "Dono";
+      case "administracao":
+      case "adm":
+        return "Adm";
+      case "limpeza":
+        return "Limpeza";
+      default:
+        return cargo;
+    }
+  };
+
+
+  // Funções de formatação (telefone, datas, cargo) aqui...
 
   const buscarDados = () => {
     if (!token || token.trim() === "") {
@@ -24,18 +82,19 @@ export function UserInformation({ abrirModal, tabela, campos}) {
         if (!response.ok) {
           const text = await response.text();
           throw new Error(`Erro ao buscar ${tabela}: ${response.status} - ${text}`);
-
         }
         return response.json();
-
-
-
       })
-
       .then((data) => {
-        setDados(data);
-        console.log(data);
-        console.log(dados)
+        const dadosFormatados = data.map(item => ({
+          ...item,
+          telefone: formatarTelefone(item.telefone),
+          cargo: formatarCargo(item.cargo),
+          data: formatarDataOuDataHora(item.dataHora),
+          dataHoraSaida: formatarDataOuDataHora(item.dataHoraSaida),
+          dataValidade: formatarDataOuDataHora(item.dataValidade)
+        }));
+        setDados(dadosFormatados);
       })
       .catch((error) => console.error(error));
   };
@@ -46,7 +105,6 @@ export function UserInformation({ abrirModal, tabela, campos}) {
 
   const confirmarExclusao = (id) => {
     const confirmacao = window.confirm(`Tem certeza que deseja excluir este item?`);
-    console.log(id);
     if (confirmacao) {
       fetch(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
         method: "DELETE",
@@ -58,60 +116,25 @@ export function UserInformation({ abrirModal, tabela, campos}) {
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Erro ao excluir`);
-          }   
+          }
           alert("Excluído com sucesso!");
           buscarDados();
         })
-        .catch((error) => {
-          console.error(error);
-          alert("Erro ao excluir.");
-        });
+        .catch(() => alert("Erro ao excluir."));
     }
   };
 
-  // // Funções auxiliares podem ser adaptadas conforme a tabela
-  // const capitalizar = (texto) => {
-  //   if (!texto) return "";
-  //   return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
-  // };
-
-  // const formatarNome = (nome, sobrenome) => {
-  //   return `${capitalizar(nome)} ${capitalizar(sobrenome)}`;
-  // };
-
-  // const formatarTelefone = (telefone) => {
-  //   if (!telefone) return "Não informado";
-  //   return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  // };
-
-  // const formatarCargo = (cargo) => {
-  //   switch (cargo) {
-  //     case "dono":
-  //       return "Dono";
-  //     case "administracao":
-  //       return "Adm";
-  //     case "limpeza":
-  //       return "Limpeza";
-  //     default:
-  //       return "Cargo Desconhecido";
-  //   }
-  // };
-
   return (
-    <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
-      {dados.map((item, index) => (
-        <UserInformationDiv
-          key={index}
-          id={item.id}
-          valores={campos.map((campo) => item[campo])}
-          abrirModal={() => abrirModal(item)}
-          confirmarExclusao={confirmarExclusao}
-          mostrarIcone={tabela === "funcionarios"}
-          mostrarIconesAlteracao={tabela !== "historicoAlertas"}
-          campos={campos} // Só mostra o ícone na tela de funcionários
-        />
-      ))}
+    <div className="h-[60vh] w-[95%] relative right-[3vh]  ">
+      <UserInformationTable
+        titles={titles}
+        campos={campos}
+        dados={dados}
+        abrirModal={abrirModal}
+        confirmarExclusao={confirmarExclusao}
+        mostrarIcone={tabela === "funcionarios" || tabela === "produtos" }
+        mostrarIconesAlteracao={tabela !== "historicoAlertas"}
+      />
     </div>
   );
-
 }
