@@ -1,10 +1,25 @@
+function formatarData(dataString, somenteData = false) {
+  if (!dataString) return "-";
+  const data = new Date(dataString);
+  const dia = String(data.getDate()).padStart(2, '0');
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const ano = data.getFullYear();
+  if (somenteData) {
+    return `${dia}-${mes}-${ano}`;
+  }
+  const hora = String(data.getHours()).padStart(2, '0');
+  const minutos = String(data.getMinutes()).padStart(2, '0');
+  return `${dia}-${mes}-${ano} ${hora}:${minutos}`;
+}
+
 export function UserInformationDiv({
   id,
   valores = [],
   abrirModal,
   confirmarExclusao,
   mostrarIcone = true,
-  mostrarIconesAlteracao = true, // nova prop
+  mostrarIconesAlteracao = true,
+  campos = [],
 }) {
   return (
     <div>
@@ -21,7 +36,15 @@ export function UserInformationDiv({
               key={index}
               className="h-full w-[25%] justify-center items-center flex"
             >
-              <h2>{valor !== undefined ? valor.toString() : "-"}</h2>
+              <h2>
+                {campos[index] === "dataHora"
+                  ? formatarData(valor)
+                  : campos[index] === "data"
+                  ? formatarData(valor, true)
+                  : valor !== undefined
+                  ? valor.toString()
+                  : "-"}
+              </h2>
             </div>
           ))}
         </div>
