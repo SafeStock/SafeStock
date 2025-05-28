@@ -1,10 +1,19 @@
-/** @type {import('tailwindcss').Config} */
+
 export default {
   content: [
-    "./src/**/*.{html,js,jsx,ts,tsx}", // Inclui todos os tipos de arquivos usados no React
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+      },
+      fontSize: {
+        title: '3.125rem',
+        subtitle: '1.875rem',
+      },
+    },
   },
   plugins: [],
 }
