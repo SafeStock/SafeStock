@@ -122,34 +122,6 @@ export function RotasApp() {
             buttonLabel="Enviar"
           />} />
 
-          {/* Rota para editar funcionário parte 1*/}
-          <Route path="/dashboard/editarFuncionário" element={<Formulario
-            titulo="Editar Funcionário"
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do funcionário" },
-              { name: "sobrenome", label: "Sobrenome:", placeholder: "Digite o sobrenome do funcionário" },
-              { name: "cargo", label: "Cargo:", placeholder: "Digite o cargo do funcionário)" },
-
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-            navigateTo="/dashboard/editarFuncionário2"
-            buttonLabel="Próximo"
-          />} />
-
-          {/* Rota para editar funcionário parte 2*/}
-          <Route path="/dashboard/editarFuncionário2" element={<Formulario
-            titulo="Editar Funcionário"
-            campos={[
-              { name: "email", label: "Email:", placeholder: "Digite o email do funcionário" },
-              { name: "senha", label: "Senha:", placeholder: "Digite a senha" },
-              { name: "telefone", label: "Telefone:", placeholder: "Digite o telefone do funcionário)" },
-
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-            navigateTo="/dashboard"
-            buttonLabel="Enviar"
-          />} />
-
         </Route>
       </Route>
 

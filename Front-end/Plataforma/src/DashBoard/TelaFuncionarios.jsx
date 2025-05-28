@@ -17,12 +17,13 @@ export function TelaFuncionarios() {
   const handlePrimeiraEtapa = (dados) => {
     setDadosPrimeiraEtapa(dados);
     setEtapa(2);
+    return false; // Isso impede a navegação
   };
 
   const handleSegundaEtapa = (dados) => {
-    // Aqui você pode tratar os dados finais (juntar as duas etapas)
     console.log({ ...dadosPrimeiraEtapa, ...dados });
     fecharModal();
+    return false; // Isso impede a navegação
   };
 
   return (

@@ -7,6 +7,7 @@ export function UserInformation({ abrirModal, tabela, campos}) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
   console.log(data);
+  
 
   const buscarDados = () => {
     if (!token || token.trim() === "") {
@@ -104,7 +105,7 @@ export function UserInformation({ abrirModal, tabela, campos}) {
           key={index}
           id={item.id}
           valores={campos.map((campo) => item[campo])}
-          abrirModal={() => abrirModal(item)}
+          abrirModal={abrirModal}
           confirmarExclusao={confirmarExclusao}
           mostrarIcone={tabela === "funcionarios"}
           mostrarIconesAlteracao={tabela !== "historicoAlertas"}
