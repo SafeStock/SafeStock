@@ -97,7 +97,7 @@ export function DivElementKPIDonoLittleRight(){
 
 
 
-export function DivElementKPIDonoBigRight(){
+export function DivElementKPIDonoBigRight({ NameUse="Histórico de Uso", buttonNameUse="Ver Histórico" }){
 
     const Navigate = useNavigate();
     const irParaTelaDeHistoricoUso = () => {  
@@ -108,7 +108,7 @@ export function DivElementKPIDonoBigRight(){
         <div className="w-[95%] h-[74%] bg-[white] rounded-[2vh] 
         shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
             <div className="w-full h-[15%] flex justify-center items-center">
-                <p className="text-[#3A577B] font-[600] text-[25px] font-[inter]">Histórico de uso</p>
+                <p className="text-[#3A577B] font-[600] text-[25px] font-[inter]">{NameUse}</p>
             </div>
             <div className="w-full h-[67%] flex flex-col items-center bg-transparent">
                 <div className="w-full h-[10%] flex flex-row font-[inter] text-[#44808B] text-[17px] font-[300]">
@@ -139,7 +139,7 @@ export function DivElementKPIDonoBigRight(){
                 w-[9vw] h-[5vh] cursor-pointer
                 hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
                 onClick={irParaTelaDeHistoricoUso}>
-                    Ver Histórico
+                    {buttonNameUse}
                 </button>
                 </div>
 
