@@ -104,13 +104,3 @@ html {
 .tamanho-variavel{
   width: 90vw;
 }
-
-@layer components {
-  .heading-title {
-    @apply font-inter font-bold text-title;
-  }
-
-  .heading-subtitle {
-    @apply font-inter font-semibold text-subtitle;
-  }
-}

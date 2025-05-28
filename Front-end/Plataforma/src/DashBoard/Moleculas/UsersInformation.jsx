@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { data } from "react-router-dom";
 import { UserInformationTable } from "../Celulas/UserInformationTable";
-
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 
 export function UserInformation({ abrirModal, tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
@@ -23,29 +24,26 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     }
     return telefone; // retorna como veio se não bater o padrão
   };
-  function formatarDataOuDataHora(dataString) {
-    if (!dataString) return "";
 
-    const data = new Date(dataString);
-    if (isNaN(data)) return dataString; // Se não for data válida, retorna original
 
-    const dia = String(data.getDate()).padStart(2, "0");
-    const mes = String(data.getMonth() + 1).padStart(2, "0");
-    const ano = data.getFullYear();
+  /**
+ * Formata uma string de data/hora para o formato "DD-MM-YYYY" ou "DD-MM-YYYY HH:mm"
+ * @param {string} dataString - Data ISO ou compatível
+ * @returns {string}
+ */
+function formatarDataOuDataHora(dataString) {
+  if (!dataString) return "-";
 
-    const horas = data.getHours();
-    const minutos = data.getMinutes();
+  const data = dayjs(dataString);
+  if (!data.isValid()) return dataString;
 
-    if (horas === 0 && minutos === 0) {
-      // Só data
-      return `${dia}-${mes}-${ano}`;
-    } else {
-      // Data com hora e minutos
-      const hh = String(horas).padStart(2, "0");
-      const mm = String(minutos).padStart(2, "0");
-      return `${dia}-${mes}-${ano} ${hh}:${mm}`;
-    }
-  }
+  // Se a hora for 00:00, mostra apenas a data
+  const ehMeiaNoite = data.hour() === 0 && data.minute() === 0;
+
+  return ehMeiaNoite
+    ? data.format("DD-MM-YYYY")
+    : data.format("DD-MM-YYYY HH:mm");
+}
 
 
   const formatarCargo = (cargo) => {
@@ -86,18 +84,24 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         return response.json();
       })
       .then((data) => {
-        const dadosFormatados = data.map(item => ({
-          ...item,
-          telefone: formatarTelefone(item.telefone),
-          cargo: formatarCargo(item.cargo),
-          data: formatarDataOuDataHora(item.dataHora),
-          dataHoraSaida: formatarDataOuDataHora(item.dataHoraSaida),
-          dataValidade: formatarDataOuDataHora(item.dataValidade)
-        }));
-        setDados(dadosFormatados);
-      })
+  const dadosFormatados = data.map(item => {
+    console.log("Item bruto:", item); // <-- aqui
+    return {
+      ...item,
+      telefone: formatarTelefone(item.telefone),
+      cargo: formatarCargo(item.cargo),
+      dataHora: formatarDataOuDataHora(item.dataHora),
+      dataHoraSaida: formatarDataOuDataHora(item.dataHoraSaida),
+      dataValidade: formatarDataOuDataHora(item.dataValidade),
+      dataEntrada: formatarDataOuDataHora(item.dataEntrada)
+    };
+  });
+  setDados(dadosFormatados);
+  console.log("Dados formatados:", dadosFormatados);
+})
       .catch((error) => console.error(error));
   };
+  
 
   useEffect(() => {
     buscarDados();
@@ -132,7 +136,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         dados={dados}
         abrirModal={abrirModal}
         confirmarExclusao={confirmarExclusao}
-        mostrarIcone={tabela === "funcionarios" || tabela === "produtos" }
+        mostrarIcone={tabela === "funcionarios"}
         mostrarIconesAlteracao={tabela !== "historicoAlertas"}
       />
     </div>
