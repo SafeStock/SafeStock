@@ -11,16 +11,15 @@ export function Formulario({ titulo, campos, onSubmit, navigateTo = "/dashboard"
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // Torne a função async para suportar funções assíncronas em onSubmit
     const enviar = async (e) => {
         e.preventDefault();
-        setIsModalOpen(true);
         
         if (onSubmit) {
-            await onSubmit(form);
-        }
-        if (navigateTo) {
-            navigate(navigateTo);
+            const result = await onSubmit(form);
+            // Só navega se navigateTo for fornecido E o onSubmit não tiver retornado false
+            if (navigateTo && result !== false) {
+                navigate(navigateTo);
+            }
         }
     };
 
@@ -38,7 +37,7 @@ export function Formulario({ titulo, campos, onSubmit, navigateTo = "/dashboard"
                 <h2 className={titleClass}>{titulo}</h2>
                 <form onSubmit={enviar} className={formClass}>
                     {campos.map((campo) => (
-                        <div key={campo.name}>
+                        <div keyz={campo.name}>
                             <label htmlFor={campo.name} className={labelClass}>
                                 {campo.label}
                             </label>

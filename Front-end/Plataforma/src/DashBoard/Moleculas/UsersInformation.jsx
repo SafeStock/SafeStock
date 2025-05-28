@@ -8,6 +8,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
   console.log(data);
+  
 
 
 
@@ -129,16 +130,19 @@ function formatarDataOuDataHora(dataString) {
   };
 
   return (
-    <div className="h-[60vh] w-[95%] relative right-[3vh]  ">
-      <UserInformationTable
-        titles={titles}
-        campos={campos}
-        dados={dados}
-        abrirModal={abrirModal}
-        confirmarExclusao={confirmarExclusao}
-        mostrarIcone={tabela === "funcionarios"}
-        mostrarIconesAlteracao={tabela !== "historicoAlertas"}
-      />
+    <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
+      {dados.map((item, index) => (
+        <UserInformationDiv
+          key={index}
+          id={item.id}
+          valores={campos.map((campo) => item[campo])}
+          abrirModal={abrirModal}
+          confirmarExclusao={confirmarExclusao}
+          mostrarIcone={tabela === "funcionarios"}
+          mostrarIconesAlteracao={tabela !== "historicoAlertas"}
+          campos={campos} // Só mostra o ícone na tela de funcionários
+        />
+      ))}
     </div>
   );
 }
