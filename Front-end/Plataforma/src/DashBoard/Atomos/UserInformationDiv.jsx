@@ -1,6 +1,8 @@
 function formatarData(dataString, somenteData = false) {
   if (!dataString) return "-";
+  // Garante que a data seja válida
   const data = new Date(dataString);
+  if (isNaN(data.getTime())) return "-";
   const dia = String(data.getDate()).padStart(2, '0');
   const mes = String(data.getMonth() + 1).padStart(2, '0');
   const ano = data.getFullYear();
