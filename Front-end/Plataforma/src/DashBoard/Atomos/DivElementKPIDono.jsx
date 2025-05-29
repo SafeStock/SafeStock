@@ -20,8 +20,8 @@ export function DivElementKPIDonoLittleLeft({ImgUrl, Titulo, Qtd}){
             </div>
              <DivisionDivElementKPIDonoLittle/>
             <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[75%] h-full">
-                    <p className="text-[15px] mt-[1vh] text-center">
+                <div className="w-[80%] h-full">
+                    <p className="text-[17px] mt-[1vh] text-center">
                     {Titulo}
                     </p>
                 </div>
@@ -53,7 +53,7 @@ export function DivElementKPIDonoBigLeft({tamanho, displayAlerta = "none" , disp
                 <div className="h-full w-full flex flex-col justify-center items-center">
 
                     <AlertaInformationDiv tamanho="20vw">
-                         <div className="text-[#547A81] font-[raleway] font-[600] text-[21.5px] w-full h-[30%] 
+                         <div className="text-[#547A81] font-[inter] font-[600] text-[21.5px] w-full h-[30%] 
                          flex justify-center items-center">
                             Alerta
                             </div>
@@ -62,7 +62,7 @@ export function DivElementKPIDonoBigLeft({tamanho, displayAlerta = "none" , disp
                 </div>
                 <div className="h-full w-full flex flex-col justify-center items-center">
                     <AlertaInformationDiv tamanho="20vw">
-                        <div className="text-[#547A81] font-[raleway] font-[600] text-[21.5px] w-full h-[30%] 
+                        <div className="text-[#547A81] font-[inter] font-[600] text-[21.5px] w-full h-[30%] 
                          flex justify-center items-center">
                             Status
                         </div>
@@ -85,9 +85,13 @@ export function DivElementKPIDonoLittleRight(){
             Status de abastecimento
             </div>
             <div className="w-full h-[40%] flex justify-center items-center">
-                <div className="bg-[#E8F0F1] w-[70%] h-[85%] rounded-[40px] overflow-hidden">
-                <div className="bg-[#9AC7D9] w-[50%] h-full ">
-                    <p className="text-[#3A577B] absolute font-[400] font-[inter] text-[28px] ml-[9.8vw] mt-[0.8vh]">50%</p>
+                <div className="bg-[#E8F0F1] w-[25vw] h-[6.5vh] rounded-[40px] overflow-hidden">
+
+                <div className="absolute w-[25vw] h-[6.5vh] justify-center items-center flex flex-col">
+                <p className="text-[#3A577B] font-[400] font-[inter] text-[25px]">50%</p>
+                </div>
+
+                <div className="bg-[#9AC7D9] w-[50%] h-full ">  
                 </div>
                 </div>
             </div>
@@ -134,7 +138,7 @@ export function DivElementKPIDonoBigRight({ NameUse="Histórico de Uso", buttonN
             </div>
             <div className="w-full h-[18%] flex justify-center items-center flex justify-around">
                 <button className="
-                border-0 bg-[#3A577B] text-[15px] text-[#eee] font-[Raleway] font-[600]
+                border-0 bg-[#3A577B] text-[15px] text-[#eee] font-[inter] font-[600]
                 rounded-[3vh]
                 w-[9vw] h-[5vh] cursor-pointer
                 hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
