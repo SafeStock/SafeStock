@@ -45,23 +45,23 @@ export default function GraficoEstoqueBar() {
       <ResponsiveContainer width="95%" height={240}>
         <BarChart data={dadosGrafico} barCategoryGap="20%">
           <CartesianGrid stroke="#e0e0e0" vertical={false}/>
-          <XAxis dataKey="name" tick={{ fill: '#2f4563' }} />
+          <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.7vh',}} />
           <YAxis tick={{ fill: '#2f4300' }} />
           <Tooltip  
-          contentStyle={{ background: 'white', borderRadius: '13px', border: '1px solid #b0b0b0', boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.4)' }} 
+          contentStyle={{ background: 'white', borderRadius: '13px', border: '1.5px solid #b0b0b0', boxShadow: '-8px 4px 10px rgba(0, 0, 0, 0.4)' }} 
           position={{ x: 570, y: 175 }}
           cursor={{ fill: 'transparent' }}
           />
           <Legend
             formatter={(value) => (
 
-              <span className="text-[#2f4563] font-medium">
+              <span className="text-[#2f4563] font-semibold text-[1.7vh]">
                 {value === 'esperado' ? 'Esperado' : 'Atual'}
               </span>
             )}
           />
-          <Bar dataKey="esperado" stackId="estoque" fill="#a9d3e9" activeBar={false} />
           <Bar dataKey="atual" stackId="estoque" fill="#2f4563" activeBar={false} />
+          <Bar dataKey="esperado" stackId="" fill="#a9d3e9" activeBar={false} />
         </BarChart>
       </ResponsiveContainer>
     </div>

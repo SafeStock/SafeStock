@@ -132,15 +132,14 @@ function formatarDataOuDataHora(dataString) {
   return (
     <div className="h-[67vh] w-[80vw] flex flex-col items-center overflow-y-auto scrollbar-custom p-[0.8vh]">
       {dados.map((item, index) => (
-        <UserInformationDiv
-          key={index}
-          id={item.id}
-          valores={campos.map((campo) => item[campo])}
+        <UserInformationTable
+          titles={["Nome", "Cargo", "Departamento"]}
+          campos={["nome", "cargo", "departamento"]}
+          dados={dados}
           abrirModal={abrirModal}
           confirmarExclusao={confirmarExclusao}
-          mostrarIcone={tabela === "funcionarios"}
-          mostrarIconesAlteracao={tabela !== "historicoAlertas"}
-          campos={campos} // Só mostra o ícone na tela de funcionários
+          mostrarIcone={true}
+          mostrarIconesAlteracao={true}
         />
       ))}
     </div>
