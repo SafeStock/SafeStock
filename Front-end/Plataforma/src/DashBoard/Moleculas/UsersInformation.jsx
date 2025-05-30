@@ -27,9 +27,9 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
 
 
   /**
- * Formata uma string de data/hora para o formato "DD-MM-YYYY" ou "DD-MM-YYYY HH:mm"
- * @param {string} dataString - Data ISO ou compatível
- * @returns {string}
+
+  @param {string} dataString 
+  @returns {string}
  */
 function formatarDataOuDataHora(dataString) {
   if (!dataString) return "-";
@@ -37,7 +37,6 @@ function formatarDataOuDataHora(dataString) {
   const data = dayjs(dataString);
   if (!data.isValid()) return dataString;
 
-  // Se a hora for 00:00, mostra apenas a data
   const ehMeiaNoite = data.hour() === 0 && data.minute() === 0;
 
   return ehMeiaNoite
@@ -61,8 +60,6 @@ function formatarDataOuDataHora(dataString) {
     }
   };
 
-
-  // Funções de formatação (telefone, datas, cargo) aqui...
 
   const buscarDados = () => {
     if (!token || token.trim() === "") {
@@ -139,6 +136,6 @@ function formatarDataOuDataHora(dataString) {
         mostrarIcone={tabela === "funcionarios"}
         mostrarIconesAlteracao={tabela !== "historicoAlertas"}
       />
-    </div>
+       </div>
   );
 }
