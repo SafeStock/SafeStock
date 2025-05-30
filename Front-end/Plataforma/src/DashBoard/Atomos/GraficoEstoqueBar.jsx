@@ -41,8 +41,8 @@ export default function GraficoEstoqueBar() {
 
   return (
 
-    <div className="w-full bg-white rounded-2xl shadow p-6 font-[inter]">
-      <ResponsiveContainer width="95%" height={240}>
+    <div className="w-full bg-white rounded-2xl shadow p-6 ">
+      <ResponsiveContainer width="95%" height={275}>
         <BarChart data={dadosGrafico} barCategoryGap="20%">
           <CartesianGrid stroke="#e0e0e0" vertical={false}/>
           <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.7vh',}} />
