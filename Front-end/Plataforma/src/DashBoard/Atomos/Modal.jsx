@@ -14,7 +14,7 @@ export function Modal({ isOpen, onClose, children }) {
         {children}
 
         <button
-          className="absolute bottom-8 text-[30px] font-[inter]  border-none bg-transparent cursor-pointer"
+          className="absolute bottom text-[30px] font-[inter]  border-none bg-transparent cursor-pointer"
           onClick={onClose}
           aria-label="Fechar modal"
         >

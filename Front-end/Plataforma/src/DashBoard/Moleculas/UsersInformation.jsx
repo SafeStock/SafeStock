@@ -13,13 +13,13 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
 
   const formatarTelefone = (telefone) => {
     if (!telefone) return "";
-    // Remove tudo que não for número
+    
     const numeros = telefone.replace(/\D/g, "");
     if (numeros.length === 11) {
-      // Formato (11) 99999-9999
+    
       return numeros.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
     } else if (numeros.length === 10) {
-      // Formato (11) 9999-9999
+    
       return numeros.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
     }
     return telefone; // retorna como veio se não bater o padrão
@@ -27,9 +27,9 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
 
 
   /**
-
-  @param {string} dataString 
-  @returns {string}
+ 
+ * @param {string} dataString 
+ * @returns {string}
  */
 function formatarDataOuDataHora(dataString) {
   if (!dataString) return "-";
@@ -37,6 +37,7 @@ function formatarDataOuDataHora(dataString) {
   const data = dayjs(dataString);
   if (!data.isValid()) return dataString;
 
+  
   const ehMeiaNoite = data.hour() === 0 && data.minute() === 0;
 
   return ehMeiaNoite
@@ -60,6 +61,21 @@ function formatarDataOuDataHora(dataString) {
     }
   };
 
+  const formatarCategoria = (categoriaProduto) => {
+    if (!categoriaProduto) return "";
+    switch (categoriaProduto.toLowerCase()) {
+      case "vidros":
+        return "Vidro";
+      case "chao":
+        return "Chão";
+      case "muilti_uso":
+        return "Multi Uso";
+      default:
+        return categoriaProduto;
+    }
+  };
+
+  
 
   const buscarDados = () => {
     if (!token || token.trim() === "") {
@@ -87,6 +103,7 @@ function formatarDataOuDataHora(dataString) {
       ...item,
       telefone: formatarTelefone(item.telefone),
       cargo: formatarCargo(item.cargo),
+      categoriaProduto: formatarCategoria(item.categoriaProduto),
       dataHora: formatarDataOuDataHora(item.dataHora),
       dataHoraSaida: formatarDataOuDataHora(item.dataHoraSaida),
       dataValidade: formatarDataOuDataHora(item.dataValidade),
@@ -126,6 +143,7 @@ function formatarDataOuDataHora(dataString) {
   };
 
   return (
+     
     <div className="h-[60vh] w-[95%] relative right-[3vh]  ">
       <UserInformationTable
         titles={titles}
@@ -133,9 +151,12 @@ function formatarDataOuDataHora(dataString) {
         dados={dados}
         abrirModal={abrirModal}
         confirmarExclusao={confirmarExclusao}
-        mostrarIcone={tabela === "funcionarios"}
-        mostrarIconesAlteracao={tabela !== "historicoAlertas"}
+        mostrarIconeUser={tabela === "funcionarios"}
+        mostrarIcone={tabela === "funcionarios" || tabela === "produtos"}
+        mostrarIconesAlteracao={tabela !== "historicoAlertas" }
+        tabela={tabela}
       />
-       </div>
+    </div>
+  
   );
 }
