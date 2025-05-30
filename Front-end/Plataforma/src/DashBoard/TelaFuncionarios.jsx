@@ -23,7 +23,7 @@ export function TelaFuncionarios() {
   const handleSegundaEtapa = (dados) => {
     console.log({ ...dadosPrimeiraEtapa, ...dados });
     fecharModal();
-    return false; // Isso impede a navegação
+    return false; // 
   };
 
   return (
@@ -48,7 +48,7 @@ export function TelaFuncionarios() {
               { name: "senha", label: "Senha:", placeholder: "Digite a senha" },
               { name: "telefone", label: "Telefone:", placeholder: "Digite o telefone do funcionário)" },
             ]}
-            onSubmit={handleSegundaEtapa} // This is correct, it will be called when the form is submitted
+            onSubmit={handleSegundaEtapa} // 
             buttonLabel="Enviar"
             initialValues={{ email: dadosPrimeiraEtapa.email || "" }}
           />

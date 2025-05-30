@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
-export default function GraficoEstoqueBar() {
+export function GraficoEstoqueBar() {
   const [dadosGrafico, setDadosGrafico] = useState([]);
 
   const token = sessionStorage.getItem('authToken');
@@ -41,9 +41,9 @@ export default function GraficoEstoqueBar() {
 
   return (
 
-    <div className="w-full bg-white rounded-2xl shadow p-6 ">
-      <ResponsiveContainer width="95%" height={275}>
-        <BarChart data={dadosGrafico} barCategoryGap="20%">
+    <div className="w-full bg-white rounded-2xl shadow ">
+      <ResponsiveContainer width="95%" height={285}>
+        <BarChart data={dadosGrafico} barCategoryGap="15%">
           <CartesianGrid stroke="#e0e0e0" vertical={false}/>
           <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.7vh',}} />
           <YAxis tick={{ fill: '#2f4300' }} />

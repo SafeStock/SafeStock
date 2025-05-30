@@ -11,9 +11,6 @@ export function UserInformationTable({
     mostrarIconesAlteracao
 }) {
 
-    console.log("Tabela recebida:", tabela);
-
-
     return (
         <div className="relative top-[2vh]">
             {/* Cabeçalho*/}
