@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { ListaDinamica } from "./ListaDinamica";
 import { GraficoEstoqueBar } from "../Atomos/GraficoEstoqueBar";
 import { MiniHistoricoAlerta } from "../Atomos/MiniHistoricoAlerta";
 import { getToken } from '../Moleculas/getToken';
+import { Formulario } from "../Formulario";
 
 // Componente de KPI pequeno (lado esquerdo)
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
@@ -32,7 +34,6 @@ export function DivElementKPIDonoBigLeft({
     tamanho,
     displayAlerta = "none",
     displayGrafico = "none",
-
 }) {
     return (
         <div
@@ -74,7 +75,7 @@ export function DivElementKPIDonoLittleRight() {
     );
 }
 
-// Componente de KPI grande (lado direito)
+// Componente de KPI grande (lado direito) com modal implementado
 export function DivElementKPIDonoBigRight({
     NameUse = "Histórico de Uso",
     buttonNameUse = "Ver Histórico",
@@ -85,6 +86,8 @@ export function DivElementKPIDonoBigRight({
     const navigate = useNavigate();
     const token = getToken();
 
+    // Estado do modal
+    const [modalAberto, setModalAberto] = useState(false);
 
     const formatarDadosUso = (dados) => {
         return dados.map(item => ({
@@ -98,27 +101,22 @@ export function DivElementKPIDonoBigRight({
 
     const formatarDataEspecifica = (dataString) => {
         if (!dataString) return "-";
-
         const data = dayjs(dataString);
         if (!data.isValid()) return "-";
-
         const temHora = data.hour() !== 0 || data.minute() !== 0;
         return temHora
             ? data.format("DD-MM-YYYY HH:mm")
             : data.format("DD-MM-YYYY");
     };
 
-    const irParaTelaDeHistoricoUso = () => {
-        navigate("/dashboard/historicouso");
-    };
-
+    const abrirModal = () => setModalAberto(true);
+    const fecharModal = () => setModalAberto(false);
 
     return (
         <div className="w-[99%] h-[74%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
             <div className="w-full h-[20%] flex justify-center items-center ">
                 <p className="text-[#3A577B] font-[600] text-[3vh] ">{NameUse}</p>
             </div>
-
 
             <div className="w-full " style={{ height: customHeight }}>
                 <ListaDinamica
@@ -138,17 +136,80 @@ export function DivElementKPIDonoBigRight({
                 />
             </div>
 
-
             <div className="w-full h-[18%] flex justify-center items-center">
                 <button
                     className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
         w-[9vw] h-[5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
         hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
-                    onClick={irParaTelaDeHistoricoUso}
+                    onClick={abrirModal}
                 >
                     {buttonNameUse}
                 </button>
             </div>
+
+            
+            {/* Modal centralizado */}
+            {modalAberto && (
+                <div
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 1000,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "rgba(0,0,0,0.5)",
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "#fff",
+                            borderRadius: "1rem",
+                            boxShadow: "0 5px 20px rgba(0,0,0,0.2)",
+                            padding: "2rem",
+                            // minWidth: "320px",
+                            // width: "400px",
+                            width: "22vw",
+                            maxHeight: "58vh",
+                            overflow: "hidden",
+                            position: "relative",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <button
+                            onClick={fecharModal}
+                            style={{
+                                position: "absolute",
+                                top: 12,
+                                right: 18,
+                                background: "transparent",
+                                border: "none",
+                                fontSize: "1.5rem",
+                                color: "#888",
+                                cursor: "pointer",
+                            }}
+                            aria-label="Fechar"
+                        >
+                            ×
+                        </button>
+                        <Formulario
+                            titulo="Registrar Uso"
+                            campos={[
+                                { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
+                                { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
+                                { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
+                                { name: "dataRetirada", label: "Data de retirada:", placeholder: "Digite a data de retirada (ex: 08/27)" }
+                            ]}
+                            onSubmit={fecharModal}
+                            buttonLabel="Registrar"
+                        />
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
@@ -162,7 +223,7 @@ export function AlertaInformationDiv({ tamanho, children }) {
     );
 }
 
-export  function AlertExibition({ alert }) {
+export function AlertExibition({ alert }) {
     return (
         <div className="w-full h-[6vh] text-[19px] flex justify-center items-center">
             "{alert}"
@@ -178,4 +239,3 @@ export function StatusAlertExibition({ cor, status }) {
         </div>
     );
 }
-

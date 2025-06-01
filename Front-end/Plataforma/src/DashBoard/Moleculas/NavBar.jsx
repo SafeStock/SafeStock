@@ -18,20 +18,17 @@ export function NavBar() {
 
   return (
     <div className="flex bg-[#3A577B] w-[5.3vw] h-[90vh] rounded-[1vw] shadow-[0px_5px_10px_rgba(0,0,0,0.8)] items-center gap-[3vh] flex-col">
-      <DivisionNavBar/>
+      <DivisionNavBar />
 
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/dashboard.svg" onClick={() => handleRedirect('/dashboard')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/funcionarios.svg" onClick={() => handleRedirect('telafuncionarios')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/produtos.svg" onClick={() => handleRedirect('telaprodutos')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoUso.svg" onClick={() => handleRedirect('historicouso')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/exportarRelatorio.svg" onClick={() => handleRedirect('dashboardlimpeza')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoAlertas.svg" onClick={() => handleRedirect('historicoalertas')} />
-      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/logout.svg" onClick={() => {sessionStorage.clear(); handleRedirect('/login');
-  }} 
-/>
-      
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/dashboard.svg" onClick={() => handleRedirect('/dashboard')} title="Dashboard" />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/funcionarios.svg" onClick={() => handleRedirect('telafuncionarios')} title="Funcionários" />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/produtos.svg" onClick={() => handleRedirect('telaprodutos')} title="Produtos" />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoUso.svg" onClick={() => handleRedirect('historicouso')} title="Histórico de Uso" />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/exportarRelatorio.svg" onClick={() => handleRedirect('dashboardlimpeza')} title="Exportar Relatório" />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/historicoAlertas.svg" onClick={() => handleRedirect('historicoalertas')} title="Histórico de Alertas" />
+      <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/logout.svg" onClick={() => { sessionStorage.clear(); handleRedirect('/login'); }} title="Sair" />
 
-      <Logo/>
+      <Logo />
     </div>
   );
 }

@@ -13,7 +13,7 @@ export function Formulario({ titulo, campos, onSubmit, navigateTo = "/dashboard"
 
     const enviar = async (e) => {
         e.preventDefault();
-        
+
         if (onSubmit) {
             const result = await onSubmit(form);
             // Só navega se navigateTo for fornecido E o onSubmit não tiver retornado false
@@ -36,8 +36,8 @@ export function Formulario({ titulo, campos, onSubmit, navigateTo = "/dashboard"
             <div className={container}>
                 <h2 className={titleClass}>{titulo}</h2>
                 <form onSubmit={enviar} className={formClass}>
-                    {campos.map((campo) => (
-                        <div keyz={campo.name}>
+                    {campos.map((campo, idx) => (
+                        <div key={campo.name || idx}>
                             <label htmlFor={campo.name} className={labelClass}>
                                 {campo.label}
                             </label>
@@ -47,7 +47,7 @@ export function Formulario({ titulo, campos, onSubmit, navigateTo = "/dashboard"
                                 name={campo.name}
                                 className={inputClass}
                                 placeholder={campo.placeholder}
-                                value={form[campo.name]}
+                                value={form[campo.name] ?? ""}
                                 onChange={handleChange}
                             />
                         </div>
