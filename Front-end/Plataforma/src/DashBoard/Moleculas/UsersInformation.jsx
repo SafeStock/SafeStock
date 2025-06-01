@@ -8,43 +8,26 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
 
-
-
-
   const formatarTelefone = (telefone) => {
     if (!telefone) return "";
-
     const numeros = telefone.replace(/\D/g, "");
     if (numeros.length === 11) {
-
       return numeros.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
     } else if (numeros.length === 10) {
-
       return numeros.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
     }
-    return telefone; // retorna como veio se não bater o padrão
+    return telefone;
   };
 
-
-  /**
- 
- * @param {string} dataString 
- * @returns {string}
- */
   function formatarDataOuDataHora(dataString) {
     if (!dataString) return "-";
-
     const data = dayjs(dataString);
     if (!data.isValid()) return dataString;
-
-
     const ehMeiaNoite = data.hour() === 0 && data.minute() === 0;
-
     return ehMeiaNoite
       ? data.format("DD-MM-YYYY")
       : data.format("DD-MM-YYYY HH:mm");
   }
-
 
   const formatarCargo = (cargo) => {
     if (!cargo) return "";
@@ -90,7 +73,6 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
   };
 
   const buscarDados = () => {
-
     if (!token || token.trim() === "") {
       console.warn("Token inválido ou não informado");
       return;
@@ -104,11 +86,17 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     })
       .then((response) => {
         const data = response.data;
-        const dadosFormatados = data.map(item => ({
+        // Garante que data é um array antes de usar map
+        const lista = Array.isArray(data)
+          ? data
+          : Array.isArray(data[tabela])
+            ? data[tabela]
+            : [];
+        const dadosFormatados = lista.map(item => ({
           ...item,
           telefone: formatarTelefone(item.telefone),
           cargo: formatarCargo(item.cargo),
-        status:formatarStatus(item.status),
+          status: formatarStatus(item.status),
           categoriaProduto: formatarCategoria(item.categoriaProduto),
           dataHora: formatarDataOuDataHora(item.dataHora),
           dataHoraSaida: formatarDataOuDataHora(item.dataHoraSaida),
@@ -124,12 +112,10 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
       });
   };
 
-
-
   useEffect(() => {
     buscarDados();
+    // eslint-disable-next-line
   }, [tabela]);
-
 
   const confirmarExclusao = (id) => {
     const confirmacao = window.confirm(`Tem certeza que deseja excluir este item?`);
@@ -150,10 +136,8 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     }
   };
 
-
   return (
-
-    <div className="h-[60vh] w-[95%] relative right-[3vh]  ">
+    <div className="h-[60vh] w-[95%] relative right-[3vh]">
       <UserInformationTable
         titles={titles}
         campos={campos}
@@ -166,6 +150,5 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         tabela={tabela}
       />
     </div>
-
   );
 }

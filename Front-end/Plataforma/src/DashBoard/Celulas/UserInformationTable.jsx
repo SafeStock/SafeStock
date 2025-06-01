@@ -17,15 +17,17 @@ export function UserInformationTable({
             <div className="w-full bg-white sticky top-0 z-50  shadow-md">
                 <table className="w-full text-[#3A577B] border-collapse  table-fixed">
                     <colgroup>
-                        {mostrarIcone && <col className="w-[6vw] " />}
-                        {titles.map(() => <col className="w-auto" />)}
-                        <col className="w-[2vw] " />
+                        {mostrarIcone && <col className="w-[6vw]" />}
+                        {titles.map((title, idx) => (
+                            <col key={title || idx} className="w-auto" />
+                        ))}
+                        <col className="w-[2vw]" />
                     </colgroup>
                     <thead>
                         <tr>
                             {mostrarIcone && <th className="p-[1vh] text-center"></th>}
                             {titles.map((title, i) => (
-                                <th key={i} className="p-[1vh] text-center text-[2.5vh] bg-[white] ">
+                                <th key={title || i} className="p-[1vh] text-center text-[2.5vh] bg-[white] ">
                                     {title}
                                 </th>
                             ))}
@@ -41,13 +43,13 @@ export function UserInformationTable({
                     <colgroup>
                         {mostrarIcone && <col className="w-[4vw]" />}
                         {titles.map((title, index) => (
-                            <col key={index} className="w-full" />
+                            <col key={title || index} className="w-full" />
                         ))}
                         <col className="w-[4.5vw]" />
                     </colgroup>
                     <tbody>
                         {dados.map((item, i) => (
-                            <tr key={i} className="h-[10vh] shadow-[0_0_10px_rgba(0,0,0,0.2)] rounded-[20px] text-[2vh] ">
+                            <tr key={item.id || i} className="h-[10vh] shadow-[0_0_10px_rgba(0,0,0,0.2)] rounded-[20px] text-[2vh] ">
                                 {mostrarIcone && (
                                     <td className="p-[2.5vh]">
                                         {tabela === "produtos" ? (
@@ -58,7 +60,7 @@ export function UserInformationTable({
                                     </td>
                                 )}
                                 {campos.map((campo, j) => (
-                                    <td key={j} className="text-center w-auto ">
+                                    <td key={campo || j} className="text-center w-auto ">
                                         {campo === "status" ? (
                                             <StatusBadge status={item[campo]} className="relative left-[1]" />
                                         ) : (
@@ -89,4 +91,3 @@ export function UserInformationTable({
         </div >
     );
 }
-
