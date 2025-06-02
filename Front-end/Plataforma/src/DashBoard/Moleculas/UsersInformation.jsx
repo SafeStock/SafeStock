@@ -67,8 +67,6 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         return "Crítico";
       case "atenção":
         return "Atenção";
-      case "bom":
-        return "Bom";
       default:
         return categoriaStatus;
     }

@@ -1,11 +1,12 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { ListaDinamica } from "./ListaDinamica";
 import { GraficoEstoqueBar } from "../Atomos/GraficoEstoqueBar";
 import { MiniHistoricoAlerta } from "../Atomos/MiniHistoricoAlerta";
 import { getToken } from '../Moleculas/getToken';
 import { Formulario } from "../Formulario";
+import { useNavigate } from "react-router-dom";
+import { useSetAba } from "../../Hooks/setAba";
 
 // Componente de KPI pequeno (lado esquerdo)
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
@@ -81,11 +82,11 @@ export function DivElementKPIDonoBigRight({
     buttonNameUse = "Ver Histórico",
     customEndpoint,
     customCampos,
-    customHeight = "35vh"
+    customHeight = "35vh",
+    NavigateOn = "none"
 }) {
     // const navigate = useNavigate();
     const token = getToken();
-
 
     const [modalAberto, setModalAberto] = useState(false);
 
@@ -112,6 +113,15 @@ export function DivElementKPIDonoBigRight({
     const abrirModal = () => setModalAberto(true);
     const fecharModal = () => setModalAberto(false);
 
+      const navigate = useNavigate();
+
+        const useAba = useSetAba();
+
+    const handleRedirect = (path) => {
+    navigate(path);
+    useAba;
+    };
+
     return (
         <div className="w-[99%] h-[74%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
             <div className="w-full h-[20%] flex justify-center items-center ">
@@ -137,11 +147,21 @@ export function DivElementKPIDonoBigRight({
             </div>
 
             <div className="w-full h-[18%] flex justify-center items-center">
+
+        <button
+        className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
+        w-[9vw] h-[5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
+        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+        onClick={() => handleRedirect('historicouso')} style={{ display: NavigateOn }}>
+                    {buttonNameUse}
+        </button>
+
+
                 <button
                     className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
         w-[9vw] h-[5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
         hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
-                    onClick={abrirModal}
+                    onClick={abrirModal} style={{ display: NavigateOn === "block" ? "none" : "block" }}
                 >
                     {buttonNameUse}
                 </button>
