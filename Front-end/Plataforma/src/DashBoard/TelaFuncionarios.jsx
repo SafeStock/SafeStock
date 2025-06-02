@@ -61,6 +61,7 @@ export function TelaFuncionarios() {
         abrirModal={() => setModalAberto(true)}
         tabela={"funcionarios"}
         campos={["nome", "cargo", "email", "telefone"]}
+        displayButton="flex"
       />
     </div>
   );
