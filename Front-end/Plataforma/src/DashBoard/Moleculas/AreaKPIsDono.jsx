@@ -58,7 +58,7 @@ export function AreaKPIsDonoLateralEsquerda() {
                 />
             </div>
 
-            <div className="h-[74%] w-full flex flex-col items-center">
+            <div className="h-[75%] w-full flex flex-col items-center">
 
                 <DivElementKPIDonoBigLeft
                     tamanho="37.5vh"
