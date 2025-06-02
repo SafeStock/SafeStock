@@ -11,7 +11,8 @@ import { getToken } from '../Moleculas/getToken';
 export function AreaKPIsDonoLateralEsquerda() {
 
     const [qtd, setQtd] = useState("-");
-    const token = getToken();
+    const [qtd2, setQtd2] = useState("-");
+    const token = getToken(); 
 
     useEffect(() => {
     fetch("http://localhost:8080/api/produtos/kpi/totalprodutos", {
@@ -29,6 +30,24 @@ export function AreaKPIsDonoLateralEsquerda() {
         console.error("Erro ao buscar total de produtos:", error);
       });
   }, []);
+
+  useEffect(() => {
+        fetch("http://localhost:8080/api/produtos/kpi/totalproximosvalidade", {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setQtd2(data); // Alterado para setQtd2
+        })
+        .catch(error => {
+            console.error("Erro ao buscar produtos próximos da validade:", error);
+            setQtd2("Erro");
+        });
+    }, []);
 
     return (
         <div className="h-[95%] w-[56%] flex flex-col justify-start items-center ml-[9vw] ">
@@ -53,7 +72,7 @@ export function AreaKPIsDonoLateralEsquerda() {
                 <DivisionDivElementKPIDono />
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/CalendarExpired.svg"}
-                    Qtd="?"
+                    Qtd= {qtd2}
                     Titulo="Produto próximo da validade"
                 />
             </div>

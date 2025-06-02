@@ -72,4 +72,21 @@ public class ProdutoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/kpi/proximosvalidade")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ProdutoListar>> listarProdutosProximosDaValidade() {
+        List<ProdutoListar> produtosProximos = produtoService.listarProdutosProximosDaValidade();
+        if (produtosProximos.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(produtosProximos);
+    }
+
+    @GetMapping("/kpi/totalproximosvalidade")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> obterTotalProdutosProximosDaValidade() {
+        Long total = produtoService.contarProdutosProximosDaValidade();
+        return ResponseEntity.ok(total);
+    }
 }
