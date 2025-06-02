@@ -6,6 +6,7 @@ import com.example.safestock.model.Produto;
 import com.example.safestock.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +56,25 @@ public class ProdutoService {
 
     public void deletarProdutos(Long id) {
         produtoRepository.deleteById(id);
+    }
+
+    public List<ProdutoListar> listarProdutosProximosDaValidade() {
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataLimite = hoje.plusDays(7);
+
+        List<Produto> produtosProximos = produtoRepository.findByDataValidadeBetween(hoje, dataLimite);
+
+        return produtosProximos.stream()
+                .map(ProdutoMapper::of)
+                .toList();
+    }
+
+    // Adicione este método para contar os produtos próximos da validade
+    public Long contarProdutosProximosDaValidade() {
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataLimite = hoje.plusDays(7);
+
+        return produtoRepository.countByDataValidadeBetween(hoje, dataLimite);
     }
 
 }
