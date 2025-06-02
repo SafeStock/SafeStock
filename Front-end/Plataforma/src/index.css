@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: "Raleway", sans-serif;
+  font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   -Principal: #3A577B;
 
@@ -109,11 +108,6 @@ html {
 /* ESPAÇO PARA EDITAR SCROLLBAR GERAIS*/
 ::-webkit-scrollbar {
   width: 4px;
-}
-
-
-::-webkit-scrollbar-track {
-
 }
 
 
