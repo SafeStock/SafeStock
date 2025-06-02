@@ -78,7 +78,7 @@ export function AreaKPIsDonoLateralEsquerda() {
     )
 }
 
-export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela,  }) {
+export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela, NavigateOn }) {
     return (
         <div className="h-[95%] w-[38%]">
             <DivElementKPIDonoLittleRight />
@@ -88,6 +88,7 @@ export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela,  }) {
                 buttonNameUse={buttonNameUse}
                 tabela={tabela}
                 customEndpoint='http://localhost:8080/api/registroUso'
+                NavigateOn= {NavigateOn}
             />
         </div>
     )

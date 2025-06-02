@@ -5,10 +5,6 @@ export function StatusBadge({ status }) {
                 return "#ff3b30"; // vermelho
             case "atenção":
                 return "#ff9500"; // laranja
-            case "bom":
-                return "#34c759"; // verde
-            default:
-                return "#d1d1d6"; // cinza claro
         }
     };
 
