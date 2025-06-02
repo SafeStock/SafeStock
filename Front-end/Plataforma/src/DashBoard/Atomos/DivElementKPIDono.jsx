@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { ListaDinamica } from "./ListaDinamica";
 import { GraficoEstoqueBar } from "../Atomos/GraficoEstoqueBar";
@@ -10,7 +10,7 @@ import { Formulario } from "../Formulario";
 // Componente de KPI pequeno (lado esquerdo)
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
     return (
-        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
             <div className="w-full h-[48.5%] flex items-center justify-center">
                 <div className="w-[65%] h-full flex flex-row items-end justify-around">
                     <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
@@ -21,7 +21,7 @@ export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
             </div>
             <div className="w-[80%] h-[0.2vh] bg-[#9AC7D9]"></div>
             <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[80%] h-full">
+                <div className="w-[81%] h-full">
                     <p className="text-[17px] mt-[1vh] text-center">{Titulo}</p>
                 </div>
             </div>
@@ -40,8 +40,8 @@ export function DivElementKPIDonoBigLeft({
             className="w-[97%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
             style={{ height: tamanho }}
         >
-            <div className="w-[100%] flex flex-col h-[38vh]" style={{ display: displayGrafico }}>
-                <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-end text-[23px] font-[600]">
+            <div className="w-[100%] flex flex-col h-[40vh]" style={{ display: displayGrafico }}>
+                <div className="text-[#3A577B] w-full h-[8vh] flex justify-center items-end text-[23px] font-[600]">
                     Movimentação do Estoque
                 </div>
                 <GraficoEstoqueBar />
@@ -75,7 +75,7 @@ export function DivElementKPIDonoLittleRight() {
     );
 }
 
-// Componente de KPI grande (lado direito) com modal implementado
+
 export function DivElementKPIDonoBigRight({
     NameUse = "Histórico de Uso",
     buttonNameUse = "Ver Histórico",
@@ -83,10 +83,10 @@ export function DivElementKPIDonoBigRight({
     customCampos,
     customHeight = "35vh"
 }) {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const token = getToken();
 
-    // Estado do modal
+
     const [modalAberto, setModalAberto] = useState(false);
 
     const formatarDadosUso = (dados) => {
@@ -147,7 +147,7 @@ export function DivElementKPIDonoBigRight({
                 </button>
             </div>
 
-            
+
             {/* Modal centralizado */}
             {modalAberto && (
                 <div
@@ -166,17 +166,18 @@ export function DivElementKPIDonoBigRight({
                             background: "#fff",
                             borderRadius: "1rem",
                             boxShadow: "0 5px 20px rgba(0,0,0,0.2)",
-                            padding: "2rem",
+                            padding: "10vh",
                             // minWidth: "320px",
                             // width: "400px",
-                            width: "22vw",
-                            maxHeight: "58vh",
+                            width: "25vw",
+                            height: "30vw",
+                            maxHeight: "60vh",
                             overflow: "hidden",
                             position: "relative",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
-                            alignItems: "center"
+                            alignItems: "center",
                         }}
                     >
                         <button

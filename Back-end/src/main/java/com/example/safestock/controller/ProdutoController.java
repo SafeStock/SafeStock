@@ -37,6 +37,14 @@ public class ProdutoController {
         return ResponseEntity.status(200).body(produtosEncontrados);
     }
 
+    @GetMapping("/kpi/totalprodutos")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> obterTotalProdutosCadastrados() {
+        Long total = produtoService.contarProdutosCadastrados();
+        return ResponseEntity.ok(total);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Produto> buscarProdutoPorId(@PathVariable Long id){
         Optional<Produto> produto = produtoService.buscarProdutoPorId(id);

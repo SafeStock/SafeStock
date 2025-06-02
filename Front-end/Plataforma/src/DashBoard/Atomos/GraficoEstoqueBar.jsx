@@ -17,7 +17,9 @@ export function GraficoEstoqueBar() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const dadosFormatados = data.map((item) => ({
+        const produtosOrdenados = [...data].sort((a, b) => b.quantidade - a.quantidade);
+        const qtdProdutosPlotados = produtosOrdenados.slice(0, 6);
+        const dadosFormatados = qtdProdutosPlotados.map((item) => ({
           name: item.nome,
           esperado: item.limiteSemanalDeUso,
           atual: item.quantidade
@@ -36,16 +38,16 @@ export function GraficoEstoqueBar() {
       buscarDados();
     }, 5000); 
 
-    return () => clearInterval(interval); // limpa intervalo ao desmontar componente
+    return () => clearInterval(interval); 
   }, []);
 
   return (
 
     <div className="w-full bg-white rounded-2xl shadow ">
-      <ResponsiveContainer width="95%" height={285}>
-        <BarChart data={dadosGrafico} barCategoryGap="15%">
+      <ResponsiveContainer width="95%" height={225}>
+        <BarChart data={dadosGrafico} barCategoryGap="17%">
           <CartesianGrid stroke="#e0e0e0" vertical={false}/>
-          <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.7vh',}} />
+          <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.6vh', fontWeight: '550'}} />
           <YAxis tick={{ fill: '#2f4300' }} />
           <Tooltip  
           contentStyle={{ background: 'white', borderRadius: '13px', border: '1.5px solid #b0b0b0', boxShadow: '-8px 4px 10px rgba(0, 0, 0, 0.4)' }} 
