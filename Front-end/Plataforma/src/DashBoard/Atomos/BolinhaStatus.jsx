@@ -1,7 +1,7 @@
 export function StatusBadge({ status }) {
     const corStatus = (status) => {
         switch (status.toLowerCase()) {
-            case "critico":
+            case "crítico":
                 return "#ff3b30"; // vermelho
             case "atenção":
                 return "#ff9500"; // laranja

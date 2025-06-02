@@ -11,10 +11,4 @@ import java.util.List;
 public interface RegistroUsoRepository extends JpaRepository<RegistroUso, Long> {
 
     void deleteByFuncionarioId(Long funcionarioId);
-
-    List<RegistroUso> findByProdutoAndDataRegistroBetween(
-            Produto produto,
-            LocalDate dataInicio,
-            LocalDate dataFim
-    );
 }

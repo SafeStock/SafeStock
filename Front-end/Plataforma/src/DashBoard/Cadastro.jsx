@@ -98,8 +98,8 @@ export function Cadastro() {
       };
 
       const novoUsuario = {
-        nome: nome.trim().toLowerCase(),
-        sobrenome: sobrenome.trim().toLowerCase(),
+        nome: nome.trim(),
+        sobrenome: sobrenome.trim(),
         cargo: cargoMap[cargo.trim().toLowerCase()], // converte string para número
         telefone: telefone.trim(),
         email: email.trim().toLowerCase(),
