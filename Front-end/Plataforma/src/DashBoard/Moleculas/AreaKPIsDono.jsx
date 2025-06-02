@@ -5,35 +5,55 @@ import { DivisionDivElementKPIDonoBig } from "../Atomos/Divisions"
 import { DivElementKPIDonoLittleRight } from "../Atomos/DivElementKPIDono"
 import { DivisionDivElementKPIDonoBigRight } from "../Atomos/Divisions"
 import { DivElementKPIDonoBigRight } from "../Atomos/DivElementKPIDono"
+import { useEffect, useState } from "react";
+import { getToken } from '../Moleculas/getToken';
 
 export function AreaKPIsDonoLateralEsquerda() {
 
+    const [qtd, setQtd] = useState("-");
+    const token = getToken();
 
+    useEffect(() => {
+    fetch("http://localhost:8080/api/produtos/kpi/totalprodutos", {
+      method: "GET",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setQtd(data);
+      })
+      .catch(error => {
+        console.error("Erro ao buscar total de produtos:", error);
+      });
+  }, []);
 
     return (
         <div className="h-[95%] w-[56%] flex flex-col justify-start items-center ml-[9vw] ">
             <div className="h-[26%] w-full flex flex-row justify-center items-start">
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/Stonks.svg"}
-                    Qtd="5"
+                    Qtd="?"
                     Titulo="Produtos próximo ao limite de uso"
                 />
                 <DivisionDivElementKPIDono />
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/BoxKPI.svg"}
-                    Qtd="15"
+                    Qtd= {qtd}
                     Titulo="Produtos presentes no estoque"
                 />
                 <DivisionDivElementKPIDono />
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/GetOutBox.svg"}
-                    Qtd="2"
+                    Qtd="?"
                     Titulo="Produtos retirados do estoque"
                 />
                 <DivisionDivElementKPIDono />
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/CalendarExpired.svg"}
-                    Qtd="10"
+                    Qtd="?"
                     Titulo="Produto próximo da validade"
                 />
             </div>
