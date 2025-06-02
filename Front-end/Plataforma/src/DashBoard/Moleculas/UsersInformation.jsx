@@ -44,6 +44,8 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     }
   };
 
+  
+
   const formatarCategoria = (categoriaProduto) => {
     if (!categoriaProduto) return "";
     switch (categoriaProduto.toLowerCase()) {
