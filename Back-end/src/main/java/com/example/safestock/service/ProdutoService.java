@@ -18,6 +18,10 @@ public class ProdutoService {
         this.produtoRepository = produtoRepository;
     }
 
+    public Long contarProdutosCadastrados() {
+        return produtoRepository.count();
+    }
+
     public void cadastrarProduto(Produto novoProduto){
         this.produtoRepository.save(novoProduto);
     }
