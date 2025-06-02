@@ -62,7 +62,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     if (!categoriaStatus) return "";
     switch (categoriaStatus.toLowerCase()) {
       case "critico":
-        return "Critico";
+        return "Crítico";
       case "atenção":
         return "Atenção";
       case "bom":
