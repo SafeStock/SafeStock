@@ -98,7 +98,7 @@ export function ListaDinamica({
             )}
 
             {/* Cabeçalho da tabela */}
-            <div className="w-full bg-white sticky top-0 z-50 shadow-md ">
+            <div className="w-full bg-white sticky top-[10vh] z-50 shadow-md ">
                 <table className="w-full text-[#3A577B] border-collapse table-fixed ">
                     <colgroup>
                         {campos.map(() => <col className="w-auto" />)}
@@ -118,7 +118,7 @@ export function ListaDinamica({
             </div>
 
             {/* Corpo da tabela */}
-            <div className="h-[27.8vh] w-full overflow-y-auto">
+            <div className="h-[50vh] w-full overflow-y-auto">
                 <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed ">
                     <colgroup>
                         {campos.map((_, index) => (

@@ -2,8 +2,6 @@ import { DivElementKPIDonoLittleLeft } from "../Atomos/DivElementKPIDono"
 import { DivisionDivElementKPIDono } from "../Atomos/Divisions"
 import { DivElementKPIDonoBigLeft } from "../Atomos/DivElementKPIDono"
 import { DivisionDivElementKPIDonoBig } from "../Atomos/Divisions"
-import { DivElementKPIDonoLittleRight } from "../Atomos/DivElementKPIDono"
-import { DivisionDivElementKPIDonoBigRight } from "../Atomos/Divisions"
 import { DivElementKPIDonoBigRight } from "../Atomos/DivElementKPIDono"
 import { useEffect, useState } from "react";
 import { getToken } from '../Moleculas/getToken';
@@ -81,8 +79,6 @@ export function AreaKPIsDonoLateralEsquerda() {
 export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela, NavigateOn }) {
     return (
         <div className="h-[95%] w-[38%]">
-            <DivElementKPIDonoLittleRight />
-            <DivisionDivElementKPIDonoBigRight />
             <DivElementKPIDonoBigRight
                 NameUse={NameUse}
                 buttonNameUse={buttonNameUse}

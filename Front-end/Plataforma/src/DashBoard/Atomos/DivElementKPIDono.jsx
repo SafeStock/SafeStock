@@ -57,24 +57,6 @@ export function DivElementKPIDonoBigLeft({
     );
 }
 
-// Componente de KPI pequeno (lado direito)
-export function DivElementKPIDonoLittleRight() {
-    return (
-        <div className="w-[99%] h-[18vh] bg-white rounded-[2vh] mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
-            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[25px] font-[600]">
-                Status de abastecimento
-            </div>
-            <div className="w-full h-[40%] flex justify-center items-center">
-                <div className="bg-[#E8F0F1] w-[25vw] h-[6.5vh] rounded-[40px] overflow-hidden relative">
-                    <div className="absolute w-[25vw] h-[6.5vh] flex justify-center items-center">
-                        <p className="text-[#3A577B] font-[400] text-[25px]">50%</p>
-                    </div>
-                    <div className="bg-[#9AC7D9] w-[50%] h-full"></div>
-                </div>
-            </div>
-        </div>
-    );
-}
 
 
 export function DivElementKPIDonoBigRight({
@@ -123,12 +105,12 @@ export function DivElementKPIDonoBigRight({
     };
 
     return (
-        <div className="w-[99%] h-[74%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
+        <div className="w-[99%] h-[99%] mt-[6.8px] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
             <div className="w-full h-[20%] flex justify-center items-center ">
                 <p className="text-[#3A577B] font-[600] text-[3vh] ">{NameUse}</p>
             </div>
 
-            <div className="w-full " style={{ height: customHeight }}>
+            <div className="w-full" style={{ height: customHeight }}>
                 <ListaDinamica
                     endpoint={customEndpoint}
                     campos={customCampos || ["produto", "quantidade", "dataValidade", "dataHoraSaida"]}
@@ -146,7 +128,7 @@ export function DivElementKPIDonoBigRight({
                 />
             </div>
 
-            <div className="w-full h-[18%] flex justify-center items-center">
+            <div className="w-full h-[18%] mt-[15vh] flex justify-center items-center">
 
         <button
         className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
