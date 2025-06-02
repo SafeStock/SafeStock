@@ -1,8 +1,5 @@
 import { useState } from "react";
-import imagemCadastro from "../assets/imagemCadastro.svg";
-import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 // import { useNavigate } from 'react-router-dom';
-import { NavBarArea } from "./Celulas/NavBarArea";
 
 
 export function Cadastro() {
@@ -139,14 +136,11 @@ export function Cadastro() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
-      <div className="absolute left-[-0.515vw]">
-        <NavBarArea />
-      </div>
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
         {/* Formulário 1 */}
         {etapa === 1 && (
           <div
-            className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[65vh] w-[68vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
@@ -217,7 +211,7 @@ export function Cadastro() {
         {/* Formulário 2 */}
         {etapa === 2 && (
           <div
-            className="h-[65vh] w-full rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[65vh] w-[68vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
@@ -283,19 +277,8 @@ export function Cadastro() {
           </div>
         )}
 
-        {/* Imagem */}
-        <div className="w-80">
-          <img src={imagemCadastro} alt="Cadastro" className="max-w-full" />
-
-        </div>
       </div>
 
-      <section className="w-[100vw] h-[101vh] ml-[70vw] mb-[0.8vh] z-[-1] absolute">
-        <img
-          src={imagemObjeto}
-          alt="Objeto de Cadastro"
-          className="w-full h-full" />
-      </section>
     </div>
   );
 }

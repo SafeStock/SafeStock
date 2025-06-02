@@ -8,10 +8,11 @@ import { HistoricoAlertas } from '../DashBoard/HistoricoAlertas';
 import { HistoricoUso } from '../DashBoard/HistoricoUso';
 import { DashLimpeza } from '../DashBoard/DashLimpeza';
 import { PrivateRoute } from '../components/PrivateRoute';
-import { DonoLayout } from "../DashBoard/Celulas/DonoLayout"
-import { AdminLayout } from "../DashBoard/Celulas/AdminLayout"
-import { LimpezaLayout } from "../DashBoard/Celulas/LimpezaLayout"
+import { DonoLayout } from "../DashBoard/Celulas/DonoLayout";
+import { AdminLayout } from "../DashBoard/Celulas/AdminLayout";
+import { LimpezaLayout } from "../DashBoard/Celulas/LimpezaLayout";
 import { Formulario } from '../DashBoard/Formulario';
+import { Cadastro} from '../DashBoard/Cadastro';
 
 export function RotasApp() {
   useSetAba();
@@ -25,6 +26,7 @@ export function RotasApp() {
         <Route path="/dashboard" element={<DonoLayout />}>
           <Route index element={<DashPrincipalDono />} />
           <Route path="telafuncionarios" element={<TelaFuncionarios />} />
+          <Route path="cadastro" element={<Cadastro />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
@@ -35,6 +37,7 @@ export function RotasApp() {
       <Route element={<PrivateRoute allowedRoles={["administracao"]} />}>
         <Route path="/dashboard" element={<AdminLayout />}>
           <Route index element={<DashPrincipalDono />} />
+          <Route path="cadastro" element={<Cadastro />} />
           <Route path="telafuncionarios" element={<TelaFuncionarios />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
