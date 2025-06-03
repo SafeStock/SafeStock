@@ -3,6 +3,7 @@ package com.example.safestock.controller;
 import com.example.safestock.dto.produto.*;
 import com.example.safestock.model.Produto;
 import com.example.safestock.service.ProdutoService;
+import com.example.safestock.service.RegistroUsoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private RegistroUsoService registroUsoService;
 
     @PostMapping("/cadastro")
     @SecurityRequirement(name = "Bearer")
@@ -102,5 +106,11 @@ public class ProdutoController {
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Long> contarProdutosProximosLimiteUso() {
         return ResponseEntity.ok(produtoService.contarProdutosProximosLimiteUso());
+    }
+
+    @GetMapping("/kpi/totalretiradoestoque")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> contarProdutosSaidaEstoque() {
+        return ResponseEntity.ok(registroUsoService.contarPordutosRetiradosDoEstoque());
     }
 }

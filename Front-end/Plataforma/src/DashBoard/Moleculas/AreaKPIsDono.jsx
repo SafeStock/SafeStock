@@ -50,6 +50,24 @@ export function AreaKPIsDonoLateralEsquerda() {
   }, []);
 
   useEffect(() => {
+        fetch("http://localhost:8080/api/produtos/kpi/totalretiradoestoque", {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setQtd3(data); 
+        })
+        .catch(error => {
+            console.error("Erro ao buscar produtos próximos da validade:", error);
+            setQtd3("Erro");
+        });
+    }, []);
+
+  useEffect(() => {
         fetch("http://localhost:8080/api/produtos/kpi/totalproximosvalidade", {
             method: "GET",
             headers: {
@@ -59,13 +77,14 @@ export function AreaKPIsDonoLateralEsquerda() {
         })
         .then(response => response.json())
         .then(data => {
-            setQtd4(data); // Alterado para setQtd2
+            setQtd4(data); 
         })
         .catch(error => {
             console.error("Erro ao buscar produtos próximos da validade:", error);
             setQtd4("Erro");
         });
     }, []);
+
     
 
     return (
@@ -85,7 +104,7 @@ export function AreaKPIsDonoLateralEsquerda() {
                 <DivisionDivElementKPIDono />
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/GetOutBox.svg"}
-                    Qtd="?"
+                    Qtd={qtd3}
                     Titulo="Produtos retirados do estoque"
                 />
                 <DivisionDivElementKPIDono />
