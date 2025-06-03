@@ -89,4 +89,18 @@ public class ProdutoController {
         Long total = produtoService.contarProdutosProximosDaValidade();
         return ResponseEntity.ok(total);
     }
+
+    // Adicione estes endpoints no ProdutoController.java
+    @GetMapping("/kpi/proximoslimite")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ProdutoListar>> listarProdutosProximosLimiteUso() {
+        List<ProdutoListar> produtos = produtoService.listarProdutosProximosLimiteUso();
+        return produtos.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/kpi/totalproximoslimite")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> contarProdutosProximosLimiteUso() {
+        return ResponseEntity.ok(produtoService.contarProdutosProximosLimiteUso());
+    }
 }

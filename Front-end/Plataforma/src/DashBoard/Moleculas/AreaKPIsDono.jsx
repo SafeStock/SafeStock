@@ -10,6 +10,7 @@ export function AreaKPIsDonoLateralEsquerda() {
 
     const [qtd, setQtd] = useState("-");
     const [qtd2, setQtd2] = useState("-");
+    const [qtd3, setQtd3] = useState("-");
     const token = getToken(); 
 
     useEffect(() => {
@@ -47,13 +48,32 @@ export function AreaKPIsDonoLateralEsquerda() {
         });
     }, []);
 
+    useEffect(() => {
+        fetch("http://localhost:8080/api/produtos/kpi/totalproximoslimite", {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setQtd3(data);
+        })
+        .catch(error => {
+            console.error("Erro ao buscar produtos próximos do limite:", error);
+            setQtd3("Erro");
+        });
+    }, []);
+
     return (
         <div className="h-[95%] w-[56%] flex flex-col justify-start items-center ml-[9vw] ">
             <div className="h-[26%] w-full flex flex-row justify-center items-start">
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/Stonks.svg"}
-                    Qtd="?"
+                    Qtd= {qtd3}
                     Titulo="Produtos próximo ao limite de uso"
+                    Tooltip="Produtos com estoque ≤ 1.5x o limite semanal"
                 />
                 <DivisionDivElementKPIDono />
                 <DivElementKPIDonoLittleLeft

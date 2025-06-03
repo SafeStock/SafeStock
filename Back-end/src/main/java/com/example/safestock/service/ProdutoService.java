@@ -77,4 +77,16 @@ public class ProdutoService {
         return produtoRepository.countByDataValidadeBetween(hoje, dataLimite);
     }
 
+    // Adicione estes métodos no ProdutoService.java
+    public Long contarProdutosProximosLimiteUso() {
+        return produtoRepository.countProdutosProximosLimiteUso();
+    }
+
+    public List<ProdutoListar> listarProdutosProximosLimiteUso() {
+        return produtoRepository.findProdutosProximosLimiteUso()
+                .stream()
+                .map(ProdutoMapper::of)
+                .toList();
+    }
+
 }
