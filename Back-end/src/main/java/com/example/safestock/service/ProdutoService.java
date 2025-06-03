@@ -69,7 +69,7 @@ public class ProdutoService {
                 .toList();
     }
 
-    // Adicione este método para contar os produtos próximos da validade
+
     public Long contarProdutosProximosDaValidade() {
         LocalDate hoje = LocalDate.now();
         LocalDate dataLimite = hoje.plusDays(7);
@@ -77,7 +77,7 @@ public class ProdutoService {
         return produtoRepository.countByDataValidadeBetween(hoje, dataLimite);
     }
 
-    // Adicione estes métodos no ProdutoService.java
+
     public Long contarProdutosProximosLimiteUso() {
         return produtoRepository.countProdutosProximosLimiteUso();
     }
