@@ -44,7 +44,7 @@ export function GraficoEstoqueBar() {
   return (
 
     <div className="w-full bg-white rounded-2xl shadow ">
-      <ResponsiveContainer width="95%" height={225}>
+      <ResponsiveContainer width="95%" height={200}>
         <BarChart data={dadosGrafico} barCategoryGap="17%">
           <CartesianGrid stroke="#e0e0e0" vertical={false}/>
           <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.6vh', fontWeight: '550'}} />

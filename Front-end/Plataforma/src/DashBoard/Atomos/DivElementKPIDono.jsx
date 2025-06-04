@@ -11,10 +11,10 @@ import { useSetAba } from "../../Hooks/setAba";
 // Componente de KPI pequeno (lado esquerdo)
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
     return (
-        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+        <div className="w-[15vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
             <div className="w-full h-[48.5%] flex items-center justify-center">
                 <div className="w-[65%] h-full flex flex-row items-end justify-around">
-                    <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
+                    <img src={ImgUrl} className="w-[45%] h-[80%]" alt={Titulo} />
                     <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
                         <h1 className="text-[5vh]">{Qtd}</h1>
                     </div>
