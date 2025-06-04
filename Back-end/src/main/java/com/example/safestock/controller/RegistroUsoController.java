@@ -3,6 +3,7 @@ package com.example.safestock.controller;
 import com.example.safestock.model.Produto;
 import com.example.safestock.model.RegistroUso;
 import com.example.safestock.service.RegistroUsoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

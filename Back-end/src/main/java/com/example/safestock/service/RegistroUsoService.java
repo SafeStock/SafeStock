@@ -21,4 +21,9 @@ public class RegistroUsoService {
     public List<RegistroUso> listarRegistrosUso(){
         return registroUsoRepository.findAll();
     }
+
+    public Long contarPordutosRetiradosDoEstoque() {
+        return registroUsoRepository.sumQuantidadeRegistroDeUso();
+    }
+
 }

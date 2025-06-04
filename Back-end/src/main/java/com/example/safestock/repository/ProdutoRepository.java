@@ -15,10 +15,10 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     Long countByDataValidadeBetween(LocalDate startDate, LocalDate endDate);
 
-    // Adicione este método no ProdutoRepository.java
     @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidade <= p.limiteSemanalDeUso * 1.5") // 1.5x o limite semanal
     Long countProdutosProximosLimiteUso();
 
     @Query("SELECT p FROM Produto p WHERE p.quantidade <= p.limiteSemanalDeUso * 1.5")
     List<Produto> findProdutosProximosLimiteUso();
+
 }
