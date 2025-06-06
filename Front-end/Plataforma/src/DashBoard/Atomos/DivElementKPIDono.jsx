@@ -11,10 +11,10 @@ import { useSetAba } from "../../Hooks/setAba";
 // Componente de KPI pequeno (lado esquerdo)
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
     return (
-        <div className="w-[15vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
             <div className="w-full h-[48.5%] flex items-center justify-center">
                 <div className="w-[65%] h-full flex flex-row items-end justify-around">
-                    <img src={ImgUrl} className="w-[45%] h-[80%]" alt={Titulo} />
+                    <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
                     <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
                         <h1 className="text-[5vh]">{Qtd}</h1>
                     </div>
@@ -23,7 +23,7 @@ export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
             <div className="w-[80%] h-[0.2vh] bg-[#9AC7D9]"></div>
             <div className="w-full h-[48.5%] flex items-center justify-center">
                 <div className="w-[81%] h-full">
-                    <p className="text-[17px] mt-[1vh] text-center">{Titulo}</p>
+                    <p className="text-[1.9vh] mt-[1vh] text-center">{Titulo}</p>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@ export function DivElementKPIDonoBigLeft({
 }) {
     return (
         <div
-            className="w-[97%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
+            className="w-[95%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
             style={{ height: tamanho }}
         >
             <div className="w-[100%] flex flex-col h-[40vh]" style={{ display: displayGrafico }}>
@@ -57,6 +57,24 @@ export function DivElementKPIDonoBigLeft({
     );
 }
 
+// Componente de KPI pequeno (lado direito)
+export function DivElementKPIDonoLittleRight() {
+    return (
+        <div className="w-[99%] h-[20vh] bg-white rounded-[2vh] mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
+            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[25px] font-[600]">
+                Status de abastecimento
+            </div>
+            <div className="w-full h-[40%] flex justify-center items-center">
+                <div className="bg-[#E8F0F1] w-[25vw] h-[6.5vh] rounded-[40px] overflow-hidden relative">
+                    <div className="absolute w-[25vw] h-[6.5vh] flex justify-center items-center">
+                        <p className="text-[#3A577B] font-[400] text-[25px]">50%</p>
+                    </div>
+                    <div className="bg-[#9AC7D9] w-[50%] h-full"></div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 
 export function DivElementKPIDonoBigRight({
@@ -95,22 +113,22 @@ export function DivElementKPIDonoBigRight({
     const abrirModal = () => setModalAberto(true);
     const fecharModal = () => setModalAberto(false);
 
-      const navigate = useNavigate();
+    const navigate = useNavigate();
 
-        const useAba = useSetAba();
+    const useAba = useSetAba();
 
     const handleRedirect = (path) => {
-    navigate(path);
-    useAba;
+        navigate(path);
+        useAba;
     };
 
     return (
-        <div className="w-[99%] h-[99%] mt-[6.8px] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
+        <div className="w-full h-full bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col ">
             <div className="w-full h-[20%] flex justify-center items-center ">
-                <p className="text-[#3A577B] font-[600] text-[3vh] ">{NameUse}</p>
+                <p className="text-[#3A577B] font-[700] text-[3.5vh] ">{NameUse}</p>
             </div>
 
-            <div className="w-full" style={{ height: customHeight }}>
+            <div className="w-full " style={{ height: customHeight }}>
                 <ListaDinamica
                     endpoint={customEndpoint}
                     campos={customCampos || ["produto", "quantidade", "dataValidade", "dataHoraSaida"]}
@@ -128,20 +146,20 @@ export function DivElementKPIDonoBigRight({
                 />
             </div>
 
-            <div className="w-full h-[18%] mt-[15vh] flex justify-center items-center">
+            <div className="flex justify-center items-center relative top-[18vh]">
 
-        <button
-        className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
-        w-[9vw] h-[5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
+                <button
+                    className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
+        p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
         hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
-        onClick={() => handleRedirect('historicouso')} style={{ display: NavigateOn }}>
+                    onClick={() => handleRedirect('historicouso')} style={{ display: NavigateOn }}>
                     {buttonNameUse}
-        </button>
+                </button>
 
 
                 <button
                     className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
-        w-[9vw] h-[5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
+        p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
         hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
                     onClick={abrirModal} style={{ display: NavigateOn === "block" ? "none" : "block" }}
                 >
