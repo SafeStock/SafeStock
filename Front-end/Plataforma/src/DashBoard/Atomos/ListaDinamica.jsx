@@ -119,7 +119,7 @@ export function ListaDinamica({
 
             {/* Corpo da tabela */}
             <div className="h-[50vh] w-full overflow-y-auto">
-                <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed ">
+                <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed">
                     <colgroup>
                         {campos.map((_, index) => (
                             <col key={index} className="w-full" />

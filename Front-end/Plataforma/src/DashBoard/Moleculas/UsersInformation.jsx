@@ -137,7 +137,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
   };
 
   return (
-    <div className="h-[60vh] w-[95%] relative right-[3vh]">
+    <div className="h-[60vh] w-[99%] relative right-[3vh]">
       <UserInformationTable
         titles={titles}
         campos={campos}
