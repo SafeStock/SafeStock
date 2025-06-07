@@ -107,7 +107,7 @@ export function ListaDinamica({
                         {customHeader || (
                             <tr>
                                 {campos.map((campo, i) => (
-                                    <th key={i} className="p-[1vh] text-center text-[2vh] bg-[white]">
+                                    <th key={i} className="p-[1vh] text-center text-[2vh]">
                                         {formatarNomeCampo(campo)}
                                     </th>
                                 ))}
