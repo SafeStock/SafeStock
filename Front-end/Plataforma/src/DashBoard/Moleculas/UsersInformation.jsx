@@ -44,7 +44,6 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     }
   };
 
-  
 
   const formatarCategoria = (categoriaProduto) => {
     if (!categoriaProduto) return "";
@@ -144,6 +143,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         dados={dados}
         abrirModal={abrirModal}
         confirmarExclusao={confirmarExclusao}
+        editar={editar}
         mostrarIconeUser={tabela === "funcionarios"}
         mostrarIcone={tabela === "funcionarios" || tabela === "produtos"}
         mostrarIconesAlteracao={tabela !== "historicoAlertas"}
