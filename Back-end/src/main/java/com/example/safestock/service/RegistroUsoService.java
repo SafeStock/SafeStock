@@ -2,6 +2,7 @@ package com.example.safestock.service;
 
 import com.example.safestock.model.RegistroUso;
 import com.example.safestock.repository.RegistroUsoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,19 @@ public class RegistroUsoService {
 
     public Long contarPordutosRetiradosDoEstoque() {
         return registroUsoRepository.sumQuantidadeRegistroDeUso();
+    }
+
+    @Transactional
+    public void deletarRegistroUso(Long id) {
+        // Primeiro deleta os relatórios associados
+        registroUsoRepository.deleteRelatoriosByRegistroUsoId(id);
+
+        // Depois deleta o registro de uso
+        registroUsoRepository.deleteById(id);
+    }
+
+    public void deletarRegistro(Long id) {
+        registroUsoRepository.deleteById(id);
     }
 
 }
