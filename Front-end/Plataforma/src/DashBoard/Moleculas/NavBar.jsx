@@ -17,7 +17,7 @@ export function NavBar() {
   };
 
   return (
-    <div className="flex bg-[#3A577B] w-[5.3vw] h-[90vh] rounded-[1vw] shadow-[0px_5px_10px_rgba(0,0,0,0.8)] items-center gap-[3vh] flex-col">
+    <div className="flex bg-[#3A577B] w-[4.6vw] h-[92.7vh] rounded-[1vw] shadow-[0px_5px_10px_rgba(0,0,0,0.8)] items-center gap-[3vh] flex-col">
       <DivisionNavBar />
 
       <BtnRedirecNavBar imagemUrl="/src/assets/icones-sidebar/dashboard.svg" onClick={() => handleRedirect('/dashboard')} title="Dashboard" />

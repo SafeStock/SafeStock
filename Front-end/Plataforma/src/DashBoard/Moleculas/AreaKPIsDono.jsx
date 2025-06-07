@@ -88,8 +88,8 @@ export function AreaKPIsDonoLateralEsquerda() {
     
 
     return (
-        <div className="h-[95%] w-[56%] flex flex-col justify-start items-center ml-[9vw]">
-            <div className="h-[26%] w-full flex flex-row justify-center items-start ">
+        <div className="h-[95%] w-[55%] flex flex-col justify-start items-center ml-[5vw]">
+            <div className="h-[25.5%] w-full flex flex-row justify-center items-start ">
                 <DivElementKPIDonoLittleLeft
                     ImgUrl={"/src/assets/Stonks.svg"}
                     Qtd={qtd1}
