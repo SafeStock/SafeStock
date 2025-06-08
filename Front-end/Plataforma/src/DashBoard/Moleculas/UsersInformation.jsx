@@ -135,6 +135,32 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
     }
   };
 
+  // Atualizando cadastros de forma dinamica
+  const atualizarCadastro = async (id, dadosAtualizados) => {
+  if (!token || token.trim() === "") {
+    alert("Token inválido ou não informado");
+    return;
+  }
+
+  try {
+    await axios.put(
+      `http://localhost:8080/api/${tabela}/editar/${id}`,
+      dadosAtualizados,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    alert("Cadastro atualizado com sucesso!");
+    buscarDados(); // Atualiza a lista após editar
+  } catch (error) {
+    alert("Erro ao atualizar cadastro.");
+    console.error(error.response?.data || error);
+  }
+};
+
   return (
     <div className="h-[60vh] w-[99%] relative right-[3vh]">
       <UserInformationTable
@@ -143,6 +169,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         dados={dados}
         abrirModal={abrirModal}
         confirmarExclusao={confirmarExclusao}
+        atualizarCadastro={atualizarCadastro}
         mostrarIconeUser={tabela === "funcionarios"}
         mostrarIcone={tabela === "funcionarios" || tabela === "produtos"}
         mostrarIconesAlteracao={tabela !== "historicoAlertas"}
