@@ -121,7 +121,7 @@ export function Login() {
                   />
 
                   <h2 className=" flex justify-end left-[80%] absolute  top-[35%]">
-                    <span className={`${star ? "opacity-100" : "opacity-0"
+                    <span className={`${star ? "opacity-100 mt-[2.7vh] ml-[2vw]" : "opacity-0"
                       } transition-opacity duration-300`} style={{ color: star ? color : "transparent" }}>{star}</span>
                   </h2>
 
@@ -134,7 +134,7 @@ export function Login() {
                     className="w-[25vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
                   />
                   <h2 className=" flex justify-end left-[80%] absolute  top-[49.5%]">
-                    <span className={`${star ? "opacity-100" : "opacity-0"
+                    <span className={`${star ? "opacity-100 mt-[4.6vh] ml-[2.1vw]" : "opacity-0"
                       } transition-opacity duration-300`} style={{ color: star ? color : "transparent" }}>{star}</span>
                   </h2>
                 </div>
