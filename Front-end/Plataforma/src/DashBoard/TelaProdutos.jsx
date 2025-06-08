@@ -31,7 +31,7 @@ export function TelaProdutos() {
 
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full overflow-x-hidden">
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
           <Formulario

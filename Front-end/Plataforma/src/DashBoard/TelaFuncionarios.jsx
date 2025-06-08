@@ -27,7 +27,7 @@ export function TelaFuncionarios() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full overflow-x-hidden p-4">
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
           <Formulario
@@ -61,6 +61,7 @@ export function TelaFuncionarios() {
         abrirModal={() => setModalAberto(true)}
         tabela={"funcionarios"}
         campos={["nome", "cargo", "email", "telefone"]}
+        displayButton="flex"
       />
     </div>
   );

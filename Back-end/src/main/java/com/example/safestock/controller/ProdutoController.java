@@ -3,6 +3,7 @@ package com.example.safestock.controller;
 import com.example.safestock.dto.produto.*;
 import com.example.safestock.model.Produto;
 import com.example.safestock.service.ProdutoService;
+import com.example.safestock.service.RegistroUsoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private RegistroUsoService registroUsoService;
 
     @PostMapping("/cadastro")
     @SecurityRequirement(name = "Bearer")
@@ -71,5 +75,42 @@ public class ProdutoController {
             return ResponseEntity.ok(removido);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/kpi/proximosvalidade")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ProdutoListar>> listarProdutosProximosDaValidade() {
+        List<ProdutoListar> produtosProximos = produtoService.listarProdutosProximosDaValidade();
+        if (produtosProximos.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(produtosProximos);
+    }
+
+    @GetMapping("/kpi/totalproximosvalidade")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> obterTotalProdutosProximosDaValidade() {
+        Long total = produtoService.contarProdutosProximosDaValidade();
+        return ResponseEntity.ok(total);
+    }
+
+    // Adicione estes endpoints no ProdutoController.java
+    @GetMapping("/kpi/proximoslimite")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<ProdutoListar>> listarProdutosProximosLimiteUso() {
+        List<ProdutoListar> produtos = produtoService.listarProdutosProximosLimiteUso();
+        return produtos.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/kpi/totalproximoslimite")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> contarProdutosProximosLimiteUso() {
+        return ResponseEntity.ok(produtoService.contarProdutosProximosLimiteUso());
+    }
+
+    @GetMapping("/kpi/totalretiradoestoque")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Long> contarProdutosSaidaEstoque() {
+        return ResponseEntity.ok(registroUsoService.contarPordutosRetiradosDoEstoque());
     }
 }

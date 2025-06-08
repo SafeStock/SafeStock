@@ -96,7 +96,7 @@ export function RotasApp() {
           />} />
 
 
-          {/* Rota para editar cadastro de produto parte 1*/}
+          {/* Rota para editar cadastro de produto parte 1
           <Route path="/dashboard/editarCadastroProdutos" element={<Formulario
             titulo="Editar produtos"
             campos={[
@@ -108,11 +108,11 @@ export function RotasApp() {
             onSubmit={(dados) => console.log(dados)}
             navigateTo="/dashboard/cadastroProdutos2"
             buttonLabel="Próximo"
-          />} />
+          />} /> */}
 
 
           {/* Rota para editar cadastro de produto parte 2*/}
-          <Route path="/dashboard/editarCadastroProdutos2" element={<Formulario
+          {/* <Route path="/dashboard/editarCadastroProdutos2" element={<Formulario
             titulo="Editar produtos"
             campos={[
               { name: "limiteDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
@@ -123,7 +123,7 @@ export function RotasApp() {
             onSubmit={(dados) => console.log(dados)}
             navigateTo="/dashboard"
             buttonLabel="Enviar"
-          />} />
+          />} /> */}
 
         </Route>
       </Route>
