@@ -4,31 +4,83 @@ import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 import { useState } from "react";
 import { Modal } from "./Atomos/Modal";
 import { Formulario } from "./Formulario";
-
+import axios from "axios";
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
   const [etapa, setEtapa] = useState(1);
   const [dadosPrimeiraEtapa, setDadosPrimeiraEtapa] = useState({});
+  const [produtoSelecionado, setProdutoSelecionado] = useState({});
+  const token = sessionStorage.getItem('authToken');
 
   const fecharModal = () => {
     setModalAberto(false);
     setEtapa(1);
     setDadosPrimeiraEtapa({});
+    setProdutoSelecionado({});
+  };
+
+  // Função para abrir o modal já com os dados do produto selecionado
+  const abrirModal = (produto = {}) => {
+    setProdutoSelecionado(produto);
+    setDadosPrimeiraEtapa({
+      nome: produto.nome || "",
+      categoria: produto.categoriaProduto || "",
+      quantidade: produto.quantidade || "",
+      id: produto.id
+    });
+    setEtapa(1);
+    setModalAberto(true);
+  };
+
+  // Função para atualizar o produto no backend
+  const atualizarProduto = async (id, dadosAtualizados) => {
+    if (!token || token.trim() === "") {
+      alert("Token inválido ou não informado");
+      return;
+    }
+    try {
+      await axios.put(
+        `http://localhost:8080/api/produtos/atualizar/${id}`,
+        dadosAtualizados,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert("Produto atualizado com sucesso!");
+      fecharModal();
+      // Aqui você pode buscar novamente os dados se quiser atualizar a lista
+    } catch (error) {
+      alert("Erro ao atualizar produto.");
+      console.error(error.response?.data || error);
+    }
   };
 
   const handlePrimeiraEtapa = (dados) => {
-    setDadosPrimeiraEtapa(dados);
+    setDadosPrimeiraEtapa(prev => ({ ...prev, ...dados }));
     setEtapa(2);
-    return false; // Isso impede a navegação
+    return false;
   };
 
-  const handleSegundaEtapa = (dados) => {
-    console.log({ ...dadosPrimeiraEtapa, ...dados });
-    fecharModal();
-    return false; // Isso impede a navegação
+  const handleSegundaEtapa = async (dados) => {
+    const produtoId = dadosPrimeiraEtapa.id;
+    // Certifique-se de que todos os campos obrigatórios estão presentes e corretos
+    const dadosAtualizados = {
+      id: produtoId,
+      nome: dadosPrimeiraEtapa.nome,
+      categoriaProduto: Number(dadosPrimeiraEtapa.categoria),
+      quantidade: Number(dadosPrimeiraEtapa.quantidade),
+      limiteSemanalDeUso: Number(dados.limiteSemanalDeUso),
+      dataValidade: dados.dataValidade,
+      dataEntrada: dados.dataEntrada,
+    };
+    console.log("Enviando para o backend:", dadosAtualizados);
+    await atualizarProduto(produtoId, dadosAtualizados);
+    return false;
   };
-
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
@@ -43,18 +95,19 @@ export function TelaProdutos() {
             ]}
             onSubmit={handlePrimeiraEtapa}
             buttonLabel="Próximo"
+            initialValues={produtoSelecionado}
           />
         ) : (
           <Formulario
             titulo="Editar Produtos"
             campos={[
-              { name: "limiteDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
-              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 08/27)" },
+              { name: "limiteSemanalDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
+              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 2025-08-27)" },
+              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 2025-08-27)" },
             ]}
-            onSubmit={handleSegundaEtapa} // This is correct, it will be called when the form is submitted
+            onSubmit={handleSegundaEtapa}
             buttonLabel="Enviar"
-            initialValues={{ email: dadosPrimeiraEtapa.email || "" }}
+            initialValues={produtoSelecionado}
           />
         )}
       </Modal>
@@ -64,7 +117,8 @@ export function TelaProdutos() {
         titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
         tabela="produtos"
         campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
-        abrirModal={() => setModalAberto(true)}
+        abrirModal={abrirModal}
+        atualizarCadastro={atualizarProduto}
       />
     </div>
   );

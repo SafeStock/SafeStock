@@ -7,6 +7,7 @@ export function UserInformationTable({
     tabela,
     abrirModal,
     confirmarExclusao,
+    atualizarCadastro,
     mostrarIcone,
     mostrarIconesAlteracao
 }) {
@@ -71,7 +72,7 @@ export function UserInformationTable({
                                 {(mostrarIcone || mostrarIconesAlteracao) && (
                                     <td className="w-[10vh]">
                                         {mostrarIcone && (
-                                            <button onClick={() => abrirModal(item.id)} className="bg-transparent border-none cursor-pointer">
+                                            <button onClick={() => abrirModal(item)} className="bg-transparent border-none cursor-pointer">
                                                 <img src="/src/assets/ModifyUser.svg" className="h-[2.5vh] w-[2vw]" />
                                             </button>
                                         )}
