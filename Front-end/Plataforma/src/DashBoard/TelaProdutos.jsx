@@ -29,6 +29,12 @@ export function TelaProdutos() {
     return false; // Isso impede a navegação
   };
 
+    const cargo = sessionStorage.getItem('cargo');
+    let display = 'none';
+
+  if (cargo === 'limpeza') {
+    display = 'flex';
+  }
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
@@ -65,6 +71,7 @@ export function TelaProdutos() {
         tabela="produtos"
         campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
         abrirModal={() => setModalAberto(true)}
+        displayButton={display}
       />
     </div>
   );
