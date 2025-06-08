@@ -23,7 +23,7 @@ export function NavBar() {
   
   if (cargo === 'limpeza') {
     display1 = 'none';
-    dashboard = 'dashboardlimpeza';
+    dashboard = 'dashboard/dashboardlimpeza';
   }
 
   return (
