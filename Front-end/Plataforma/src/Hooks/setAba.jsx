@@ -31,7 +31,7 @@ export function useSetAba() {
         document.title = "Historico | SafeStock";
         break;
 
-      case "limpeza":
+      case "/dashboard/dashboardlimpeza":
         document.title = "DashBord | SafeStock";
         break;
 
