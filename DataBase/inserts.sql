@@ -31,7 +31,7 @@ INSERT INTO Produto (nome, categoria_Produto, quantidade, limite_Semanal_De_Uso,
 INSERT INTO Historico_Alertas (data_Hora, status, descricao) VALUES
 ('2025-05-24 10:30:00', '0', 'Produto em nível crítico!'),
 ('2025-05-24 11:00:00', '1', 'Produto em nível de atenção!'),
-('2025-05-24 11:30:00', '2', 'Estoque em situação normal'),
+('2025-05-24 11:30:00', '1', 'Produto em nível de atenção '),
 ('2025-05-25 09:45:00', '0', 'Validade expirada!'),
 ('2025-05-25 10:15:00', '1', 'Validade próxima do vencimento!');
 

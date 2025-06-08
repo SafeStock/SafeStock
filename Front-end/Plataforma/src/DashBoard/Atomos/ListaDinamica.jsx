@@ -9,7 +9,7 @@ dayjs.locale('pt-br');
 export function ListaDinamica({
     endpoint,
     campos,
-    nomesCampos, // Nova prop
+    nomesCampos, 
     titulo,
     formataDados,
     token,
