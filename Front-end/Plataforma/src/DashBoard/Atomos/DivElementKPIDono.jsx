@@ -41,14 +41,14 @@ export function DivElementKPIDonoBigLeft({
             className="w-[95%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
             style={{ height: tamanho }}
         >
-            <div className="w-[100%] flex flex-col h-[40vh]" style={{ display: displayGrafico }}>
+            <div className="w-full flex flex-col h-[38vh]" style={{ display: displayGrafico }}>
                 <div className="text-[#3A577B] w-full h-[8vh] flex justify-center items-end text-[23px] font-[600]">
                     Movimentação do Estoque
                 </div>
                 <GraficoEstoqueBar />
             </div>
 
-            <div className="w-[100%] h-[100%] flex flex-col" style={{ display: displayAlerta }}>
+            <div className="w-full h-full flex flex-col" style={{ display: displayAlerta }}>
                 <MiniHistoricoAlerta
                     endpoint='http://localhost:8080/api/historicoAlertas'
                 />
@@ -123,7 +123,7 @@ export function DivElementKPIDonoBigRight({
     };
 
     return (
-        <div className="w-full h-full bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col ">
+        <div className="w-full h-full  rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col ">
             <div className="w-full h-[20%] flex justify-center items-center ">
                 <p className="text-[#3A577B] font-[700] text-[3.5vh] ">{NameUse}</p>
             </div>
@@ -146,7 +146,7 @@ export function DivElementKPIDonoBigRight({
                 />
             </div>
 
-            <div className="flex justify-center items-center relative top-[18vh]">
+            <div className="flex justify-center items-center relative top-[19vh] ">
 
                 <button
                     className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
@@ -244,19 +244,22 @@ export function AlertaInformationDiv({ tamanho, children }) {
     );
 }
 
-export function AlertExibition({ alert }) {
+export function AlertExibition({  children }) {
     return (
         <div className="w-full h-[6vh] text-[19px] flex justify-center items-center">
-            "{alert}"
+            {children}
         </div>
     );
 }
 
-export function StatusAlertExibition({ cor, status }) {
-    return (
-        <div className="w-full h-[6vh] flex flex-row justify-center items-center">
-            <div className="w-[3vh] h-[3vh] rounded-[50%] mr-[1vw]" style={{ background: cor }}></div>
-            {status}
-        </div>
-    );
+export function StatusAlertExibition({ cor, status, animar }) {
+  return (
+    <div className="w-full h-[6vh] flex flex-row justify-center items-center ">
+      <div
+        className={`w-[3vh] h-[3vh] rounded-full mr-[1vw] ${animar ? 'animate-pulsar-vermelho' : ''}`}
+        style={{ backgroundColor: cor }}
+      ></div>
+      <span className={` ${status ? 'text-[#ff0303]' : 'text-[#FFA500]'} animate-pulsar-vermelho`}>{status}</span>
+    </div>
+  );
 }
