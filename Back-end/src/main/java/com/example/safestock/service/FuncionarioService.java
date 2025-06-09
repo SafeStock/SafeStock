@@ -8,7 +8,6 @@ import com.example.safestock.dto.FuncionarioMapper;
 import com.example.safestock.dto.TokenDTO;
 import com.example.safestock.model.Funcionario;
 import com.example.safestock.repository.FuncionarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,20 +23,23 @@ import java.util.Optional;
 @Service
 public class FuncionarioService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final FuncionarioRepository funcionarioRepository;
+    private final GerenciadorTokenJwt gerenciadorTokenJwt;
+    private final AuthenticationManager authenticationManager;
+    private final RegistroUsoRepository registroUsoRepository;
 
-    @Autowired
-    private FuncionarioRepository funcionarioRepository;
-
-    @Autowired
-    private GerenciadorTokenJwt gerenciadorTokenJwt;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private RegistroUsoRepository registroUsoRepository;
+    public FuncionarioService(PasswordEncoder passwordEncoder,
+                              FuncionarioRepository funcionarioRepository,
+                              GerenciadorTokenJwt gerenciadorTokenJwt,
+                              AuthenticationManager authenticationManager,
+                              RegistroUsoRepository registroUsoRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.funcionarioRepository = funcionarioRepository;
+        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
+        this.authenticationManager = authenticationManager;
+        this.registroUsoRepository = registroUsoRepository;
+    }
 
     public void cadastrarFuncionario(Funcionario novoFuncionario){
         String senhaCriptografada = passwordEncoder.encode(novoFuncionario.getSenha());
@@ -46,7 +48,6 @@ public class FuncionarioService {
     }
 
     public TokenDTO autenticar(Funcionario funcionario) {
-
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 funcionario.getEmail(), funcionario.getSenha());
 
@@ -54,25 +55,18 @@ public class FuncionarioService {
 
         Funcionario funcionarioAutenticado =
                 funcionarioRepository.findByEmail(funcionario.getEmail())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email não cadastrado", null)
-                        );
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email não cadastrado"));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
         return FuncionarioMapper.of(funcionarioAutenticado, token);
-
     }
 
-    public  List<FuncionarioListar> listarTodos(){
+    public List<FuncionarioListar> listarTodos(){
         List<Funcionario> funcionarioEncontrado = funcionarioRepository.findAll();
         return funcionarioEncontrado.stream().map(FuncionarioMapper::of).toList();
-    }
-
-    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
-        this.funcionarioRepository = funcionarioRepository;
     }
 
     @Transactional
