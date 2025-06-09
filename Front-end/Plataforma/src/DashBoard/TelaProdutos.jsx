@@ -178,7 +178,6 @@ export function TelaProdutos() {
         abrirModal={abrirModal}
         atualizarCadastro={atualizarProduto}
         displayButton={display}
-
         mostrarBotaoExportar={false}
         
       />

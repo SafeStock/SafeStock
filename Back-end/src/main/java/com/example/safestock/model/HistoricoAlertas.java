@@ -17,6 +17,9 @@ public class HistoricoAlertas {
     private StatusAlerta status;
     private String descricao;
 
+
+    private String nomeProduto;
+
     @OneToMany(mappedBy = "alerta")
     private List<Relatorio> relatorio;
 
@@ -27,12 +30,13 @@ public class HistoricoAlertas {
     public HistoricoAlertas() {
     }
 
-    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao, List<Relatorio> relatorio, Produto produto) {
+    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao, List<Relatorio> relatorio, Produto produto, String nomeProduto) {
         this.dataHora = dataHora;
         this.status = status;
         this.descricao = descricao;
         this.relatorio = relatorio;
         this.produto = produto;
+        this.nomeProduto = nomeProduto;
     }
 
     public Long getId() {
@@ -79,7 +83,8 @@ public class HistoricoAlertas {
         return produto;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
+    public void setProduto(Produto produto) {this.produto = produto;}
+    public String getNomeProduto() {return nomeProduto;}
+
+    public void setNomeProduto(String nomeProduto) {this.nomeProduto = nomeProduto;}
 }

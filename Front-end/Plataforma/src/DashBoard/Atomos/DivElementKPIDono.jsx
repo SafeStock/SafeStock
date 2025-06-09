@@ -16,7 +16,7 @@ export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
                 <div className="w-[65%] h-full flex flex-row items-end justify-around">
                     <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
                     <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
-                        <h1 className="text-[5vh]">{Qtd}</h1>
+                        <strong className="text-[5vh]">{Qtd}</strong>
                     </div>
                 </div>
             </div>
@@ -251,14 +251,15 @@ export function AlertExibition({  children }) {
     );
 }
 
-export function StatusAlertExibition({ cor, status, animar }) {
+export function StatusAlertExibition({ cor, status }) {
   return (
-    <div className="w-full h-[6vh] flex flex-row justify-center items-center ">
+    <div className="w-full h-[6vh] flex flex-row justify-center items-center">
       <div
-        className={`w-[3vh] h-[3vh] rounded-full mr-[1vw] ${animar ? 'animate-pulsar-vermelho' : ''}`}
+        className="w-[3vh] h-[3vh] rounded-full mr-[1vw] animate-pulsar"
         style={{ backgroundColor: cor }}
       ></div>
-      <span className={` ${status ? 'text-[#ff0303]' : 'text-[#FFA500]'} animate-pulsar-vermelho`}>{status}</span>
+      <span className="animate-pulsar" style={{ color: cor }}>{status}</span>
     </div>
   );
 }
+
