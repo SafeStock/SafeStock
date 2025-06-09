@@ -116,6 +116,7 @@ export function TelaFuncionarios() {
         campos={["nome", "cargo", "email", "telefone"]}
         displayButton="flex"
         atualizarCadastro={atualizarCadastro}
+        mostrarBotaoExportar={false}
       />
     </div>
   );

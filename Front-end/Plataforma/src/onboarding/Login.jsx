@@ -18,13 +18,9 @@ export function Login() {
   const [star, setStar] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  const irParaDashboard = (cargo) => {
+  const irParaDashboard = () => {
   setTimeout(() => {
-    if (cargo === "limpeza") {
-      navigate('/dashboard/dashboardlimpeza');
-    } else {
       navigate('/dashboard');
-    }
   }, 2200);
 };
 

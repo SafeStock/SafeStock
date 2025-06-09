@@ -3,10 +3,14 @@ import { UserInformationTable } from "../Celulas/UserInformationTable";
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import axios from 'axios';
+import { exportarExcel } from "../../Hooks/exportarExcel";
+import { Download } from "lucide-react";
 
-export function UserInformation({ abrirModal, tabela, campos, titles }) {
+
+export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBotaoExportar = true }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
+
 
   const formatarTelefone = (telefone) => {
     if (!telefone) return "";
@@ -70,7 +74,6 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
         return categoriaStatus;
     }
   };
-
   const buscarDados = () => {
     if (!token || token.trim() === "") {
       console.warn("Token inválido ou não informado");
@@ -84,13 +87,16 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
       }
     })
       .then((response) => {
-        const data = response.data;
-        // Garante que data é um array antes de usar map
-        const lista = Array.isArray(data)
-          ? data
-          : Array.isArray(data[tabela])
-            ? data[tabela]
+        // 1. Processar dados da tabela principal
+        const dadosBrutos = response.data;
+
+        // Garante que é um array
+        const lista = Array.isArray(dadosBrutos)
+          ? dadosBrutos
+          : Array.isArray(dadosBrutos[tabela])
+            ? dadosBrutos[tabela]
             : [];
+
         const dadosFormatados = lista.map(item => ({
           ...item,
           telefone: formatarTelefone(item.telefone),
@@ -105,13 +111,53 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
 
         setDados(dadosFormatados);
         console.log("Dados formatados:", dadosFormatados);
+
+        // 2. Processar alertas SEPARADAMENTE
+        // Extrai alertas independentemente da estrutura
+        let dadosAlertas = response.data?.data || response.data?.alertas || response.data;
+
+        // Garante que é um array
+        if (!Array.isArray(dadosAlertas)) {
+          dadosAlertas = [];
+        }
+
+        console.log("Dados recebidos:", dadosAlertas);
+
+        // Filtra alertas válidos (com status e dataValidade)
+        const alertasValidos = dadosAlertas.filter(a =>
+          a &&
+          a.status &&
+          a.produto &&
+          a.produto.dataValidade
+        );
+
+        console.log("Alertas válidos:", alertasValidos);
+
+        // Ordena por prioridade e data mais próxima
+        const alertasOrdenados = [...alertasValidos].sort((a, b) => {
+          // Prioridade: críticos primeiro
+          const prioridadeA = a.status === 'critico' ? 0 : 1;
+          const prioridadeB = b.status === 'critico' ? 0 : 1;
+
+          if (prioridadeA !== prioridadeB) {
+            return prioridadeA - prioridadeB;
+          }
+
+          // Mesma prioridade: ordena pela data mais próxima
+          const dataA = new Date(a.produto.dataValidade);
+          const dataB = new Date(b.produto.dataValidade);
+          return dataA - dataB;
+        });
+
+        console.log("Alertas ordenados:", alertasOrdenados);
+
+        const alerta = alertasOrdenados[0] || null;
+        console.log("Alerta principal selecionado:", alerta);
       })
-      .catch((error) => {
+      .catch((error) => { // Corrigido o .catch
         console.error(`Erro ao buscar ${tabela}:`, error);
       });
-  };
-
-  useEffect(() => {
+  }; useEffect(() => {
     buscarDados();
     // eslint-disable-next-line
   }, [tabela]);
@@ -137,32 +183,42 @@ export function UserInformation({ abrirModal, tabela, campos, titles }) {
 
   // Atualizando cadastros de forma dinamica
   const atualizarCadastro = async (id, dadosAtualizados) => {
-  if (!token || token.trim() === "") {
-    alert("Token inválido ou não informado");
-    return;
-  }
+    if (!token || token.trim() === "") {
+      alert("Token inválido ou não informado");
+      return;
+    }
 
-  try {
-    await axios.put(
-      `http://localhost:8080/api/${tabela}/editar/${id}`,
-      dadosAtualizados,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+    try {
+      await axios.put(
+        `http://localhost:8080/api/${tabela}/editar/${id}`,
+        dadosAtualizados,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    );
-    alert("Cadastro atualizado com sucesso!");
-    buscarDados(); // Atualiza a lista após editar
-  } catch (error) {
-    alert("Erro ao atualizar cadastro.");
-    console.error(error.response?.data || error);
-  }
-};
+      );
+      alert("Cadastro atualizado com sucesso!");
+      buscarDados(); // Atualiza a lista após editar
+    } catch (error) {
+      alert("Erro ao atualizar cadastro.");
+      console.error(error.response?.data || error);
+    }
+  };
 
   return (
-    <div className="h-[60vh] w-[99%] relative right-[3vh]">
+    <div className="relative right-[3.5vh]">
+      <div className={`relative bottom-[4vh] left-[95%] ${!mostrarBotaoExportar ? 'invisible' : ''}`}>
+        <button
+          title="Baixar arquivo Excel"
+          onClick={() => exportarExcel(dados, titles, tabela, campos)}
+          className="bg-[transparent] border-none outline-none cursor-pointer active:scale-80 transition"
+        >
+          <Download size={24} />
+        </button>
+      </div>
+
       <UserInformationTable
         titles={titles}
         campos={campos}
