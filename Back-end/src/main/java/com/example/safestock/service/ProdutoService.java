@@ -60,7 +60,7 @@ public class ProdutoService {
 
     public List<ProdutoListar> listarProdutosProximosDaValidade() {
         LocalDate hoje = LocalDate.now();
-        LocalDate dataLimite = hoje.plusDays(7);
+        LocalDate dataLimite = hoje.plusDays(31);
 
         List<Produto> produtosProximos = produtoRepository.findByDataValidadeBetween(hoje, dataLimite);
 
@@ -72,7 +72,7 @@ public class ProdutoService {
 
     public Long contarProdutosProximosDaValidade() {
         LocalDate hoje = LocalDate.now();
-        LocalDate dataLimite = hoje.plusDays(7);
+        LocalDate dataLimite = hoje.plusDays(31);
 
         return produtoRepository.countByDataValidadeBetween(hoje, dataLimite);
     }

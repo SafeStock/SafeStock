@@ -225,7 +225,6 @@ export function DivElementKPIDonoBigRight({
                                 { name: "dataRetirada", label: "Data de retirada:", placeholder: "Digite a data de retirada (ex: 08/27)" }
                             ]}
                             onSubmit={fecharModal}
-                            buttonLabel="Registrar"
                         />
                     </div>
                 </div>
