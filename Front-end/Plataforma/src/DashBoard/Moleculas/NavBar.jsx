@@ -19,8 +19,6 @@ export function NavBar() {
 
 
   let display1 = 'flex';
-
-
   return (
     <div className="flex bg-[#3A577B] w-[4.6vw] h-[92.7vh] rounded-[1vw] shadow-[0px_5px_10px_rgba(0,0,0,0.8)] items-center gap-[3vh] flex-col">
       <DivisionNavBar />

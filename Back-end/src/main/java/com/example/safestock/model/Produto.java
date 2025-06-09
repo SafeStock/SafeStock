@@ -18,7 +18,7 @@ public class Produto {
     private Long id;
 
     @NotBlank(message = "O campo nome não pode estar em branco")
-    @Size(min = 45, message = "O campo senha deve conter no minimo 45 caracteres")
+    @Size(min = 5, message = "O campo senha deve conter no minimo 5 caracteres")
     private String nome;
 
     private CategoriaProduto categoriaProduto;

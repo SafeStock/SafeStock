@@ -71,7 +71,7 @@ export function TelaProdutos() {
     const dadosAtualizados = {
       id: produtoId,
       nome: dadosPrimeiraEtapa.nome,
-      categoriaProduto: Number(dadosPrimeiraEtapa.categoria),
+      categoriaProduto: dadosPrimeiraEtapa.categoria,
       quantidade: Number(dadosPrimeiraEtapa.quantidade),
       limiteSemanalDeUso: Number(dados.limiteSemanalDeUso),
       dataValidade: dados.dataValidade,
@@ -79,6 +79,7 @@ export function TelaProdutos() {
     };
     console.log("Enviando para o backend:", dadosAtualizados);
     await atualizarProduto(produtoId, dadosAtualizados);
+    window.location.reload(); // Atualiza a página após editar
     return false;
   };
 

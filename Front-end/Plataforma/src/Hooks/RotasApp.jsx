@@ -48,6 +48,7 @@ export function RotasApp() {
       <Route element={<PrivateRoute allowedRoles={["limpeza"]} />}>
         <Route path="/dashboard" element={<LimpezaLayout />}>
           <Route index element={<DashLimpeza />} />
+          <Route path="dashboardlimpeza" element={<DashLimpeza />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />

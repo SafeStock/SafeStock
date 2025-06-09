@@ -21,4 +21,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("SELECT p FROM Produto p WHERE p.quantidade <= p.limiteSemanalDeUso * 1.5")
     List<Produto> findProdutosProximosLimiteUso();
 
+    long countByDataValidadeBefore(LocalDate data);
+
 }
