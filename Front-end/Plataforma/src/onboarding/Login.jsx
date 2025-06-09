@@ -144,12 +144,12 @@ export function Login() {
                 </button>
               </form>
 
-              <div className="mt-4 text-sm text-center text-gray-600 ">
+              {/* <div className="mt-4 text-sm text-center text-gray-600 ">
                 <p>
                   Esqueceu sua{" "}
                   <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh] ">Senha</button>?
                 </p>
-              </div>
+              </div> */}
 
               <div className="text-[2.5vh] w-[100%] flex justify-center ">
                 <span

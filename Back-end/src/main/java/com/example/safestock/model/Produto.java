@@ -18,12 +18,12 @@ public class Produto {
     private Long id;
 
     @NotBlank(message = "O campo nome não pode estar em branco")
-    @Size(min = 5, message = "O campo senha deve conter no minimo 5 caracteres")
     private String nome;
 
     private CategoriaProduto categoriaProduto;
 
     @NotNull(message = "O campo quantidade não pode estar em branco")
+    @Min(value = 1, message = "O campo quantidade deve ser no mínimo 1")
     private int quantidade;
 
 

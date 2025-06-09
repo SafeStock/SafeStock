@@ -4,6 +4,7 @@ import com.example.safestock.model.Creche;
 import com.example.safestock.model.Relatorio;
 import com.example.safestock.model.enums.CategoriaProduto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class ProdutoCadastro {
     @Schema(description = "Categoria do produto", example = "Chão")
     private CategoriaProduto categoriaProduto;
 
-    @Size(min = 1, max = 4)
+    @Min(1)
     @Schema(description = "Quantidade do produto", example = "25")
     private int quantidade;
 
