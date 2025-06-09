@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { getToken } from '../Moleculas/getToken';
 import {
     AlertaInformationDiv,
@@ -13,6 +15,8 @@ export function MiniHistoricoAlerta({ endpoint }) {
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState(null);
     const token = getToken();
+    dayjs.extend(customParseFormat);
+
 
     useEffect(() => {
         if (!endpoint) {
@@ -47,9 +51,8 @@ export function MiniHistoricoAlerta({ endpoint }) {
                 // Filtra alertas válidos (com status e dataValidade)
                 const alertasValidos = dadosAlertas.filter(a =>
                     a &&
-                    a.status &&
-                    a.produto && // Verifica se existe o objeto produto
-                    a.produto.dataValidade // Verifica se existe dataValidade dentro de produto
+                    a.produto &&
+                    a.produto.dataValidade
                 );
 
                 console.log("Alertas válidos:", alertasValidos);
@@ -57,18 +60,15 @@ export function MiniHistoricoAlerta({ endpoint }) {
                 // Ordena por prioridade e data mais próxima
                 const alertasOrdenados = [...alertasValidos].sort((a, b) => {
                     // Prioridade: críticos primeiro
-                    const prioridadeA = a.status === 'critico' ? 0 : 1;
-                    const prioridadeB = b.status === 'critico' ? 0 : 1;
+                    if (a.status === 'critico' && b.status !== 'critico') return -1;
+                    if (a.status !== 'critico' && b.status === 'critico') return 1;
 
-                    if (prioridadeA !== prioridadeB) {
-                        return prioridadeA - prioridadeB;
-                    }
-
-                    // Mesma prioridade: ordena pela data mais próxima
+                    // Se o status for igual ou ambos não forem críticos, ordena pela data
                     const dataA = new Date(a.produto.dataValidade);
                     const dataB = new Date(b.produto.dataValidade);
                     return dataA - dataB;
                 });
+
 
                 console.log("Alertas ordenados:", alertasOrdenados);
 
@@ -89,12 +89,23 @@ export function MiniHistoricoAlerta({ endpoint }) {
     if (carregando) return <div className="p-4 text-center">Carregando alertas...</div>;
     if (erro) return <div className="p-4 text-red-500 text-center">{erro}</div>;
     if (!alertaPrincipal) return <div className="p-4 text-center">Nenhum alerta crítico no momento</div>;
+    console.log("Data de validade recebida:", alertaPrincipal.produto.dataValidade);
+
 
     // Extrai informações do produto do alerta principal
     const nomeProduto = alertaPrincipal.produto?.nome || 'Produto desconhecido';
-     const dataValidade = new Date(alertaPrincipal.produto.dataValidade);
-     const hoje = new Date();
-     const diasParaVencer = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
+    const validadeProduto = alertaPrincipal.produto?.dataValidade;
+    if (!validadeProduto) {
+        console.warn("Produto sem data de validade:", alertaPrincipal.produto);
+        return <div className="p-4 text-center">Produto sem data de validade cadastrada</div>;
+    }
+
+    const dataValidade = dayjs(validadeProduto);
+    const hoje = dayjs();
+    const diasParaVencer = dataValidade.diff(hoje, 'day');
+
+    console.log("Dias para vencer:", diasParaVencer);
+
     const mensagem = (
         <span className='text-[3vh] '>
             <strong className='text-[#73b1e8]'>{nomeProduto}</strong> está a <strong className='text-[#ff0303] '> {diasParaVencer} dias do vencimento</strong>!
@@ -111,13 +122,13 @@ export function MiniHistoricoAlerta({ endpoint }) {
                 />
             </div>
 
-            
-                <div className="flex flex-row justify-center items-center h-full w-full gap-4">
-                    <AlertaInformationDiv tamanho="100%">
-                        <AlertExibition>{mensagem}</AlertExibition>
-                    </AlertaInformationDiv>
-                </div>
-           
+
+            <div className="flex flex-row justify-center items-center h-full w-full gap-4">
+                <AlertaInformationDiv tamanho="100%">
+                    <AlertExibition>{mensagem}</AlertExibition>
+                </AlertaInformationDiv>
+            </div>
+
         </div>
     );
 };
