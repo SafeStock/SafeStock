@@ -1,6 +1,7 @@
 package com.example.safestock.model;
 
 import com.example.safestock.model.enums.CategoriaProduto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -37,7 +38,9 @@ public class Produto {
     private Creche creche;
 
     @OneToMany(mappedBy = "produto")
+    @JsonManagedReference(value = "produto-relatorio")
     private List<Relatorio> relatorio;
+
 
     public Produto() {
     }

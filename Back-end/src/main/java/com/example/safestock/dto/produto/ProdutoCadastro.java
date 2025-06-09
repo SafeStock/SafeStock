@@ -15,14 +15,12 @@ public class ProdutoCadastro {
     @Schema(description = "Id do produto", example = "1")
     private Long id;
 
-    @Size(min = 3, max = 25)
     @Schema(description = "Nome do produto", example = "Candida")
     private String nome;
 
     @Schema(description = "Categoria do produto", example = "Chão")
     private CategoriaProduto categoriaProduto;
 
-    @Min(1)
     @Schema(description = "Quantidade do produto", example = "25")
     private int quantidade;
 
@@ -37,17 +35,6 @@ public class ProdutoCadastro {
 
     @Schema(description = "Creche do produto", example = "1")
     private Creche creche;
-
-    @Schema(description = "Relatorio do produto", example = "1")
-    private List<Relatorio> relatorio;
-
-    public List<Relatorio> getRelatorio() {
-        return relatorio;
-    }
-
-    public void setRelatorio(List<Relatorio> relatorio) {
-        this.relatorio = relatorio;
-    }
 
     public Creche getCreche() {
         return creche;

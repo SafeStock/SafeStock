@@ -1,6 +1,7 @@
 package com.example.safestock.model;
 import com.example.safestock.model.Produto;
 import com.example.safestock.model.RegistroUso;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class Relatorio {
 
     @ManyToOne
     @JoinColumn(name = "fkProduto")
+    @JsonBackReference(value = "produto-relatorio")
     private Produto produto;
 
     @ManyToOne
