@@ -4,6 +4,7 @@ import com.example.safestock.model.Creche;
 import com.example.safestock.model.Relatorio;
 import com.example.safestock.model.enums.CategoriaProduto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -14,14 +15,12 @@ public class ProdutoCadastro {
     @Schema(description = "Id do produto", example = "1")
     private Long id;
 
-    @Size(min = 3, max = 25)
     @Schema(description = "Nome do produto", example = "Candida")
     private String nome;
 
     @Schema(description = "Categoria do produto", example = "Chão")
     private CategoriaProduto categoriaProduto;
 
-    @Size(min = 1, max = 4)
     @Schema(description = "Quantidade do produto", example = "25")
     private int quantidade;
 
@@ -36,17 +35,6 @@ public class ProdutoCadastro {
 
     @Schema(description = "Creche do produto", example = "1")
     private Creche creche;
-
-    @Schema(description = "Relatorio do produto", example = "1")
-    private List<Relatorio> relatorio;
-
-    public List<Relatorio> getRelatorio() {
-        return relatorio;
-    }
-
-    public void setRelatorio(List<Relatorio> relatorio) {
-        this.relatorio = relatorio;
-    }
 
     public Creche getCreche() {
         return creche;

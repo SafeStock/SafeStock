@@ -14,14 +14,12 @@ public class ProdutoAtualizar {
     @Schema(description = "Id do produto", example = "1")
     private Long id;
 
-    @Size(min = 3, max = 25)
     @Schema(description = "Nome do produto", example = "Candida")
     private String nome;
 
     @Schema(description = "Categoria do produto", example = "Chão")
     private CategoriaProduto categoriaProduto;
 
-    @Size(min = 1, max = 4)
     @Schema(description = "Quantidade do produto", example = "25")
     private int quantidade;
 
@@ -33,17 +31,6 @@ public class ProdutoAtualizar {
 
     @Schema(description = "Entrada do produto", example = "15/05/2025")
     private LocalDate dataEntrada;
-
-    @Schema(description = "Relatorio do produto", example = "1")
-    private List<Relatorio> relatorio;
-
-    public List<Relatorio> getRelatorio() {
-        return relatorio;
-    }
-
-    public void setRelatorio(List<Relatorio> relatorio) {
-        this.relatorio = relatorio;
-    }
 
     public LocalDate getDataEntrada() {
         return dataEntrada;

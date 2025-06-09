@@ -1,15 +1,12 @@
-// Modal.jsx
 export function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
 
   return (
     <div
-      className=" flex items-center justify-center fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-[1000]"
-      // Removido o onClick do overlay para não fechar ao clicar fora
+      className="w-[100vw] h-[100vh] fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[1000]"
     >
       <div
-        className="bg-[white] rounded-[1vw] flex flex-col overflow-hidden relative"
-        // Mantém o stopPropagation apenas por segurança, mas não é mais necessário
+        className="bg-[white] rounded-[1vw] flex flex-col overflow-hidden relative w-[30vw] h-[60vh]"
         onClick={e => e.stopPropagation()}
       >
         {children}

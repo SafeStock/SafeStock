@@ -46,24 +46,13 @@ export function RotasApp() {
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={["limpeza"]} />}>
-        <Route path="/dashboard" element={<LimpezaLayout />}>
+        <Route path="/" element={<LimpezaLayout />}>
+          <Route index element={<DashLimpeza />} />
           <Route path="dashboardlimpeza" element={<DashLimpeza />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
 
-
-          {/* Rota para registro de uso */}
-          <Route path="/dashboard/registrouso" element={<Formulario
-            titulo="Registro de uso"
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
-              { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
-              { name: "dataRetirada", label: "Data de retirada:", placeholder: "Digite a data de retirada (ex: 08/27)" }
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-          />} />
 
 
           {/* Rota para cadastro de produto parte 1*/}
@@ -84,36 +73,6 @@ export function RotasApp() {
           {/* Rota para cadastro de produto parte 2*/}
           <Route path="/dashboard/cadastroProdutos2" element={<Formulario
             titulo="Cadastro de produto"
-            campos={[
-              { name: "limiteDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
-              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 08/27)" },
-
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-            navigateTo="/dashboard"
-            buttonLabel="Enviar"
-          />} />
-
-
-          {/* Rota para editar cadastro de produto parte 1*/}
-          <Route path="/dashboard/editarCadastroProdutos" element={<Formulario
-            titulo="Editar produtos"
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
-              { name: "categoria", label: "Categoria:", placeholder: "Digite a categoria do produto" },
-              { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
-
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-            navigateTo="/dashboard/cadastroProdutos2"
-            buttonLabel="Próximo"
-          />} />
-
-
-          {/* Rota para editar cadastro de produto parte 2*/}
-          <Route path="/dashboard/editarCadastroProdutos2" element={<Formulario
-            titulo="Editar produtos"
             campos={[
               { name: "limiteDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
               { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },

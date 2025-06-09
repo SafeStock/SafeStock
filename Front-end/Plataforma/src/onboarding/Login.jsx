@@ -18,12 +18,12 @@ export function Login() {
   const [star, setStar] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  const irParaDashboard = (cargo) => {
+  const irParaDashboard = () => {
   setTimeout(() => {
-    if (cargo === "limpeza") {
-      navigate('/dashboard/dashboardlimpeza');
-    } else {
+    if (sessionStorage.getItem('cargo') === 'dono') {
       navigate('/dashboard');
+    } else if (sessionStorage.getItem('cargo') === 'limpeza') {
+      navigate('/dashboardlimpeza');
     }
   }, 2200);
 };
@@ -121,7 +121,7 @@ export function Login() {
                   />
 
                   <h2 className=" flex justify-end left-[80%] absolute  top-[35%]">
-                    <span className={`${star ? "opacity-100" : "opacity-0"
+                    <span className={`${star ? "opacity-100 mt-[2.7vh] ml-[2vw]" : "opacity-0"
                       } transition-opacity duration-300`} style={{ color: star ? color : "transparent" }}>{star}</span>
                   </h2>
 
@@ -134,7 +134,7 @@ export function Login() {
                     className="w-[25vw] p-[1.5vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none "
                   />
                   <h2 className=" flex justify-end left-[80%] absolute  top-[49.5%]">
-                    <span className={`${star ? "opacity-100" : "opacity-0"
+                    <span className={`${star ? "opacity-100 mt-[4.6vh] ml-[2.1vw]" : "opacity-0"
                       } transition-opacity duration-300`} style={{ color: star ? color : "transparent" }}>{star}</span>
                   </h2>
                 </div>
@@ -148,12 +148,12 @@ export function Login() {
                 </button>
               </form>
 
-              <div className="mt-4 text-sm text-center text-gray-600 ">
+              {/* <div className="mt-4 text-sm text-center text-gray-600 ">
                 <p>
                   Esqueceu sua{" "}
                   <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh] ">Senha</button>?
                 </p>
-              </div>
+              </div> */}
 
               <div className="text-[2.5vh] w-[100%] flex justify-center ">
                 <span

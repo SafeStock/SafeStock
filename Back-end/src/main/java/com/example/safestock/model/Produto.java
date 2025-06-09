@@ -1,6 +1,7 @@
 package com.example.safestock.model;
 
 import com.example.safestock.model.enums.CategoriaProduto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -18,12 +19,12 @@ public class Produto {
     private Long id;
 
     @NotBlank(message = "O campo nome não pode estar em branco")
-    @Size(min = 45, message = "O campo senha deve conter no minimo 45 caracteres")
     private String nome;
 
     private CategoriaProduto categoriaProduto;
 
     @NotNull(message = "O campo quantidade não pode estar em branco")
+    @Min(value = 1, message = "O campo quantidade deve ser no mínimo 1")
     private int quantidade;
 
 
@@ -37,7 +38,9 @@ public class Produto {
     private Creche creche;
 
     @OneToMany(mappedBy = "produto")
+    @JsonManagedReference(value = "produto-relatorio")
     private List<Relatorio> relatorio;
+
 
     public Produto() {
     }

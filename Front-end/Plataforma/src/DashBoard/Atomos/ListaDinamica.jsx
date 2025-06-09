@@ -9,7 +9,7 @@ dayjs.locale('pt-br');
 export function ListaDinamica({
     endpoint,
     campos,
-    nomesCampos, // Nova prop
+    nomesCampos,
     titulo,
     formataDados,
     token,
@@ -17,7 +17,8 @@ export function ListaDinamica({
     hideTitle = false,
     customHeader = null,
     onRowClick = null,
-    disableAutoDate = false
+    disableAutoDate = false,
+    onExportClick = null
 }) {
 
     const [dados, setDados] = useState([]);
@@ -92,22 +93,33 @@ export function ListaDinamica({
         <div className=" w-full">
             {/* Título (se não estiver escondido) */}
             {!hideTitle && titulo && (
-                <h2 className="">
-                    {titulo}
-                </h2>
+                <div>
+                    <h2>{titulo}</h2>
+                    {onExportClick && (
+                        <button
+                            onClick={onExportClick}
+                            type="button"
+                        >
+                            Exportar Excel
+                        </button>
+                    )}
+                </div>
             )}
+
 
             {/* Cabeçalho da tabela */}
             <div className="w-full bg-white sticky top-[10vh] z-50 shadow-md ">
                 <table className="w-full text-[#3A577B] border-collapse table-fixed ">
                     <colgroup>
-                        {campos.map(() => <col className="w-auto" />)}
+                        {campos.map((campo, i) => (
+                            <col key={`${campo}-${i}`} className="w-auto" />
+                        ))}
                     </colgroup>
                     <thead>
                         {customHeader || (
                             <tr>
                                 {campos.map((campo, i) => (
-                                    <th key={i} className="p-[1vh] text-center text-[2vh] bg-[white]">
+                                    <th key={i} className="p-[1vh] text-center text-[2vh]">
                                         {formatarNomeCampo(campo)}
                                     </th>
                                 ))}
@@ -118,23 +130,23 @@ export function ListaDinamica({
             </div>
 
             {/* Corpo da tabela */}
-            <div className="h-[50vh] w-full overflow-y-auto">
-                <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed ">
+            <div className="h-[45.8vh] w-full overflow-y-auto">
+                <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed">
                     <colgroup>
                         {campos.map((_, index) => (
                             <col key={index} className="w-full" />
                         ))}
                     </colgroup>
                     <tbody>
-                        {dados.map((item, i) => (
+                        {dados.map((item) => (
                             <tr
-                                key={i}
+                                key={item.id}
                                 className={`h-[7vh] shadow-[0_0_10px_rgba(0,0,0,0.2)] rounded-[20px] text-[1.5vh] ${onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}`}
                                 onClick={() => onRowClick && onRowClick(item)}
                             >
-                                {campos.map((campo, j) => (
+                                {campos.map((campo) => (
                                     <td
-                                        key={j}
+                                        key={campo}
                                         className={`text-center w-auto p-[1vh] ${campo.toLowerCase().includes("data") ? "font-mono whitespace-nowrap" : ""}`}
                                     >
                                         {item[campo] || "-"}

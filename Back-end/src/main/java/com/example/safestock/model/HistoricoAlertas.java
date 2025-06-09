@@ -1,6 +1,7 @@
 package com.example.safestock.model;
 
 import com.example.safestock.model.enums.StatusAlerta;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,17 +17,26 @@ public class HistoricoAlertas {
     private StatusAlerta status;
     private String descricao;
 
+
+    private String nomeProduto;
+
     @OneToMany(mappedBy = "alerta")
     private List<Relatorio> relatorio;
+
+    @ManyToOne
+    @JoinColumn(name = "fkProduto")
+    private Produto produto;
 
     public HistoricoAlertas() {
     }
 
-    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao, List<Relatorio> relatorio) {
+    public HistoricoAlertas(LocalDateTime dataHora, StatusAlerta status, String descricao, List<Relatorio> relatorio, Produto produto, String nomeProduto) {
         this.dataHora = dataHora;
         this.status = status;
         this.descricao = descricao;
         this.relatorio = relatorio;
+        this.produto = produto;
+        this.nomeProduto = nomeProduto;
     }
 
     public Long getId() {
@@ -68,4 +78,13 @@ public class HistoricoAlertas {
     public void setRelatorio(List<Relatorio> relatorio) {
         this.relatorio = relatorio;
     }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {this.produto = produto;}
+    public String getNomeProduto() {return nomeProduto;}
+
+    public void setNomeProduto(String nomeProduto) {this.nomeProduto = nomeProduto;}
 }

@@ -9,7 +9,7 @@ export function StatusBadge({ status }) {
     };
 
     return (
-        <div className="flex items-center gap-3 relative left-[18vh]">
+        <div className="flex items-center flex items-center gap-1 relative left-[13vh]">
             <span className={`inline-block rounded-full w-[2vh] h-[2vh] mr-[1vh]`} style={{ backgroundColor: corStatus(status) }}></span>
             <span>{status}</span>
         </div>

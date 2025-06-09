@@ -7,7 +7,7 @@
 :root {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
-  -Principal: #3A577B;
+
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -120,4 +120,17 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8abad;
+}
+
+@keyframes pulsar-color {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(0.3);
+  }
+}
+
+.animate-pulsar-color {
+  animation: pulsar-color 1s ease-in-out infinite;
 }

@@ -3,12 +3,12 @@ import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 export function HistoricoAlertas() {
 
   return (
-    <div className="flex">
+    <div className="flex overflow-hidden">
       <AreaWorkGeral
         NewText={`Historico de Alertas`}
-        titles={["Alerta", "Status", "Data e Hora"]}
+        titles={["Alerta" ,"Produto" , "Status", "Data e Hora"]}
         tabela={"historicoAlertas"}
-        campos={["status","descricao","dataHora"]}
+        campos={["status","produto.nome","descricao","dataHora"]}
       />
 
     </div>

@@ -134,13 +134,18 @@ export function Cadastro() {
     }
   }
 
+  const inputClass = "w-[20vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none";
+  const bottomClass = "cursor-pointer text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[0.8vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition duration-200 mb-[3vh] mt-[1vh] w-[40%] h-[4.5vh] mx-auto";
+
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
       <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
         {/* Formulário 1 */}
         {etapa === 1 && (
           <div
-            className="h-[65vh] w-[68vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[65vh] w-[55vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
@@ -155,8 +160,7 @@ export function Cadastro() {
                   placeholder="Digite seu nome"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
-                  focus:border-[#2F4672] transition-colors duration-200"
+                  className={inputClass}
                 />
                 <p className="mt-[3vh]">Sobrenome</p>
                 <input
@@ -164,30 +168,22 @@ export function Cadastro() {
                   placeholder="Digite seu Sobrenome"
                   value={sobrenome}
                   onChange={(e) => setSobrenome(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
-                  focus:border-[#2F4672] transition-colors duration-200"
+                  className={inputClass}
                 />
                 <p className="mt-[3vh]">Telefone</p>
                 <input
                   type="number"
-                  placeholder="1140020922"
+                  placeholder="11978547874"
                   value={telefone}
                   onChange={(e) => setTelefone(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
-                  focus:border-[#2F4672] transition-colors duration-200"
+                  className={inputClass}
                 />
               </div>
               <button
                 type="submit"
-                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]
-                              hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200 "
-              >
+                className={bottomClass}>
                 Próximo
               </button>
-
-              <div>
-
-              </div>
 
               {/* Mensagem de erro */}
               <div className="w-[35vh] mt-2 text-center text-[2vh]">
@@ -203,7 +199,7 @@ export function Cadastro() {
                 </span>
               </div>
 
-              <h2 className="flex justify-end top-[80vh] w-[35%] text-[#2F4672] absolute">1/2</h2>
+              <h2 className="flex justify-end top-[80vh] w-[35%] text-[#2F4672] absolute mr-[12rem]">1/2</h2>
             </form>
           </div>
         )}
@@ -211,7 +207,7 @@ export function Cadastro() {
         {/* Formulário 2 */}
         {etapa === 2 && (
           <div
-            className="h-[65vh] w-[68vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[65vh] w-[55vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
@@ -224,8 +220,7 @@ export function Cadastro() {
                 <select
                   value={cargo}
                   onChange={(e) => setCargo(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none
-                  focus:border-[#2F4672] transition-colors duration-200"
+                  className="w-[21.5vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none"
                 >
                   <option value="">Selecione o tipo de usuário</option>
                   <option value="dono">Dono</option>
@@ -239,8 +234,7 @@ export function Cadastro() {
                   placeholder="Digite seu Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
-                  focus:border-[#2F4672] transition-colors duration-200"
+                  className={inputClass}
                 />
                 <p className="mt-[3vh]">Senha</p>
                 <input
@@ -248,14 +242,12 @@ export function Cadastro() {
                   placeholder="******"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  className="'w-full p-[1vh] rounded-[10px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none 
-                  focus:border-[#2F4672] transition-colors duration-200"
+                  className={inputClass}
                 />
               </div>
               <button
                 type="submit"
-                className="text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[1.5vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] w-[50%]
-                          hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+                className={bottomClass}
               >
                 Cadastrar
               </button>
@@ -272,7 +264,7 @@ export function Cadastro() {
                 </span>
               </div>
 
-              <h2 className="flex justify-end w-[100%] text-[#2F4672]">2/2</h2>
+              <h2 className="flex justify-end top-[80vh] w-[35%] text-[#2F4672] absolute mr-[12rem]">2/2</h2>
             </form>
           </div>
         )}
