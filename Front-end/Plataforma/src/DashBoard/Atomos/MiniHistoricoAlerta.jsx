@@ -9,7 +9,6 @@ import {
 } from '../Atomos/DivElementKPIDono';
 
 export function MiniHistoricoAlerta({ endpoint }) {
-
     const [alertaPrincipal, setAlertaPrincipal] = useState(null);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState(null);
@@ -29,82 +28,96 @@ export function MiniHistoricoAlerta({ endpoint }) {
         }
 
         const buscarAlertaCritico = async () => {
-  try {
-    setCarregando(true);
-    const response = await axios.get(endpoint, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+            try {
+                setCarregando(true);
+                const response = await axios.get(endpoint, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
 
-    // Debug: Verifique a estrutura real da response
-    console.log("Dados brutos da API:", response.data);
+                // Extrai alertas independentemente da estrutura
+                let dadosAlertas = response.data?.data || response.data?.alertas || response.data;
 
-    // Extrai alertas independentemente da estrutura
-    let dadosAlertas = response.data?.data || response.data?.alertas || response.data;
-    
-    // Garante que é um array
-    if (!Array.isArray(dadosAlertas)) {
-      dadosAlertas = [];
-    }
+                // Garante que é um array
+                if (!Array.isArray(dadosAlertas)) {
+                    dadosAlertas = [];
+                }
 
-    // Filtra alertas válidos (com status)
-    const alertasValidos = dadosAlertas.filter(a => a && a.status);
-    
-    // Ordena: críticos primeiro
-    const alertasOrdenados = [...alertasValidos].sort((a, b) => 
-      a.status === 'critico' ? -1 : b.status === 'critico' ? 1 : 0
-    );
+                console.log("Dados recebidos:", dadosAlertas);
 
-    const alerta = alertasOrdenados[0] || null;
-    setAlertaPrincipal(alerta);
-    console.log("Alerta selecionado:", alerta); // Agora mostra o valor atualizado
-  } catch (error) {
-    console.error('Erro ao buscar alertas:', error);
-    setErro(error.message || 'Falha ao carregar alertas');
-  } finally {
-    setCarregando(false);
-  }
-};
+                // Filtra alertas válidos (com status e dataValidade)
+                const alertasValidos = dadosAlertas.filter(a =>
+                    a &&
+                    a.status &&
+                    a.produto && // Verifica se existe o objeto produto
+                    a.produto.dataValidade // Verifica se existe dataValidade dentro de produto
+                );
+
+                console.log("Alertas válidos:", alertasValidos);
+
+                // Ordena por prioridade e data mais próxima
+                const alertasOrdenados = [...alertasValidos].sort((a, b) => {
+                    // Prioridade: críticos primeiro
+                    const prioridadeA = a.status === 'critico' ? 0 : 1;
+                    const prioridadeB = b.status === 'critico' ? 0 : 1;
+
+                    if (prioridadeA !== prioridadeB) {
+                        return prioridadeA - prioridadeB;
+                    }
+
+                    // Mesma prioridade: ordena pela data mais próxima
+                    const dataA = new Date(a.produto.dataValidade);
+                    const dataB = new Date(b.produto.dataValidade);
+                    return dataA - dataB;
+                });
+
+                console.log("Alertas ordenados:", alertasOrdenados);
+
+                const alerta = alertasOrdenados[0] || null;
+                setAlertaPrincipal(alerta);
+                console.log("Alerta principal selecionado:", alerta);
+            } catch (error) {
+                console.error('Erro ao buscar alertas:', error);
+                setErro(error.message || 'Falha ao carregar alertas');
+            } finally {
+                setCarregando(false);
+            }
+        };
+
         buscarAlertaCritico();
     }, [endpoint, token]);
-
-
 
     if (carregando) return <div className="p-4 text-center">Carregando alertas...</div>;
     if (erro) return <div className="p-4 text-red-500 text-center">{erro}</div>;
     if (!alertaPrincipal) return <div className="p-4 text-center">Nenhum alerta crítico no momento</div>;
 
+    // Extrai informações do produto do alerta principal
+    const nomeProduto = alertaPrincipal.produto?.nome || 'Produto desconhecido';
+     const dataValidade = new Date(alertaPrincipal.produto.dataValidade);
+     const hoje = new Date();
+     const diasParaVencer = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
+    const mensagem = (
+        <span className='text-[3vh] '>
+            <strong className='text-[#73b1e8]'>{nomeProduto}</strong> está a <strong className='text-[#ff0303] '> {diasParaVencer} dias do vencimento</strong>!
+        </span>
+    );
+
+
     return (
-        <div className="w-full h-[50vh] flex flex-col">
-            <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-end text-[23px] font-[600] mb-2">
-                Histórico de Alertas
+        <div className="flex flex-col justify-center items-center">
+            <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-center text-[23px] font-[600] mt-[5vh] ">
+                <StatusAlertExibition
+                    cor={alertaPrincipal.status === 'critico' ? '#ff0303' : '#FFA500'}
+                    status='ATENÇÃO'
+                />
             </div>
 
-            <div className="w-full h-[calc(100%-5vh)] flex justify-center items-center px-4">
+            
                 <div className="flex flex-row justify-center items-center h-full w-full gap-4">
-                    {/* Card do Alerta */}
-                    <AlertaInformationDiv tamanho="50%">
-                        <div className="text-[#547A81] font-[600] text-[21.5px] w-full h-[30%] flex justify-center items-center mb-2">
-                            {alertaPrincipal.titulo || 'Alerta Crítico'}
-                        </div>
-                        <div className="w-full h-[70%] flex justify-center">
-                            <AlertExibition alert={alertaPrincipal.mensagem} />
-                        </div>
-                    </AlertaInformationDiv>
-
-                    {/* Card do Status */}
-                    <AlertaInformationDiv tamanho="50%">
-                        <div className="text-[#547A81] font-[600]  text-[21.5px] w-full h-[30%] flex justify-center items-center mb-2">
-                            Status
-                        </div>
-                        <div className="w-full h-[70%] flex justify-center">
-                            <StatusAlertExibition
-                                cor={alertaPrincipal.status === 'critico' ? '#E10000' : '#FFA500'}
-                                status={alertaPrincipal.status === 'critico' ? 'Crítico' : 'Atenção'}
-                            />
-                        </div>
+                    <AlertaInformationDiv tamanho="100%">
+                        <AlertExibition>{mensagem}</AlertExibition>
                     </AlertaInformationDiv>
                 </div>
-            </div>
+           
         </div>
     );
 };

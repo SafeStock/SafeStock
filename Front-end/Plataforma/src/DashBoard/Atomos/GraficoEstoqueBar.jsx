@@ -36,23 +36,23 @@ export function GraficoEstoqueBar() {
     buscarDados();
     const interval = setInterval(() => {
       buscarDados();
-    }, 5000); 
+    }, 5000);
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, []);
 
   return (
 
     <div className="w-full bg-white rounded-2xl shadow ">
-      <ResponsiveContainer width="95%" height={200}>
+      <ResponsiveContainer width="95%" height={230}>
         <BarChart data={dadosGrafico} barCategoryGap="17%">
-          <CartesianGrid stroke="#e0e0e0" vertical={false}/>
-          <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.6vh', fontWeight: '550'}} />
+          <CartesianGrid stroke="#e0e0e0" vertical={false} />
+          <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.6vh', fontWeight: '550' }} />
           <YAxis tick={{ fill: '#2f4300' }} />
-          <Tooltip  
-          contentStyle={{ background: 'white', borderRadius: '13px', border: '1.5px solid #b0b0b0', boxShadow: '-8px 4px 10px rgba(0, 0, 0, 0.4)' }} 
-          position={{ x: 570, y: 175 }}
-          cursor={{ fill: 'transparent' }}
+          <Tooltip
+            contentStyle={{ background: 'white', borderRadius: '13px', border: '1.5px solid #b0b0b0', boxShadow: '-8px 4px 10px rgba(0, 0, 0, 0.4)' }}
+            position={{ x: 570, y: 175 }}
+            cursor={{ fill: 'transparent' }}
           />
           <Legend
             formatter={(value) => (

@@ -9,7 +9,7 @@ dayjs.locale('pt-br');
 export function ListaDinamica({
     endpoint,
     campos,
-    nomesCampos, 
+    nomesCampos,
     titulo,
     formataDados,
     token,
@@ -17,7 +17,8 @@ export function ListaDinamica({
     hideTitle = false,
     customHeader = null,
     onRowClick = null,
-    disableAutoDate = false
+    disableAutoDate = false,
+      onExportClick = null
 }) {
 
     const [dados, setDados] = useState([]);
@@ -92,10 +93,19 @@ export function ListaDinamica({
         <div className=" w-full">
             {/* Título (se não estiver escondido) */}
             {!hideTitle && titulo && (
-                <h2 className="">
-                    {titulo}
-                </h2>
+                <div>
+                    <h2>{titulo}</h2>
+                    {onExportClick && (
+                        <button
+                            onClick={onExportClick}
+                            type="button"
+                        >
+                            Exportar Excel
+                        </button>
+                    )}
+                </div>
             )}
+
 
             {/* Cabeçalho da tabela */}
             <div className="w-full bg-white sticky top-[10vh] z-50 shadow-md ">
@@ -118,7 +128,7 @@ export function ListaDinamica({
             </div>
 
             {/* Corpo da tabela */}
-            <div className="h-[50vh] w-full overflow-y-auto">
+            <div className="h-[45.8vh] w-full overflow-y-auto">
                 <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed">
                     <colgroup>
                         {campos.map((_, index) => (
