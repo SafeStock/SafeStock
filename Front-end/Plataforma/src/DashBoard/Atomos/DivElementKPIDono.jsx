@@ -245,7 +245,7 @@ export function AlertaInformationDiv({ tamanho, children }) {
 
 export function AlertExibition({  children }) {
     return (
-        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center">
+        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center animate-pulsar">
             {children}
         </div>
     );
@@ -253,12 +253,14 @@ export function AlertExibition({  children }) {
 
 export function StatusAlertExibition({ cor, status }) {
   return (
-    <div className="w-full h-[6vh] flex flex-row justify-center items-center">
+    <div className="w-full h-[6vh] flex flex-row justify-center items-center animate-pulsar">
       <div
         className="w-[3vh] h-[3vh] rounded-full mr-[1vw] animate-pulsar"
         style={{ backgroundColor: cor }}
-      ></div>
-      <span className="animate-pulsar" style={{ color: cor }}>{status}</span>
+      />
+      <span className="animate-pulsar" style={{ color: cor }}>
+        {status}
+      </span>
     </div>
   );
 }
