@@ -57,26 +57,6 @@ export function DivElementKPIDonoBigLeft({
     );
 }
 
-// Componente de KPI pequeno (lado direito)
-export function DivElementKPIDonoLittleRight() {
-    return (
-        <div className="w-[99%] h-[20vh] bg-white rounded-[2vh] mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center">
-            <div className="text-[#3A577B] w-full h-[30%] flex justify-center items-center text-[25px] font-[600]">
-                Status de abastecimento
-            </div>
-            <div className="w-full h-[40%] flex justify-center items-center">
-                <div className="bg-[#E8F0F1] w-[25vw] h-[6.5vh] rounded-[40px] overflow-hidden relative">
-                    <div className="absolute w-[25vw] h-[6.5vh] flex justify-center items-center">
-                        <p className="text-[#3A577B] font-[400] text-[25px]">50%</p>
-                    </div>
-                    <div className="bg-[#9AC7D9] w-[50%] h-full"></div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-
 export function DivElementKPIDonoBigRight({
     NameUse = "Histórico de Uso",
     buttonNameUse = "Ver Histórico",
