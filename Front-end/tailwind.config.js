@@ -7,13 +7,13 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
-        'pulsar-vermelho': {
+        pulsar: {
           '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.3' },
+          '50%': { opacity: '0.1' },
         },
       },
       animation: {
-        'pulsar-vermelho': 'pulsar-vermelho 1s ease-in-out infinite',
+        pulsar: 'pulsar 1s ease-in-out infinite',
       },
     },
   },

@@ -54,18 +54,6 @@ export function RotasApp() {
           <Route path="telaprodutos" element={<TelaProdutos />} />
 
 
-          {/* Rota para registro de uso */}
-          <Route path="/dashboard/registrouso" element={<Formulario
-            titulo="Registro de uso"
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
-              { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
-              { name: "dataRetirada", label: "Data de retirada:", placeholder: "Digite a data de retirada (ex: 08/27)" }
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-          />} />
-
 
           {/* Rota para cadastro de produto parte 1*/}
           <Route path="/dashboard/cadastroProdutos" element={<Formulario

@@ -13,6 +13,12 @@ import java.util.List;
 public class HistoricoAlertasController {
     private final HistoricoAlertasService historicoAlertasService;
 
+    @GetMapping
+    public ResponseEntity<List<HistoricoAlertas>> listarAlertasRecentes() {
+        return ResponseEntity.ok(historicoAlertasService.findAlertasRecentes());
+    }
+
+
     public HistoricoAlertasController(HistoricoAlertasService historicoAlertasService) {
         this.historicoAlertasService = historicoAlertasService;
     }
@@ -23,8 +29,6 @@ public class HistoricoAlertasController {
         return ResponseEntity.ok(novoHistoricoAlerta);
     }
 
-    @GetMapping
-    public List<HistoricoAlertas> listarHistorico(){
-        return historicoAlertasService.listarHistorico();
-    }
+    //@GetMapping
+    //public List<HistoricoAlertas> listarHistorico(){return historicoAlertasService.listarHistorico();}
 }
