@@ -101,7 +101,14 @@ public class AlertaService {
         emailService.enviarEmail(
                 "ekkoante@gmail.com",
                 "⚠️ Alerta de Vencimento: " + produto.getNome(),
-                "Produto: " + produto.getNome() + "\nStatus: " + status + "\nDescrição: " + descricao
+                "Prezado(a),\n\n" +
+                        "Informamos que o produto abaixo encontra-se com o seguinte status:\n\n" +
+                        "Produto: " + produto.getNome() + "\n" +
+                        "Status: " + status + "\n" +
+                        "Descrição: " + descricao + "\n\n" +
+                        "Solicitamos a gentileza de verificar e tomar as providências necessárias.\n\n" +
+                        "Atenciosamente,\n" +
+                        "- Stock, Safe"
         );
 
 
