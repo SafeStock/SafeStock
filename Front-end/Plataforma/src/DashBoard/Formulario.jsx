@@ -49,7 +49,7 @@ export function Formulario({
     const enviar = async (e) => {
         e.preventDefault();
 
-        const camposVazios = Object.entries(form).filter(([, value]) => value.trim() === "");
+        const camposVazios = Object.entries(form).filter(([, value]) => String(value).trim() === "");
 
 
         if (camposVazios.length > 0) {
