@@ -30,7 +30,6 @@ public class Funcionario {
     private String email;
 
     @NotBlank(message = "O campo senha não pode ser nulo")
-    @Pattern(regexp = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")
     private String senha;
 
     @NotBlank(message = "O campo telefone não pode ser nulo")

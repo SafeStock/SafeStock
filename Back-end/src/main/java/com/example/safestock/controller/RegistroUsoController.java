@@ -22,11 +22,10 @@ public class RegistroUsoController {
         this.registroUsoService = registroUsoService;
     }
 
-    @PostMapping
+    @PostMapping("/cadastro")
     public ResponseEntity<RegistroUso> registarUso(@Valid @RequestBody RegistroUso registro){
         RegistroUso novoRegistroUso = registroUsoService.registrarUso(registro);
         return ResponseEntity.ok(novoRegistroUso);
-
     }
 
     @GetMapping

@@ -122,16 +122,15 @@ html {
   background: #a8abad;
 }
 
-@keyframes pulsar-vermelho {
+@keyframes pulsar-color {
   0%, 100% {
-    color: #FF0F0F;
+    filter: brightness(1);
   }
   50% {
-    color: #FF6666;
+    filter: brightness(0.3);
   }
 }
 
-.animate-pulsar-vermelho {
-  animation: pulsar-vermelho 1s ease-in-out infinite;
+.animate-pulsar-color {
+  animation: pulsar-color 1s ease-in-out infinite;
 }
-

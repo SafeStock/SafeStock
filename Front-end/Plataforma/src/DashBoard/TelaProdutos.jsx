@@ -163,6 +163,7 @@ export function TelaProdutos() {
           )}
         </Modal>
 
+<<<<<<< HEAD
         <AreaWorkGeral
           NewText="Produtos"
           titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
@@ -175,5 +176,19 @@ export function TelaProdutos() {
         />
       </div>
     </ModalProdutoContext.Provider>
+=======
+      <AreaWorkGeral
+        NewText="Produtos"
+        titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
+        tabela="produtos"
+        campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
+        abrirModal={abrirModal}
+        atualizarCadastro={atualizarProduto}
+        displayButton={display}
+        mostrarBotaoExportar={false}
+        
+      />
+    </div>
+>>>>>>> 7a9cc951eaf7a72600cc2f0ffec3c233faa67129
   );
 }

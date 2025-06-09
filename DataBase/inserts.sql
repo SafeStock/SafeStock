@@ -33,19 +33,6 @@ INSERT INTO Produto (nome, categoria_Produto, quantidade, limite_Semanal_De_Uso,
 ('Cera Líquida', 1, 60, 70, '2025-09-25', '2025-07-25', 1);
 
 
-INSERT INTO Historico_Alertas (fk_Produto,data_Hora, status, descricao) VALUES
-(1,'2025-05-24 10:30:00', '0', 'Produto em nível crítico!'),
-(2,'2025-05-24 11:00:00', '1', 'Produto em nível de atenção!'),
-(3,'2025-05-24 11:30:00', '1', 'Produto em nível de atenção '),
-(4,'2025-05-25 09:45:00', '0', 'Validade expirada!'),
-(5,'2025-05-25 10:15:00', '1', 'Validade próxima do vencimento!'),
-(6,'2025-05-26 10:00:00', '0', 'Produto em falta no estoque!'),
-(7,'2025-05-26 10:30:00', '1', 'Limite semanal de uso excedido!'),
-(8,'2025-05-26 11:00:00', '0', 'Produto com validade expirada!'),
-(9,'2025-05-26 11:30:00', '1', 'Produto abaixo do limite mínimo!'),
-(10,'2025-05-26 12:00:00', '0', 'Produto próximo da validade!');
-
-
 INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade) VALUES
 ('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10),
 ('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5),

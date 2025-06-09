@@ -16,7 +16,7 @@ export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
                 <div className="w-[65%] h-full flex flex-row items-end justify-around">
                     <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
                     <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
-                        <h1 className="text-[5vh]">{Qtd}</h1>
+                        <strong className="text-[5vh]">{Qtd}</strong>
                     </div>
                 </div>
             </div>
@@ -205,7 +205,6 @@ export function DivElementKPIDonoBigRight({
                                 { name: "dataRetirada", label: "Data de retirada:", placeholder: "Digite a data de retirada (ex: 08/27)" }
                             ]}
                             onSubmit={fecharModal}
-                            buttonLabel="Registrar"
                         />
                     </div>
                 </div>
@@ -226,20 +225,23 @@ export function AlertaInformationDiv({ tamanho, children }) {
 
 export function AlertExibition({  children }) {
     return (
-        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center">
+        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center animate-pulsar">
             {children}
         </div>
     );
 }
 
-export function StatusAlertExibition({ cor, status, animar }) {
+export function StatusAlertExibition({ cor, status }) {
   return (
-    <div className="w-full h-[6vh] flex flex-row justify-center items-center ">
+    <div className="w-full h-[6vh] flex flex-row justify-center items-center animate-pulsar">
       <div
-        className={`w-[3vh] h-[3vh] rounded-full mr-[1vw] ${animar ? 'animate-pulsar-vermelho' : ''}`}
+        className="w-[3vh] h-[3vh] rounded-full mr-[1vw] animate-pulsar"
         style={{ backgroundColor: cor }}
-      ></div>
-      <span className={` ${status ? 'text-[#ff0303]' : 'text-[#FFA500]'} animate-pulsar-vermelho`}>{status}</span>
+      />
+      <span className="animate-pulsar" style={{ color: cor }}>
+        {status}
+      </span>
     </div>
   );
 }
+
