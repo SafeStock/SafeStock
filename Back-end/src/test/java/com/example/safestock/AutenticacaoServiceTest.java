@@ -27,7 +27,7 @@ public class AutenticacaoServiceTest {
         void deveRetornarFuncionarioQuandoEmailExiste() {
             Funcionario funcionario = new Funcionario();
             funcionario.setEmail("teste@email.com");
-            funcionario.setSenha("senha123");
+            funcionario.setSenha("senha123!@");
             funcionario.setNome("Teste Funcionario");
             funcionario.setSobrenome("Damas");
             funcionario.setTelefone("11998948944");
