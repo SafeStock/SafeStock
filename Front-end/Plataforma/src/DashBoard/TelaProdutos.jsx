@@ -11,6 +11,7 @@ export function TelaProdutos() {
   const [etapa, setEtapa] = useState(1);
   const [dadosPrimeiraEtapa, setDadosPrimeiraEtapa] = useState({});
   const [produtoSelecionado, setProdutoSelecionado] = useState({});
+  const [modoCadastro, setModoCadastro] = useState(false); // novo estado
   const token = sessionStorage.getItem('authToken');
 
   const fecharModal = () => {
@@ -18,9 +19,10 @@ export function TelaProdutos() {
     setEtapa(1);
     setDadosPrimeiraEtapa({});
     setProdutoSelecionado({});
+    setModoCadastro(false);
   };
 
-  // Função para abrir o modal já com os dados do produto selecionado
+  // Função para abrir o modal para editar
   const abrirModal = (produto = {}) => {
     setProdutoSelecionado(produto);
     setDadosPrimeiraEtapa({
@@ -30,6 +32,21 @@ export function TelaProdutos() {
       id: produto.id
     });
     setEtapa(1);
+    setModoCadastro(false);
+    setModalAberto(true);
+  };
+
+  // Função para abrir o modal para cadastrar
+  const abrirModalCadastro = () => {
+    setProdutoSelecionado({});
+    setDadosPrimeiraEtapa({
+      nome: "",
+      categoria: "",
+      quantidade: "",
+      id: undefined
+    });
+    setEtapa(1);
+    setModoCadastro(true);
     setModalAberto(true);
   };
 
@@ -52,9 +69,35 @@ export function TelaProdutos() {
       );
       alert("Produto atualizado com sucesso!");
       fecharModal();
-      // Aqui você pode buscar novamente os dados se quiser atualizar a lista
+      window.location.reload();
     } catch (error) {
       alert("Erro ao atualizar produto.");
+      console.error(error.response?.data || error);
+    }
+  };
+
+  // Função para cadastrar produto no backend
+  const cadastrarProduto = async (dadosAtualizados) => {
+    if (!token || token.trim() === "") {
+      alert("Token inválido ou não informado");
+      return;
+    }
+    try {
+      await axios.post(
+        `http://localhost:8080/api/produtos/cadastro`,
+        dadosAtualizados,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert("Produto cadastrado com sucesso!");
+      fecharModal();
+      window.location.reload();
+    } catch (error) {
+      alert("Erro ao cadastrar produto.");
       console.error(error.response?.data || error);
     }
   };
@@ -66,10 +109,7 @@ export function TelaProdutos() {
   };
 
   const handleSegundaEtapa = async (dados) => {
-    const produtoId = dadosPrimeiraEtapa.id;
-    // Certifique-se de que todos os campos obrigatórios estão presentes e corretos
     const dadosAtualizados = {
-      id: produtoId,
       nome: dadosPrimeiraEtapa.nome,
       categoriaProduto: dadosPrimeiraEtapa.categoria,
       quantidade: Number(dadosPrimeiraEtapa.quantidade),
@@ -77,25 +117,35 @@ export function TelaProdutos() {
       dataValidade: dados.dataValidade,
       dataEntrada: dados.dataEntrada,
     };
-    console.log("Enviando para o backend:", dadosAtualizados);
-    await atualizarProduto(produtoId, dadosAtualizados);
-    window.location.reload(); // Atualiza a página após editar
+    if (modoCadastro) {
+      await cadastrarProduto(dadosAtualizados);
+    } else {
+      const produtoId = dadosPrimeiraEtapa.id;
+      await atualizarProduto(produtoId, { id: produtoId, ...dadosAtualizados });
+    }
     return false;
   };
 
-    const cargo = sessionStorage.getItem('cargo');
-    let display = 'none';
-
+  const cargo = sessionStorage.getItem('cargo');
+  let display = 'none';
   if (cargo === 'limpeza') {
     display = 'flex';
   }
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
+      {/* Botão para cadastrar produto */}
+      <button
+        className="bg-blue-600 text-white px-4 py-2 rounded mb-4 w-48 self-end"
+        onClick={abrirModalCadastro}
+      >
+        Cadastrar Produto
+      </button>
+
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
           <Formulario
-            titulo="Editar Produtos"
+            titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
             campos={[
               { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
               { name: "categoria", label: "Categoria:", placeholder: "Digite a categoria do produto" },
@@ -107,14 +157,14 @@ export function TelaProdutos() {
           />
         ) : (
           <Formulario
-            titulo="Editar Produtos"
+            titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
             campos={[
               { name: "limiteSemanalDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
               { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 2025-08-27)" },
               { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 2025-08-27)" },
             ]}
             onSubmit={handleSegundaEtapa}
-            buttonLabel="Enviar"
+            buttonLabel={modoCadastro ? "Cadastrar" : "Enviar"}
             initialValues={produtoSelecionado}
           />
         )}
@@ -125,11 +175,9 @@ export function TelaProdutos() {
         titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
         tabela="produtos"
         campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
-
         abrirModal={abrirModal}
         atualizarCadastro={atualizarProduto}
         displayButton={display}
-
       />
     </div>
   );
