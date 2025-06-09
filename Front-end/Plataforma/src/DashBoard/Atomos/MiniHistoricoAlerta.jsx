@@ -104,48 +104,35 @@ export function MiniHistoricoAlerta({ endpoint }) {
     const hoje = dayjs();
     const diasParaVencer = dataValidade.diff(hoje, 'day');
 
-    // Determinar cor e texto do status
-      const statusAlerta = alertaPrincipal?.status?.toLowerCase();
-    let corStatus, textoStatus;
-    
-    if (statusAlerta === 'critico') {
-        corStatus = '#ff0303';
-        textoStatus = 'CRÍTICO';
-    } else if (statusAlerta === 'atenção' || statusAlerta === 'atencao') {
-        corStatus = '#FFA500'; // Laranja para atenção
-        textoStatus = 'ATENÇÃO';
-    } else {
-        corStatus = '#3A577B'; // Azul padrão
-        textoStatus = statusAlerta?.toUpperCase() || 'ALERTA';
-    }
+    console.log("Dias para vencer:", diasParaVencer);
 
-       const mensagem = (
-        <span className='text-[3vh]'>
-            <strong className='text-[#73b1e8]'>{nomeProduto}</strong> está a 
-            <strong 
-                className="animate-pulsar ml-[1vh]" 
-                style={{ color: corStatus }}
-            > {diasParaVencer} dias do vencimento</strong>!
+    const mensagem = (
+        <span className='text-[3vh] animate-pulsar'>
+            <strong className='text-[#73b1e8]'>{nomeProduto}</strong> está a <strong className='text-[#ff0303] '> {diasParaVencer} dias do vencimento</strong>!
         </span>
     );
 
+
     return (
         <div className="flex flex-col justify-center items-center">
-            <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-center text-[23px] font-[600] mt-[5vh] ">
+            <div className="text-[#3A577B] w-full h-[5vh] flex justify-center items-center text-[23px] font-[600] mt-[5vh]  animate-pulsar ">
                 <StatusAlertExibition
-                    cor={corStatus}
-                    status={textoStatus}
+                    cor={alertaPrincipal.status === 'critico' ? '#ff0303' : '#FFA500'}
+                    status='ATENÇÃO'
                 />
             </div>
 
-            <div className="flex flex-row justify-center items-center h-full w-full gap-4">
+
+            <div className="flex flex-row justify-center items-center h-full w-full gap-4  animate-pulsar">
                 <AlertaInformationDiv tamanho="100%">
                     <AlertExibition>{mensagem}</AlertExibition>
                 </AlertaInformationDiv>
             </div>
+
         </div>
     );
 };
+
 MiniHistoricoAlerta.propTypes = {
     endpoint: PropTypes.string.isRequired
 };
