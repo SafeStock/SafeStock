@@ -1,10 +1,9 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
-import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 import { useState } from "react";
 import { Modal } from "./Atomos/Modal";
 import { Formulario } from "./Formulario";
 import axios from "axios";
+import { ModalProdutoContext } from "./Moleculas/ModalProdutoContext";
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -126,62 +125,55 @@ export function TelaProdutos() {
     return false;
   };
 
-  const cargo = sessionStorage.getItem('cargo');
-  let display = 'none';
-  if (cargo === 'limpeza') {
-    display = 'flex';
+  const cargo = sessionStorage.getItem("cargo");
+  let display = "none";
+  if (cargo === "limpeza") {
+    display = "flex";
   }
 
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
-      {/* Botão para cadastrar produto */}
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded mb-4 w-48 self-end"
-        onClick={abrirModalCadastro}
-      >
-        Cadastrar Produto
-      </button>
+    <ModalProdutoContext.Provider value={{ abrirModalCadastro }}>
+      <div className="flex flex-col w-full overflow-x-hidden">
 
-      <Modal isOpen={modalAberto} onClose={fecharModal}>
-        {etapa === 1 ? (
-          <Formulario
-            titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
-              { name: "categoria", label: "Categoria:", placeholder: "Digite a categoria do produto" },
-              { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
-            ]}
-            onSubmit={handlePrimeiraEtapa}
-            buttonLabel="Próximo"
-            initialValues={produtoSelecionado}
-          />
-        ) : (
-          <Formulario
-            titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
-            campos={[
-              { name: "limiteSemanalDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 2025-08-27)" },
-              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 2025-08-27)" },
-            ]}
-            onSubmit={handleSegundaEtapa}
-            buttonLabel={modoCadastro ? "Cadastrar" : "Enviar"}
-            initialValues={produtoSelecionado}
-          />
-        )}
-      </Modal>
+        <Modal isOpen={modalAberto} onClose={fecharModal}>
+          {etapa === 1 ? (
+            <Formulario
+              titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
+              campos={[
+                { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
+                { name: "categoria", label: "Categoria:", placeholder: "Digite a categoria do produto" },
+                { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
+              ]}
+              onSubmit={handlePrimeiraEtapa}
+              buttonLabel="Próximo"
+              initialValues={produtoSelecionado}
+            />
+          ) : (
+            <Formulario
+              titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
+              campos={[
+                { name: "limiteSemanalDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
+                { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 2025-08-27)" },
+                { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 2025-08-27)" },
+              ]}
+              onSubmit={handleSegundaEtapa}
+              buttonLabel={modoCadastro ? "Cadastrar" : "Enviar"}
+              initialValues={produtoSelecionado}
+            />
+          )}
+        </Modal>
 
-      <AreaWorkGeral
-        NewText="Produtos"
-        titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
-        tabela="produtos"
-        campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
-        abrirModal={abrirModal}
-        atualizarCadastro={atualizarProduto}
-        displayButton={display}
-
-        mostrarBotaoExportar={false}
-        
-      />
-    </div>
+        <AreaWorkGeral
+          NewText="Produtos"
+          titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
+          tabela="produtos"
+          campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
+          abrirModal={abrirModal}
+          atualizarCadastro={atualizarProduto}
+          displayButton={display}
+          mostrarBotaoExportar={false}
+        />
+      </div>
+    </ModalProdutoContext.Provider>
   );
 }
