@@ -1,11 +1,10 @@
 package com.example.safestock;
 
-import com.example.safestock.config.GerenciadorTokenJwt;
-import com.example.safestock.model.Funcionario;
-import com.example.safestock.repository.FuncionarioRepository;
-import com.example.safestock.repository.RegistroUsoRepository;
-import com.example.safestock.service.FuncionarioService;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.safestock.infrastructure.config.GerenciadorTokenJwt;
+import com.example.safestock.core.domain.Funcionario;
+import com.example.safestock.infrastructure.repository.FuncionarioRepository;
+import com.example.safestock.infrastructure.repository.RegistroUsoRepository;
+import com.example.safestock.core.application.usecase.FuncionarioService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

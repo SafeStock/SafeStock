@@ -1,8 +1,8 @@
 package com.example.safestock;
 
-import com.example.safestock.model.Funcionario;
-import com.example.safestock.repository.FuncionarioRepository;
-import com.example.safestock.service.AutenticacaoService;
+import com.example.safestock.core.domain.Funcionario;
+import com.example.safestock.infrastructure.repository.FuncionarioRepository;
+import com.example.safestock.core.application.usecase.AutenticacaoService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

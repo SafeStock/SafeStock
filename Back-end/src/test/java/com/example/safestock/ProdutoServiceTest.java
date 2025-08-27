@@ -1,10 +1,9 @@
 package com.example.safestock;
 
-import com.example.safestock.model.Produto;
-import com.example.safestock.model.enums.CategoriaProduto;
-import com.example.safestock.repository.ProdutoRepository;
-import com.example.safestock.service.ProdutoService;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.safestock.core.domain.Produto;
+import com.example.safestock.core.domain.enuns.CategoriaProduto;
+import com.example.safestock.infrastructure.repository.ProdutoRepository;
+import com.example.safestock.core.application.usecase.ProdutoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

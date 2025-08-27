@@ -1,0 +1,30 @@
+package com.example.safestock.core.domain;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "Relatorio")
+@NoArgsConstructor @Getter @Setter
+public class Relatorio {
+    @Id
+    private Integer idRelatorio;
+    private LocalDateTime dataHoraEmissao;
+
+    @ManyToOne
+    @JoinColumn(name = "fkProduto")
+    @JsonBackReference(value = "produto-relatorio")
+    private Produto produto;
+
+    @ManyToOne
+    @JoinColumn(name = "fkRegistroUso")
+    private RegistroUso registroUso;
+
+    @ManyToOne
+    @JoinColumn(name = "fkAlerta")
+    private HistoricoAlertas alerta;
+}
