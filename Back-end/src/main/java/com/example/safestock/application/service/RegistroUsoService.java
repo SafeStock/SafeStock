@@ -1,5 +1,6 @@
 package com.example.safestock.application.service;
 
+import com.example.safestock.application.port.in.RegistroUsoUseCase;
 import com.example.safestock.application.port.out.RegistroUsoRepository;
 import com.example.safestock.domain.model.RegistroUso;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RegistroUsoService {
+public class RegistroUsoService implements RegistroUsoUseCase {
 
     private final RegistroUsoRepository registroUsoRepository;
 
@@ -15,37 +16,21 @@ public class RegistroUsoService {
         this.registroUsoRepository = registroUsoRepository;
     }
 
-    public RegistroUso registrarUso(RegistroUso registroUso){
+    @Override
+    public RegistroUso criar(RegistroUso registroUso) {
+        // Regras de negócio aqui (ex: validações)
         return registroUsoRepository.save(registroUso);
     }
 
-    public List<RegistroUso> listarRegistrosUso(){
+    @Override
+    public List<RegistroUso> listar() {
+        // Regras de negócio aqui (ex: validações)
         return registroUsoRepository.findAll();
     }
 
-
-//
-//    public RegistroUso registrarUso (RegistroUso registroUso){
-//        return registroUsoRepository.save(registroUso);
-//    }
-//
-//    public List<RegistroUso> listarRegistrosUso(){
-//        return registroUsoRepository.findAll();
-//    }
-//
-//    public Long contarPordutosRetiradosDoEstoque() {
-//        return registroUsoRepository.sumQuantidadeRegistroDeUso();
-//    }
-//
-//    @Transactional
-//    public void deletarRegistroUso(Long id) {
-//        registroUsoRepository.deleteRelatoriosByRegistroUsoId(id);
-//
-//        registroUsoRepository.deleteById(id);
-//    }
-//
-//    public void deletarRegistro(Long id) {
-//        registroUsoRepository.deleteById(id);
-//    }
-
+    @Override
+    public void deletar(Long id) {
+        // Regras de negócio aqui (ex: validações)
+        registroUsoRepository.deleteById(id);
+    }
 }
