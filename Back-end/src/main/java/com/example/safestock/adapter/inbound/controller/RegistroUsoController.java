@@ -1,4 +1,4 @@
-package com.example.safestock.adapter.inbound;
+package com.example.safestock.adapter.inbound.controller;
 
 import com.example.safestock.application.service.RegistroUsoService;
 import com.example.safestock.domain.model.RegistroUso;
