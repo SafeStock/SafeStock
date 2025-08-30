@@ -1,10 +1,9 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
-import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 import { useState } from "react";
 import { Modal } from "./Atomos/Modal";
-import { Formulario } from "./Formulario";
+import { CadastroProduto } from "./CadastroProduto";
 import axios from "axios";
+
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -13,6 +12,16 @@ export function TelaProdutos() {
   const [produtoSelecionado, setProdutoSelecionado] = useState({});
   const [modoCadastro, setModoCadastro] = useState(false); // novo estado
   const token = sessionStorage.getItem('authToken');
+  
+
+  // Função para abrir o modal para cadastrar
+  const abrirModalCadastro = () => {
+    setModoCadastro(true);
+    setProdutoSelecionado({});
+    setDadosPrimeiraEtapa({});
+    setEtapa(1);
+    setModalAberto(true);
+  };
 
   const fecharModal = () => {
     setModalAberto(false);
@@ -33,20 +42,6 @@ export function TelaProdutos() {
     });
     setEtapa(1);
     setModoCadastro(false);
-    setModalAberto(true);
-  };
-
-  // Função para abrir o modal para cadastrar
-  const abrirModalCadastro = () => {
-    setProdutoSelecionado({});
-    setDadosPrimeiraEtapa({
-      nome: "",
-      categoria: "",
-      quantidade: "",
-      id: undefined
-    });
-    setEtapa(1);
-    setModoCadastro(true);
     setModalAberto(true);
   };
 
@@ -134,17 +129,10 @@ export function TelaProdutos() {
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
-      {/* Botão para cadastrar produto */}
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded mb-4 w-48 self-end"
-        onClick={abrirModalCadastro}
-      >
-        Cadastrar Produto
-      </button>
-
+  
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
-          <Formulario
+          <CadastroProduto
             titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
             campos={[
               { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
@@ -156,7 +144,7 @@ export function TelaProdutos() {
             initialValues={produtoSelecionado}
           />
         ) : (
-          <Formulario
+          <CadastroProduto
             titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
             campos={[
               { name: "limiteSemanalDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
@@ -169,7 +157,6 @@ export function TelaProdutos() {
           />
         )}
       </Modal>
-
       <AreaWorkGeral
         NewText="Produtos"
         titles={["Nome", "Categoria", "Quantidade", "Limite", "Data de Validade", "Data de Entrada"]}
@@ -179,8 +166,17 @@ export function TelaProdutos() {
         atualizarCadastro={atualizarProduto}
         displayButton={display}
         mostrarBotaoExportar={false}
-        
       />
+        {/* Botão de adicionar produto (estilo igual ao de funcionários) */}
+      <div className="w-[8vw] items-center justify-center flex fixed bottom-[9vh] right-[42vw]">
+        <button
+          title="Cadastrar Produto"
+          onClick={abrirModalCadastro}
+          className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%] w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200 "
+        >
+          +
+        </button>
+      </div>
     </div>
   );
 }

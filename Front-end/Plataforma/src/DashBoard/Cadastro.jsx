@@ -137,23 +137,24 @@ export function Cadastro() {
   const inputClass = "w-[20vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none";
   const bottomClass = "cursor-pointer text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[0.8vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition duration-200 mb-[3vh] mt-[1vh] w-[40%] h-[4.5vh] mx-auto";
 
-
+  const corpoDiv =  "min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative";
+  const formularioDiv = "flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden relative">
-      <div className="flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]">
+    <div className={corpoDiv}>
+      <div className={formularioDiv}>
         {/* Formulário 1 */}
         {etapa === 1 && (
           <div
-            className="h-[65vh] w-[55vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[85vh] w-[65vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
               onSubmit={proximo}
-              className="justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]"
+              className="justify-center flex flex-col items-center gap-[2.9vh] text-[#2F4672]"
             >
-              <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
-              <div className="w-[80%] flex flex-col gap-[1vh] text-[2.5vh]">
+              <h2 className="text-[4vh] font-bold">Cadastro</h2>
+              <div className="w-5 flex flex-col gap-[1vh] text-[2.5vh]">
                 <p>Nome</p>
                 <input
                   type="text"
@@ -186,9 +187,9 @@ export function Cadastro() {
               </button>
 
               {/* Mensagem de erro */}
-              <div className="w-[35vh] mt-2 text-center text-[2vh]">
+              <div className="w-[35vw] mt-10 text-center text-[2vh]">
 
-                `{console.log(color)}
+                {console.log(color)}
 
                 <span
                   className={`${mensagemErro ? "opacity-100" : "opacity-0"
@@ -199,7 +200,7 @@ export function Cadastro() {
                 </span>
               </div>
 
-              <h2 className="flex justify-end top-[80vh] w-[35%] text-[#2F4672] absolute mr-[12rem]">1/2</h2>
+              <h2 className=" flex justify-center text-center top-[71vh] text-[#2F4672] absolute ">1/2</h2>
             </form>
           </div>
         )}
@@ -207,15 +208,15 @@ export function Cadastro() {
         {/* Formulário 2 */}
         {etapa === 2 && (
           <div
-            className="h-[65vh] w-[55vh] rounded-[30px] shadow-[3px_3px_8px_rgba(0,0,0,0.3)] p-[5vh]"
+            className="h-[85vh] w-[65vh]"
             style={{ animation: "fade-in-right 0.5s ease-out" }}
           >
             <form
               onSubmit={cadastrar}
-              className="justify-center flex flex-col items-center gap-[3.5vh] text-[#2F4672]"
+              className="justify-center flex flex-col items-center gap-[2.9vh] text-[#2F4672]"
             >
-              <h2 className="text-[4vh] font-bold mb-4 m-[2vh]">Cadastro</h2>
-              <div className="w-[80%] flex flex-col gap-[1vh] text-[2.5vh]">
+              <h2 className="text-[4vh] font-bold">Cadastro</h2>
+              <div className="w-5 flex flex-col gap-[1vh] text-[2.5vh]">
                 <p>Cargo</p>
                 <select
                   value={cargo}
@@ -223,11 +224,9 @@ export function Cadastro() {
                   className="w-[21.5vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none"
                 >
                   <option value="">Selecione o tipo de usuário</option>
-                  <option value="dono">Dono</option>
                   <option value="secretaria">Secretária</option>
                   <option value="limpeza">Equipe de Limpeza</option>
                 </select>
-
                 <p className="mt-[3vh]">Email</p>
                 <input
                   type="text"
@@ -251,20 +250,17 @@ export function Cadastro() {
               >
                 Cadastrar
               </button>
-
               {/* Mensagem de erro */}
-              <div className="w-[35vh] mt-2 text-center text-[2vh]">
+              <div className="w-[35vw] mt-10 text-center text-[2vh]">
                 <span
-                  className={`${mensagemErro ?
-                    "opacity-100" : "opacity-0"}
+                  className={`${mensagemErro ? "opacity-100" : "opacity-0"}
                     transition-opacity duration-300`}
                   style={{ color: mensagemErro ? color : "transparent" }}>
 
                   {mensagemErro || "mensagem de erro"}
                 </span>
               </div>
-
-              <h2 className="flex justify-end top-[80vh] w-[35%] text-[#2F4672] absolute mr-[12rem]">2/2</h2>
+              <h2 className=" flex justify-center text-center top-[71vh] text-[#2F4672] absolute ">2/2</h2>
             </form>
           </div>
         )}

@@ -4,7 +4,6 @@ import { ListaDinamica } from "./ListaDinamica";
 import { GraficoEstoqueBar } from "../Atomos/GraficoEstoqueBar";
 import { MiniHistoricoAlerta } from "../Atomos/MiniHistoricoAlerta";
 import { getToken } from '../Moleculas/getToken';
-import { Formulario } from "../Formulario";
 import { useNavigate } from "react-router-dom";
 import { useSetAba } from "../../Hooks/setAba";
 
@@ -196,7 +195,7 @@ export function DivElementKPIDonoBigRight({
                         >
                             ×
                         </button>
-                        <Formulario
+                        <CadastroUso
                             titulo="Registrar Uso"
                             campos={[
                                 { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },

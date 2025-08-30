@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Modal } from "./Atomos/Modal";
-import { Formulario } from "../DashBoard/Formulario";
 import axios from "axios";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "./Moleculas/getToken";
+import { Cadastro } from "./Cadastro";
 
 export function HistoricoUso() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -92,7 +92,7 @@ export function HistoricoUso() {
       </div>
 
       <Modal isOpen={modalAberto} onClose={fecharModal}>
-        <Formulario
+        <Cadastro
           titulo="Registro de Uso"
           campos={[
             {
