@@ -1,0 +1,22 @@
+package com.example.safestock.adapter.outbound.repository;
+
+import com.example.safestock.application.port.out.ProdutoRepository;
+import com.example.safestock.domain.model.Produto;
+import com.example.safestock.infrastructure.jpa.JpaProdutoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class ProdutoRepositoryImpl implements ProdutoRepository {
+
+    private final JpaProdutoRepository jpa;
+
+    public ProdutoRepositoryImpl(JpaProdutoRepository jpa) {
+        this.jpa = jpa;
+    }
+
+
+    @Override
+    public Produto save(Produto produto) {
+        return null;
+    }
+}

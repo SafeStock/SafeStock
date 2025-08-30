@@ -1,0 +1,22 @@
+package com.example.safestock.adapter.outbound.repository;
+
+import com.example.safestock.application.port.out.RelatorioRepository;
+import com.example.safestock.domain.model.Relatorio;
+import com.example.safestock.infrastructure.jpa.JpaRelatorioRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class RelatorioRepositoryImpl implements RelatorioRepository {
+
+    private final JpaRelatorioRepository jpa;
+
+    public RelatorioRepositoryImpl(JpaRelatorioRepository jpa) {
+        this.jpa = jpa;
+    }
+
+
+    @Override
+    public Relatorio save(Relatorio relatorio) {
+        return null;
+    }
+}
