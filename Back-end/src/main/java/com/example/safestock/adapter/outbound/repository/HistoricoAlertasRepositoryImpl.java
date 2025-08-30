@@ -1,5 +1,6 @@
 package com.example.safestock.adapter.outbound.repository;
 
+import com.example.safestock.adapter.outbound.mapper.HistoricoAlertasMapper;
 import com.example.safestock.application.port.out.HistoricoAlertasRepository;
 import com.example.safestock.domain.model.HistoricoAlertas;
 import com.example.safestock.infrastructure.entity.HistoricoAlertasEntity;

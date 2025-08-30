@@ -1,5 +1,6 @@
 package com.example.safestock.adapter.outbound.repository;
 
+import com.example.safestock.adapter.outbound.mapper.ProdutoMapper;
 import com.example.safestock.application.port.out.ProdutoRepository;
 import com.example.safestock.domain.model.Produto;
 import com.example.safestock.infrastructure.entity.ProdutoEntity;

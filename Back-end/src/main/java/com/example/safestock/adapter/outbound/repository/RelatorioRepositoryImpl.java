@@ -1,5 +1,6 @@
 package com.example.safestock.adapter.outbound.repository;
 
+import com.example.safestock.adapter.outbound.mapper.RelatorioMapper;
 import com.example.safestock.application.port.out.RelatorioRepository;
 import com.example.safestock.domain.model.Relatorio;
 import com.example.safestock.infrastructure.entity.RelatorioEntity;
