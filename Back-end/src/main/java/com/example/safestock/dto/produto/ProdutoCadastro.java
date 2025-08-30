@@ -1,102 +1,63 @@
 package com.example.safestock.dto.produto;
 
-import com.example.safestock.model.Creche;
-import com.example.safestock.model.Relatorio;
 import com.example.safestock.model.enums.CategoriaProduto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class ProdutoCadastro {
 
-    @Schema(description = "Id do produto", example = "1")
-    private Long id;
-
     @Schema(description = "Nome do produto", example = "Candida")
+    @NotNull
     private String nome;
 
-    @Schema(description = "Categoria do produto", example = "Chão")
+    @Schema(description = "Categoria do produto", example = "chao")
+    @NotNull
     private CategoriaProduto categoriaProduto;
 
     @Schema(description = "Quantidade do produto", example = "25")
+    @NotNull
     private int quantidade;
 
     @Schema(description = "Limite de uso do produto", example = "5")
+    @NotNull
     private int limiteSemanalDeUso;
 
-    @Schema(description = "Validade do produto", example = "15/07/2025")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Schema(description = "Validade do produto", example = "2025-07-15")
+    @NotNull
     private LocalDate dataValidade;
 
-    @Schema(description = "Entrada do produto", example = "15/05/2025")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Schema(description = "Entrada do produto", example = "2025-05-15")
+    @NotNull
     private LocalDate dataEntrada;
 
-    @Schema(description = "Creche do produto", example = "1")
-    private Creche creche;
+    @Schema(description = "Id da creche", example = "1")
+    @NotNull
+    private Long crecheId;
 
-    public Creche getCreche() {
-        return creche;
-    }
+    // Getters e Setters
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setCreche(Creche creche) {
-        this.creche = creche;
-    }
+    public CategoriaProduto getCategoriaProduto() { return categoriaProduto; }
+    public void setCategoriaProduto(CategoriaProduto categoriaProduto) { this.categoriaProduto = categoriaProduto; }
 
-    public LocalDate getDataEntrada() {
-        return dataEntrada;
-    }
+    public int getQuantidade() { return quantidade; }
+    public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
 
-    public void setDataEntrada(LocalDate dataEntrada) {
-        this.dataEntrada = dataEntrada;
-    }
+    public int getLimiteSemanalDeUso() { return limiteSemanalDeUso; }
+    public void setLimiteSemanalDeUso(int limiteSemanalDeUso) { this.limiteSemanalDeUso = limiteSemanalDeUso; }
 
-    public LocalDate getDataValidade() {
-        return dataValidade;
-    }
+    public LocalDate getDataValidade() { return dataValidade; }
+    public void setDataValidade(LocalDate dataValidade) { this.dataValidade = dataValidade; }
 
-    public void setDataValidade(LocalDate dataValidade) {
-        this.dataValidade = dataValidade;
-    }
+    public LocalDate getDataEntrada() { return dataEntrada; }
+    public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }
 
-    public int getLimiteSemanalDeUso() {
-        return limiteSemanalDeUso;
-    }
-
-    public void setLimiteSemanalDeUso(int limiteSemanalDeUso) {
-        this.limiteSemanalDeUso = limiteSemanalDeUso;
-    }
-
-    public int getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public CategoriaProduto getCategoriaProduto() {
-        return categoriaProduto;
-    }
-
-    public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
-        this.categoriaProduto = categoriaProduto;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getCrecheId() { return crecheId; }
+    public void setCrecheId(Long crecheId) { this.crecheId = crecheId; }
 }

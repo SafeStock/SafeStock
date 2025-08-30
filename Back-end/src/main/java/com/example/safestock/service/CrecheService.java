@@ -2,6 +2,7 @@ package com.example.safestock.service;
 
 import com.example.safestock.model.Creche;
 import com.example.safestock.repository.CrecheRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +21,15 @@ public class CrecheService {
         return crecheRepository.findAll();
     }
 
-    public Optional<Creche> buscarCrechePorId(Long id) {
-        return crecheRepository.findById(id);
-    }
+
+
+
+    public Creche buscarPorId(Long id) {
+            return crecheRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Creche não encontrada com ID: " + id));
+        }
+
+
 
     public Creche salvarCreche(Creche creche) {
         return crecheRepository.save(creche);

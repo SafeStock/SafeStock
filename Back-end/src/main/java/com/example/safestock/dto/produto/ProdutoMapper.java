@@ -12,7 +12,6 @@ public class ProdutoMapper {
         produto.setLimiteSemanalDeUso(produtoCadastro.getLimiteSemanalDeUso());
         produto.setDataValidade(produtoCadastro.getDataValidade());
         produto.setDataEntrada(produtoCadastro.getDataEntrada());
-        produto.setCreche(produtoCadastro.getCreche());
         return produto;
     }
 

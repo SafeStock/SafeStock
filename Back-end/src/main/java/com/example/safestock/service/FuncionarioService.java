@@ -1,6 +1,7 @@
 package com.example.safestock.service;
 
 import com.example.safestock.dto.FuncionarioListar;
+import com.example.safestock.model.enums.CargoFuncionario;
 import com.example.safestock.repository.RegistroUsoRepository;
 import org.springframework.security.core.Authentication;
 import com.example.safestock.config.GerenciadorTokenJwt;
@@ -64,10 +65,15 @@ public class FuncionarioService {
         return FuncionarioMapper.of(funcionarioAutenticado, token);
     }
 
-    public List<FuncionarioListar> listarTodos(){
-        List<Funcionario> funcionarioEncontrado = funcionarioRepository.findAll();
-        return funcionarioEncontrado.stream().map(FuncionarioMapper::of).toList();
+    public List<FuncionarioListar> listarTodosExcetoLogadoEDono(String emailLogado) {
+        List<Funcionario> funcionariosEncontrados = funcionarioRepository
+                .findByEmailNotAndCargoNot(emailLogado, CargoFuncionario.dono);
+
+        return funcionariosEncontrados.stream()
+                .map(FuncionarioMapper::of)
+                .toList();
     }
+
 
     @Transactional
     public void deletarFuncionario(Long id) {

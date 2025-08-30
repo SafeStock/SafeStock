@@ -29,6 +29,7 @@ public class Produto {
 
 
     private int limiteSemanalDeUso;
+
     private LocalDate dataValidade;
     private LocalDate dataEntrada;
 
