@@ -1,5 +1,6 @@
 package com.example.safestock.adapter.outbound.repository;
 
+import com.example.safestock.adapter.outbound.mapper.CrecheMapper;
 import com.example.safestock.application.port.out.CrecheRepository;
 import com.example.safestock.domain.model.Creche;
 import com.example.safestock.infrastructure.entity.CrecheEntity;
@@ -17,6 +18,8 @@ public class CrecheRepositoryImpl implements CrecheRepository {
 
     @Override
     public Creche save(Creche creche) {
-        return creche;
+        CrecheEntity entity = CrecheMapper.toEntity(creche);
+        CrecheEntity saved = jpa.save(entity);
+        return CrecheMapper.toDomain(saved);
     }
 }

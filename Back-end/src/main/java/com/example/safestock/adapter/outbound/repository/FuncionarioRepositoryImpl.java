@@ -2,6 +2,7 @@ package com.example.safestock.adapter.outbound.repository;
 
 import com.example.safestock.application.port.out.FuncionarioRepository;
 import com.example.safestock.domain.model.Funcionario;
+import com.example.safestock.infrastructure.entity.FuncionarioEntity;
 import com.example.safestock.infrastructure.jpa.JpaFuncionarioRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,8 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
 
     @Override
     public Funcionario save(Funcionario funcionario) {
-        return null;
+        FuncionarioEntity entity = FuncionarioMapper.toEntity(funcionario);
+        FuncionarioEntity saved = jpa.save(entity);
+        return FuncionarioMapper.toDomain(saved);
     }
 }

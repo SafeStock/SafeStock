@@ -2,6 +2,7 @@ package com.example.safestock.adapter.outbound.repository;
 
 import com.example.safestock.application.port.out.HistoricoAlertasRepository;
 import com.example.safestock.domain.model.HistoricoAlertas;
+import com.example.safestock.infrastructure.entity.HistoricoAlertasEntity;
 import com.example.safestock.infrastructure.jpa.JpaHistoricoAlertasRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,8 @@ public class HistoricoAlertasRepositoryImpl implements HistoricoAlertasRepositor
 
     @Override
     public HistoricoAlertas save(HistoricoAlertas historicoAlertas) {
-        return null;
+        HistoricoAlertasEntity entity = HistoricoAlertasMapper.toEntity(historicoAlertas);
+        HistoricoAlertasEntity saved = jpa.save(entity);
+        return HistoricoAlertasMapper.toDomain(saved);
     }
 }
