@@ -1,6 +1,6 @@
 package com.example.safestock.adapter.outbound;
 
-import com.example.safestock.application.port.RegistroUsoRepository;
+import com.example.safestock.application.port.out.RegistroUsoRepository;
 import com.example.safestock.domain.model.RegistroUso;
 import com.example.safestock.infrastructure.entity.RegistroUsoEntity;
 import com.example.safestock.infrastructure.jpa.JpaRegistroUsoRepository;

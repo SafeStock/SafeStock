@@ -1,6 +1,6 @@
 package com.example.safestock.application.service;
 
-import com.example.safestock.application.port.RegistroUsoRepository;
+import com.example.safestock.application.port.out.RegistroUsoRepository;
 import com.example.safestock.domain.model.RegistroUso;
 import org.springframework.stereotype.Service;
 
