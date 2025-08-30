@@ -38,6 +38,11 @@ export function useSetAba() {
       case "/dashboard/telaprodutos":
         document.title = "Produtos | SafeStock";
         break;  
+
+      case "/dashboard/exportarrelatorio":
+        document.title = "Exportar Relatório | SafeStock";
+        break;
+        
     }
   }, [location.pathname]);
 }
