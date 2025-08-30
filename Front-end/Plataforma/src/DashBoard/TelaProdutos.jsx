@@ -136,10 +136,12 @@ export function TelaProdutos() {
     <div className="flex flex-col w-full overflow-x-hidden">
       {/* Botão para cadastrar produto */}
       <button
-        className="bg-blue-600 text-white px-4 py-2 rounded mb-4 w-48 self-end"
+        className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%]
+        w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] absolute z-[100] left-[50vw] bottom-[9.8vh]
+        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
         onClick={abrirModalCadastro}
       >
-        Cadastrar Produto
+        + 
       </button>
 
       <Modal isOpen={modalAberto} onClose={fecharModal}>
