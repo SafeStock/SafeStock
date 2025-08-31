@@ -14,6 +14,7 @@ import { LimpezaLayout } from "../DashBoard/Celulas/LimpezaLayout";
 import {CadastroUso} from '../DashBoard/CadastroUso';
 import { Cadastro} from '../DashBoard/Cadastro';
 import { CadastroProduto } from '../DashBoard/CadastroProduto';
+import { ExportarRelatorio } from '../DashBoard/ExportarRelatorio';
 
 export function RotasApp() {
   useSetAba();
@@ -31,6 +32,7 @@ export function RotasApp() {
           <Route path="telaprodutos" element={<TelaProdutos />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
+          <Route path="exportarrelatorio" element={<ExportarRelatorio />} />
         </Route>
       </Route>
 
@@ -43,6 +45,7 @@ export function RotasApp() {
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
+          <Route path="exportarrelatorio" element={<ExportarRelatorio />} />
         </Route>
       </Route>
 

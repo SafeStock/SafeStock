@@ -169,6 +169,15 @@ export function TelaProdutos() {
   
   return (
     <div className="flex flex-col w-full overflow-x-hidden opacity-0 animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
+      <button
+        className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%]
+        w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] absolute z-[100] left-[50vw] bottom-[9.8vh]
+        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+        onClick={abrirModalCadastro}
+      >
+        + 
+      </button>
+
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
           <CadastroProduto
