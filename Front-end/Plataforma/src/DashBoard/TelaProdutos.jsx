@@ -172,7 +172,7 @@ export function TelaProdutos() {
       <button
         className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%]
         w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] absolute z-[100] left-[50vw] bottom-[9.8vh]
-        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"git add
         onClick={abrirModalCadastro}
       >
         + 
