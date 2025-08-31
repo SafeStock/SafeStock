@@ -4,12 +4,16 @@ import axios from "axios";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "./Moleculas/getToken";
-import { Cadastro } from "./Cadastro";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
+import { CadastroUso } from "./CadastroUso";
+import { toast } from "react-toastify";
 
 export function HistoricoUso() {
   const [modalAberto, setModalAberto] = useState(false);
   const [dadosSelecionados, setDadosSelecionados] = useState({});
-  const [modoCadastro, setModoCadastro] = useState(false); // Novo estado
+  const [modoCadastro, setModoCadastro] = useState(false);
+  const [loading, setLoading] = useState(true);
   const token = getToken();
   const navigate = useNavigate();
 
@@ -20,11 +24,14 @@ export function HistoricoUso() {
     }
   }, [token, navigate]);
 
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const cargo = sessionStorage.getItem('cargo');
-  let display = 'none';
-  if (cargo === 'limpeza') {
-    display = 'flex';
-  }
+  let display = cargo === 'limpeza' ? 'flex' : 'none';
 
   const fecharModal = () => {
     setModalAberto(false);
@@ -32,110 +39,96 @@ export function HistoricoUso() {
     setModoCadastro(false); 
   };
 
-  // Função para abrir modal de CADASTRO
-  const abrirModalCadastro = () => {
-    setDadosSelecionados({});
-    setModoCadastro(true);
-    setModalAberto(true);
-  };
 
-  // Função para abrir modal de EDIÇÃO
   const abrirModalEdicao = (registro = {}) => {
     setDadosSelecionados(registro);
     setModoCadastro(false);
     setModalAberto(true);
   };
 
-  // Função centralizada para cadastrar registro
   const cadastrarRegistro = async (dados) => {
     try {
       await axios.post(
         "http://localhost:8080/api/registroUso/cadastro",
-        {
-          ...dados,
-          quantidade: Number(dados.quantidade)
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
+        { ...dados, quantidade: Number(dados.quantidade), funcionario: { id: Number(dados.responsavelId) } },
+        { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
-      alert("Registro cadastrado com sucesso!");
+      toast.success("Registro cadastrado com sucesso!");
       fecharModal();
       setTimeout(() => navigate("/dashboardlimpeza"), 1000);
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Erro ao cadastrar registro";
-      alert(errorMsg);
+      toast.error(errorMsg);
     }
   };
+  
 
   const handleSubmit = (dados) => {
-    // Modo cadastro sempre usa POST
-    if (modoCadastro) {
-      cadastrarRegistro(dados);
-    }
-    // (Aqui pode adicionar lógica para edição se necessário)
+    console.log(dados); 
+    if (modoCadastro) cadastrarRegistro(dados);
   };
 
-  return (
-    <div className="flex flex-col w-full overflow-x-hidden p-4">
-      {/* Botão de cadastro (visível apenas para limpeza) */}
-      <div style={{ display }}>
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded mb-4 w-48 self-end"
-          onClick={abrirModalCadastro}
-        >
-          Cadastrar Registro
-        </button>
-      </div>
+  
 
+  if (loading) {
+    return (
+      <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
+             <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
+               <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
+                 <Skeleton borderRadius={6} width={350} height={75} />
+               </div>
+     
+               <div className="flex items-center fixed top-[6vh] right-[6vw]">
+                 <Skeleton circle width={50} height={50} />
+               </div>
+     
+               <div className="fixed top-[15.5vh] left-[14vw] flex gap-[20vh]">
+                 <Skeleton borderRadius={6} width={135} height={65} />
+                 <Skeleton borderRadius={6} width={135} height={65} />
+                 <Skeleton borderRadius={6} width={175} height={65} />
+                 <Skeleton borderRadius={6} width={175} height={65} />
+               </div>
+     
+               <div className="fixed flex flex-col top-[26vh] right-[1.3vw] gap-[1.2vh]">
+                 <Skeleton borderRadius={10} width={1410} height={90} />
+                 <Skeleton borderRadius={10} width={1410} height={90} />
+                 <Skeleton borderRadius={10} width={1410} height={90} />
+                 <Skeleton borderRadius={10} width={1410} height={90} />
+                 <Skeleton borderRadius={10} width={1410} height={90} />
+               </div>
+     
+               <div className="flex items-center fixed bottom-[7vh] right-[44vw]">
+                 <Skeleton circle width={65} height={65} />
+               </div>
+             </div>
+           </div>
+    );
+  }
+
+  return (
+    <div
+      className="flex flex-col w-full overflow-x-hidden p-4 opacity-0 animate-fadeInContent"
+      style={{ animationDelay: '0.2s' }}
+    >
+      
       <Modal isOpen={modalAberto} onClose={fecharModal}>
-        <Cadastro
+        <CadastroUso
           titulo="Registro de Uso"
-          campos={[
-            {
-              name: "produto",
-              label: "Produto:",
-              placeholder: "Nome do produto",
-              type: "text",
-              required: true
-            },
-            {
-              name: "quantidade",
-              label: "Quantidade:",
-              placeholder: "Quantidade usada",
-              type: "number",
-              min: 1,
-              required: true
-            },
-            {
-              name: "dataValidade",
-              label: "Data Validade:",
-              type: "date",
-              required: true
-            },
-            {
-              name: "dataHoraSaida",
-              label: "Data Saída:",
-              type: "datetime-local",
-              required: true
-            },
-          ]}
           onSubmit={handleSubmit}
           buttonLabel="Cadastrar"
           initialValues={dadosSelecionados}
         />
       </Modal>
 
+
       <AreaWorkGeral
         NewText={`Histórico de Uso`}
-        titles={["Produto", "Quantidade", "Data Validade", "Data Saída"]}
+        titles={["Produto", "Quantidade", "Responsável", "Data Saída"]}
         tabela="registroUso"
-        campos={["produto", "quantidade", "dataValidade", "dataHoraSaida"]}
+        campos={["produto", "quantidade", "funcionarios.nome", "dataHoraSaida"]}
         displayButton={display}
-        abrirModal={abrirModalEdicao} // Para edição
+        abrirModal={abrirModalEdicao}
+        
       />
     </div>
   );

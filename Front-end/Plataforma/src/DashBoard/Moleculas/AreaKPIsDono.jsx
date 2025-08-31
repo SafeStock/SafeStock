@@ -135,10 +135,11 @@ export function AreaKPIsDonoLateralEsquerda() {
     )
 }
 
-export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela, NavigateOn }) {
+export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela, NavigateOn,campos }) {
     return (
         <div className="h-[95%] w-[38%]">
             <DivElementKPIDonoBigRight
+                campos={campos}
                 NameUse={NameUse}
                 buttonNameUse={buttonNameUse}
                 tabela={tabela}

@@ -12,7 +12,7 @@ export function ButtonAdd({ displayButton = "none", onAdd }) {
 
   return (
     <div
-      className="w-[8vw]  items-center justify-center fixed bottom-[9vh] right-[42vw]"
+      className="w-[7.5vw]  items-center justify-center fixed bottom-[7vh] right-[42vw]"
       style={{ display: displayButton }}
     >
       <button

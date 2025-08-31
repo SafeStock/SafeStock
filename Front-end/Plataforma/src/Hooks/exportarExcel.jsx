@@ -1,5 +1,6 @@
 import ExcelJS from "exceljs"; // Biblioteca pra manipular a por caria dos arquivos XLSX.
 import { saveAs } from "file-saver"; //ota biblioteca pra salvar os arquivos.
+import { toast } from "react-toastify";
 
 export async function exportarExcel(dados, titles, nomeArquivo, campos) {
   const workbook = new ExcelJS.Workbook(); // aqui é onde cria um novo arquivo em excel, é tipo criar uma classe e java.
@@ -42,4 +43,5 @@ function acessarPropriedade(obj, caminho) { // Bom essa função basicamente te 
 
 
   saveAs(blob, `${nomeArquivo}.xlsx`); // Aqui ele força o download do arquivo no navegador com o nome específico da tabela, incluindo a extensão .xlsx
+  toast.success("Arquivo baixado com sucesso!");
 }

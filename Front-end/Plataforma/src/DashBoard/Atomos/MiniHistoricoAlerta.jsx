@@ -46,7 +46,7 @@ export function MiniHistoricoAlerta({ endpoint }) {
                     dadosAlertas = [];
                 }
 
-                console.log("Dados recebidos:", dadosAlertas);
+                // console.log("Dados recebidos:", dadosAlertas);
 
                 // Filtra alertas válidos (com status e dataValidade)
                 const alertasValidos = dadosAlertas.filter(a =>
@@ -55,7 +55,7 @@ export function MiniHistoricoAlerta({ endpoint }) {
                     a.produto.dataValidade
                 );
 
-                console.log("Alertas válidos:", alertasValidos);
+                // console.log("Alertas válidos:", alertasValidos);
 
                 // Ordena por prioridade e data mais próxima
                 const alertasOrdenados = [...alertasValidos].sort((a, b) => {
@@ -70,11 +70,11 @@ export function MiniHistoricoAlerta({ endpoint }) {
                 });
 
 
-                console.log("Alertas ordenados:", alertasOrdenados);
+                // console.log("Alertas ordenados:", alertasOrdenados);
 
                 const alerta = alertasOrdenados[0] || null;
                 setAlertaPrincipal(alerta);
-                console.log("Alerta principal selecionado:", alerta);
+                // console.log("Alerta principal selecionado:", alerta);
             } catch (error) {
                 console.error('Erro ao buscar alertas:', error);
                 setErro(error.message || 'Falha ao carregar alertas');
