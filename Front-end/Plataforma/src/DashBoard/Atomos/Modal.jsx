@@ -1,3 +1,5 @@
+import React from "react";
+
 export function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
 
@@ -6,7 +8,7 @@ export function Modal({ isOpen, onClose, children }) {
       className="w-[100vw] h-[100vh] fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-[1000]"
     >
       <div
-        className="bg-[white] rounded-[1vw] flex flex-col overflow-hidden relative w-[30vw] h-[60vh]"
+        className="bg-[white] rounded-[1vw] flex flex-col overflow-hidden relative max-w-[50vw] max-h-[80vh]"
         onClick={e => e.stopPropagation()}
       >
         {children}

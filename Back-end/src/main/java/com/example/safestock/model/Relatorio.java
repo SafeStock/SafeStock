@@ -22,6 +22,7 @@ public class Relatorio {
     @JsonBackReference(value = "produto-relatorio")
     private Produto produto;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fkRegistroUso")
     private RegistroUso registroUso;

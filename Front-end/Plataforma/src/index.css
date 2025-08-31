@@ -134,3 +134,11 @@ html {
 .animate-pulsar-color {
   animation: pulsar-color 1s ease-in-out infinite;
 }
+@keyframes fadeInContent {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeInContent {
+  animation: fadeInContent 0.8s ease-out forwards;
+}

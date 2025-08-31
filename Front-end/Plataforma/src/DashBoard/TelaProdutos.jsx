@@ -1,18 +1,34 @@
-import { NavBarArea } from "./Celulas/NavBarArea";
-import { FundoPadrao } from "./Celulas/FundoPadrao";
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "./Atomos/Modal";
-import { Formulario } from "./Formulario";
+import { CadastroProduto } from "./CadastroProduto";
 import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
   const [etapa, setEtapa] = useState(1);
   const [dadosPrimeiraEtapa, setDadosPrimeiraEtapa] = useState({});
   const [produtoSelecionado, setProdutoSelecionado] = useState({});
-  const [modoCadastro, setModoCadastro] = useState(false); // novo estado
-  const token = sessionStorage.getItem('authToken');
+  const [modoCadastro, setModoCadastro] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
+  const token = sessionStorage.getItem("authToken");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const abrirModalCadastro = () => {
+    setModoCadastro(true);
+    setProdutoSelecionado({});
+    setDadosPrimeiraEtapa({});
+    setEtapa(1);
+    setModalAberto(true);
+  };
 
   const fecharModal = () => {
     setModalAberto(false);
@@ -22,7 +38,6 @@ export function TelaProdutos() {
     setModoCadastro(false);
   };
 
-  // Função para abrir o modal para editar
   const abrirModal = (produto = {}) => {
     setProdutoSelecionado(produto);
     setDadosPrimeiraEtapa({
@@ -36,24 +51,9 @@ export function TelaProdutos() {
     setModalAberto(true);
   };
 
-  // Função para abrir o modal para cadastrar
-  const abrirModalCadastro = () => {
-    setProdutoSelecionado({});
-    setDadosPrimeiraEtapa({
-      nome: "",
-      categoria: "",
-      quantidade: "",
-      id: undefined
-    });
-    setEtapa(1);
-    setModoCadastro(true);
-    setModalAberto(true);
-  };
-
-  // Função para atualizar o produto no backend
   const atualizarProduto = async (id, dadosAtualizados) => {
     if (!token || token.trim() === "") {
-      alert("Token inválido ou não informado");
+      toast.error("Token inválido ou não informado");
       return;
     }
     try {
@@ -67,19 +67,18 @@ export function TelaProdutos() {
           }
         }
       );
-      alert("Produto atualizado com sucesso!");
+      toast.success("Produto atualizado com sucesso!");
       fecharModal();
       window.location.reload();
     } catch (error) {
-      alert("Erro ao atualizar produto.");
+      toast.error("Erro ao atualizar produto.");
       console.error(error.response?.data || error);
     }
   };
 
-  // Função para cadastrar produto no backend
   const cadastrarProduto = async (dadosAtualizados) => {
     if (!token || token.trim() === "") {
-      alert("Token inválido ou não informado");
+      toast.error("Token inválido ou não informado");
       return;
     }
     try {
@@ -93,11 +92,11 @@ export function TelaProdutos() {
           }
         }
       );
-      alert("Produto cadastrado com sucesso!");
+      toast.success("Produto cadastrado com sucesso!");
       fecharModal();
       window.location.reload();
     } catch (error) {
-      alert("Erro ao cadastrar produto.");
+      toast.error("Erro ao cadastrar produto.");
       console.error(error.response?.data || error);
     }
   };
@@ -127,18 +126,53 @@ export function TelaProdutos() {
   };
 
   const cargo = sessionStorage.getItem('cargo');
-  let display = 'none';
-  if (cargo === 'limpeza') {
-    display = 'flex';
+  let display = cargo === 'limpeza' ? 'flex' : 'none';
+
+  
+  if (loading) {
+    return (
+      <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
+        <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
+          <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
+            <Skeleton borderRadius={6} width={220} height={75} />
+          </div>
+
+          <div className="flex items-center fixed top-[6vh] right-[6vw]">
+            <Skeleton circle width={50} height={50} />
+          </div>
+
+          <div className="fixed top-[15.5vh] left-[14vw] flex gap-[7vh]">
+            <Skeleton borderRadius={6} width={135} height={65} />
+            <Skeleton borderRadius={6} width={135} height={65} />
+            <Skeleton borderRadius={6} width={135} height={65} />
+            <Skeleton borderRadius={6} width={135} height={65} />
+            <Skeleton borderRadius={6} width={175} height={65} />
+            <Skeleton borderRadius={6} width={175} height={65} />
+          </div>
+
+          <div className="fixed flex flex-col top-[26vh] right-[1.3vw] gap-[1.2vh]">
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+          </div>
+
+          <div className="flex items-center fixed bottom-[7vh] right-[44vw]">
+            <Skeleton circle width={65} height={65} />
+          </div>
+        </div>
+      </div>
+    );
   }
 
+  
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
-      {/* Botão para cadastrar produto */}
+    <div className="flex flex-col w-full overflow-x-hidden opacity-0 animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
       <button
         className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%]
         w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] absolute z-[100] left-[50vw] bottom-[9.8vh]
-        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"git add
         onClick={abrirModalCadastro}
       >
         + 
@@ -146,7 +180,7 @@ export function TelaProdutos() {
 
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
-          <Formulario
+          <CadastroProduto
             titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
             campos={[
               { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
@@ -158,12 +192,12 @@ export function TelaProdutos() {
             initialValues={produtoSelecionado}
           />
         ) : (
-          <Formulario
+          <CadastroProduto
             titulo={modoCadastro ? "Cadastrar Produto" : "Editar Produtos"}
             campos={[
               { name: "limiteSemanalDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 2025-08-27)" },
-              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 2025-08-27)" },
+              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade" },
+              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada" },
             ]}
             onSubmit={handleSegundaEtapa}
             buttonLabel={modoCadastro ? "Cadastrar" : "Enviar"}
@@ -178,11 +212,19 @@ export function TelaProdutos() {
         tabela="produtos"
         campos={["nome", "categoriaProduto", "quantidade", "limiteSemanalDeUso", "dataValidade", "dataEntrada"]}
         abrirModal={abrirModal}
-        atualizarCadastro={atualizarProduto}
         displayButton={display}
-        mostrarBotaoExportar={false}
-        
+        mostrarBotaoExportar={true}
       />
+
+      <div className="w-[7.5vw] items-center justify-center flex fixed bottom-[7vh] right-[42vw]">
+        <button
+          title="Cadastrar Produto"
+          onClick={abrirModalCadastro}
+          className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%] w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200 "
+        >
+          +
+        </button>
+      </div>
     </div>
   );
 }

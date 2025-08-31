@@ -6,6 +6,7 @@ import com.example.safestock.service.FuncionarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,18 @@ public class FuncionarioController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FuncionarioListar>> listarFuncionarios(){
-        List<FuncionarioListar> funcionariosEncontrados = this.funcionarioService.listarTodos();
+    public ResponseEntity<List<FuncionarioListar>> listarFuncionarios() {
+        String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<FuncionarioListar> funcionariosEncontrados = this.funcionarioService
+                .listarTodosExcetoLogadoEDono(emailLogado);
+
         if (funcionariosEncontrados.isEmpty()){
             return ResponseEntity.status(204).build();
         }
+
         return ResponseEntity.status(200).body(funcionariosEncontrados);
     }
+
 
     @DeleteMapping("/deletar/{id}")
     @SecurityRequirement(name = "Bearer")

@@ -15,6 +15,10 @@ export function useSetAba() {
         document.title = "Cadastro | SafeStock";
         break;
 
+      case "/dashboard/CadastroProduto":
+        document.title = "Cadastro de Produtos | SafeStock";
+        break;
+
       case "/dashboard/telafuncionarios":
         document.title = "Funcionários | SafeStock";
         break;

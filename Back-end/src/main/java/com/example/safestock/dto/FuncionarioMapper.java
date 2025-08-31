@@ -66,10 +66,13 @@ public class FuncionarioMapper {
         funcionario.setNome(funcionarioAtualizar.getNome());
         funcionario.setSobrenome(funcionarioAtualizar.getSobrenome());
         funcionario.setEmail(funcionarioAtualizar.getEmail());
-        funcionario.setSenha(funcionarioAtualizar.getSenha());
         funcionario.setTelefone(funcionarioAtualizar.getTelefone());
         funcionario.setCargo(funcionarioAtualizar.getCargo());
 
+        // Atualiza a senha somente se o usuário informar
+        if (funcionarioAtualizar.getSenha() != null && !funcionarioAtualizar.getSenha().isEmpty()) {
+            funcionario.setSenha(funcionarioAtualizar.getSenha());
+        }
         return funcionario;
     }
 

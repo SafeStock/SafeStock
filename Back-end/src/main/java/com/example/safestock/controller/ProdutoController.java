@@ -1,7 +1,9 @@
 package com.example.safestock.controller;
 
 import com.example.safestock.dto.produto.*;
+import com.example.safestock.model.Creche;
 import com.example.safestock.model.Produto;
+import com.example.safestock.service.CrecheService;
 import com.example.safestock.service.ProdutoService;
 import com.example.safestock.service.RegistroUsoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,6 +20,10 @@ import java.util.Optional;
 public class ProdutoController {
 
     @Autowired
+    private CrecheService crecheService;
+
+
+    @Autowired
     private ProdutoService produtoService;
 
     @Autowired
@@ -26,7 +32,9 @@ public class ProdutoController {
     @PostMapping("/cadastro")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> cadastrarProduto(@RequestBody @Valid ProdutoCadastro produtoCadastro){
+        Creche creche = crecheService.buscarPorId(produtoCadastro.getCrecheId());
         final Produto novoProduto = ProdutoMapper.of(produtoCadastro);
+        novoProduto.setCreche(creche);
         this.produtoService.cadastrarProduto(novoProduto);
         return ResponseEntity.status(201).build();
     }

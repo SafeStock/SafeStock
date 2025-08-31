@@ -33,14 +33,14 @@ INSERT INTO Produto (nome, categoria_Produto, quantidade, limite_Semanal_De_Uso,
 ('Cera Líquida', 1, 60, 70, '2025-09-25', '2025-07-25', 1);
 
 
-INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade) VALUES
-('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10),
-('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5),
-('2025-05-24 11:00:00', '2025-06-20', 'Multiuso', 8),
-('2025-05-24 11:30:00', '2025-06-30', 'Limpa Vidros', 6),
-('2025-05-25 09:45:00', '2025-07-01', 'Álcool Gel', 12),
-('2025-05-25 10:30:00', '2025-06-15', 'Sabão Líquido', 7),
-('2025-05-25 11:00:00', '2025-06-25', 'Amaciante', 9),
-('2025-05-25 11:30:00', '2025-07-05', 'Lustra Móveis', 5),
-('2025-05-26 09:00:00', '2025-07-10', 'Desengordurante', 10),
-('2025-05-26 09:30:00', '2025-07-15', 'Cloro', 15);
+INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade,fk_funcionario) VALUES
+('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10, 4),
+('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5, 5),
+('2025-05-24 11:00:00', '2025-06-20', 'Multiuso', 8, 4),
+('2025-05-24 11:30:00', '2025-06-30', 'Limpa Vidros', 6, 5),
+('2025-05-25 09:45:00', '2025-07-01', 'Álcool Gel', 12, 4),
+('2025-05-25 10:30:00', '2025-06-15', 'Sabão Líquido', 7, 5),
+('2025-05-25 11:00:00', '2025-06-25', 'Amaciante', 9, 4),
+('2025-05-25 11:30:00', '2025-07-05', 'Lustra Móveis', 5, 5),
+('2025-05-26 09:00:00', '2025-07-10', 'Desengordurante', 10, 4),
+('2025-05-26 09:30:00', '2025-07-15', 'Cloro', 15, 5);

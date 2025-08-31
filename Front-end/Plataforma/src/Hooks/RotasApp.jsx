@@ -11,8 +11,9 @@ import { PrivateRoute } from '../components/PrivateRoute';
 import { DonoLayout } from "../DashBoard/Celulas/DonoLayout";
 import { AdminLayout } from "../DashBoard/Celulas/AdminLayout";
 import { LimpezaLayout } from "../DashBoard/Celulas/LimpezaLayout";
-import { Formulario } from '../DashBoard/Formulario';
+import {CadastroUso} from '../DashBoard/CadastroUso';
 import { Cadastro} from '../DashBoard/Cadastro';
+import { CadastroProduto } from '../DashBoard/CadastroProduto';
 import { ExportarRelatorio } from '../DashBoard/ExportarRelatorio';
 
 export function RotasApp() {
@@ -51,41 +52,13 @@ export function RotasApp() {
       <Route element={<PrivateRoute allowedRoles={["limpeza"]} />}>
         <Route path="/" element={<LimpezaLayout />}>
           <Route index element={<DashLimpeza />} />
+          <Route path="cadastrouso" element={<CadastroUso />} />
+          <Route path="cadastroproduto" element={<CadastroProduto />} />
           <Route path="dashboardlimpeza" element={<DashLimpeza />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
 
-
-
-          {/* Rota para cadastro de produto parte 1*/}
-          <Route path="/dashboard/cadastroProdutos" element={<Formulario
-            titulo="Cadastro de produto"
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
-              { name: "categoria", label: "Categoria:", placeholder: "Digite a categoria do produto" },
-              { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
-
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-            navigateTo="/dashboard/cadastroProdutos2"
-            buttonLabel="Próximo"
-          />} />
-
-
-          {/* Rota para cadastro de produto parte 2*/}
-          <Route path="/dashboard/cadastroProdutos2" element={<Formulario
-            titulo="Cadastro de produto"
-            campos={[
-              { name: "limiteDeUso", label: "Limite de uso:", placeholder: "Digite o limite de uso semanal" },
-              { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
-              { name: "dataEntrada", label: "Data de entrada:", placeholder: "Digite a data de entrada (ex: 08/27)" },
-
-            ]}
-            onSubmit={(dados) => console.log(dados)}
-            navigateTo="/dashboard"
-            buttonLabel="Enviar"
-          />} />
 
         </Route>
       </Route>

@@ -17,7 +17,7 @@ export function AreaWorkGeral({ NewText, titles, abrirModal, tabela, campos, dis
           atualizarCadastro={atualizarCadastro}
           mostrarBotaoExportar={mostrarBotaoExportar}
         />
-        <ButtonAdd abrirModal={abrirModal} displayButton={displayButton} />
+        <ButtonAdd displayButton={displayButton} onAdd={abrirModal} />
       </div>
     </div>
   );

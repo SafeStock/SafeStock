@@ -7,6 +7,7 @@ import com.example.safestock.model.RegistroUso;
 import com.example.safestock.service.RegistroUsoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class RegistroUsoController {
         this.registroUsoService = registroUsoService;
     }
 
-    @PostMapping("/cadastro")
+    @PostMapping(value = "/cadastro", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistroUso> registarUso(@Valid @RequestBody RegistroUso registro){
         RegistroUso novoRegistroUso = registroUsoService.registrarUso(registro);
         return ResponseEntity.ok(novoRegistroUso);

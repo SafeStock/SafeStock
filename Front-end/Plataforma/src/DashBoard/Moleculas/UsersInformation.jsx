@@ -5,23 +5,21 @@ import 'dayjs/locale/pt-br';
 import axios from 'axios';
 import { exportarExcel } from "../../Hooks/exportarExcel";
 import { Download } from "lucide-react";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 
-export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBotaoExportar = true }) {
+
+export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar = true }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
 
 
-  const formatarTelefone = (telefone) => {
-    if (!telefone) return "";
-    const numeros = telefone.replace(/\D/g, "");
-    if (numeros.length === 11) {
-      return numeros.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-    } else if (numeros.length === 10) {
-      return numeros.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-    }
-    return telefone;
-  };
+const formatarTelefone = (telefone) => {
+  if (!telefone) return "";
+  return telefone.replace(/\D/g, ""); // remove tudo que não for número
+};
+
 
   function formatarDataOuDataHora(dataString) {
     if (!dataString) return "-";
@@ -110,7 +108,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
         }));
 
         setDados(dadosFormatados);
-        console.log("Dados formatados:", dadosFormatados);
+        // console.log("Dados formatados:", dadosFormatados);
 
         // 2. Processar alertas SEPARADAMENTE
         // Extrai alertas independentemente da estrutura
@@ -121,7 +119,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           dadosAlertas = [];
         }
 
-        console.log("Dados recebidos:", dadosAlertas);
+        // console.log("Dados recebidos:", dadosAlertas);
 
         // Filtra alertas válidos (com status e dataValidade)
         const alertasValidos = dadosAlertas.filter(a =>
@@ -131,7 +129,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           a.produto.dataValidade
         );
 
-        console.log("Alertas válidos:", alertasValidos);
+        // console.log("Alertas válidos:", alertasValidos);
 
         // Ordena por prioridade e data mais próxima
         const alertasOrdenados = [...alertasValidos].sort((a, b) => {
@@ -149,7 +147,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           return dataA - dataB;
         });
 
-        console.log("Alertas ordenados:", alertasOrdenados);
+        // console.log("Alertas ordenados:", alertasOrdenados);
 
         const alerta = alertasOrdenados[0] || null;
         console.log("Alerta principal selecionado:", alerta);
@@ -190,7 +188,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
 
     try {
       await axios.put(
-        `http://localhost:8080/api/${tabela}/editar/${id}`,
+        `http://localhost:8080/api/${tabela}/atualizar/${id}`,
         dadosAtualizados,
         {
           headers: {
@@ -199,10 +197,9 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           }
         }
       );
-      alert("Cadastro atualizado com sucesso!");
       buscarDados(); // Atualiza a lista após editar
     } catch (error) {
-      alert("Erro ao atualizar cadastro.");
+      toast.error("Erro ao atualizar cadastro.");
       console.error(error.response?.data || error);
     }
   };
@@ -223,7 +220,6 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
         titles={titles}
         campos={campos}
         dados={dados}
-        abrirModal={abrirModal}
         confirmarExclusao={confirmarExclusao}
         atualizarCadastro={atualizarCadastro}
         mostrarIconeUser={tabela === "funcionarios"}
