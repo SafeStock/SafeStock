@@ -1,5 +1,6 @@
 package com.example.safestock.service;
 
+import com.example.safestock.dto.RegistroUsoDTO;
 import com.example.safestock.model.RegistroUso;
 import com.example.safestock.repository.RegistroUsoRepository;
 import jakarta.transaction.Transactional;
@@ -19,9 +20,13 @@ public class RegistroUsoService {
         return registroUsoRepository.save(registroUso);
     }
 
-    public List<RegistroUso> listarRegistrosUso(){
-        return registroUsoRepository.findAll();
+    public List<RegistroUsoDTO> listarRegistrosUso(){
+        return registroUsoRepository.findAll()
+                .stream()
+                .map(RegistroUsoDTO::new)
+                .toList();
     }
+
 
     public Long contarPordutosRetiradosDoEstoque() {
         return registroUsoRepository.sumQuantidadeRegistroDeUso();

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 
 export function ProdutosInformation({ abrirModal }) {
   const [produtos, setProdutos] = useState([]);
@@ -22,28 +24,40 @@ export function ProdutosInformation({ abrirModal }) {
 useEffect(() => {
   buscarProdutos();
 }, []);
-
 const confirmarExclusao = (id) => {
-  const confirmacao = window.confirm("Deseja excluir este produto?");
-  if (confirmacao) {
-    fetch(`http://localhost:8080/api/produtos/deletar/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Erro ao excluir produto");
-        alert("Produto excluído com sucesso!");
-        buscarProdutos();
+  Swal.fire({
+    title: 'Deseja realmente excluir este Produto?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn-confirm',
+        cancelButton: 'btn-cancel',
+        reverseButtons: true
+      }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`http://localhost:8080/api/produtos/deletar/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       })
-      .catch((err) => {
-        console.error(err);
-        alert("Erro ao excluir produto.");
-      });
-  }
+        .then((res) => {
+          if (!res.ok) throw new Error("Erro ao deletar");
+          toast.success("Produto deletado com sucesso!");
+          // Aqui você pode atualizar a lista de produtos ou recarregar a página
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Erro ao deletar o produto.");
+        });
+    }
+  });
 };
+
 
   const formatarData = (dataStr) => {
     if (!dataStr) return "N/A";

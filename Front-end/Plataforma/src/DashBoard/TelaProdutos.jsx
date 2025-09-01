@@ -22,13 +22,13 @@ export function TelaProdutos() {
     return () => clearTimeout(timer);
   }, []);
 
-  const abrirModalCadastro = () => {
-    setModoCadastro(true);
-    setProdutoSelecionado({});
-    setDadosPrimeiraEtapa({});
-    setEtapa(1);
-    setModalAberto(true);
-  };
+  // const abrirModalCadastro = () => {
+  //   setModoCadastro(true);
+  //   setProdutoSelecionado({});
+  //   setDadosPrimeiraEtapa({});
+  //   setEtapa(1);
+  //   setModalAberto(true);
+  // };
 
   const fecharModal = () => {
     setModalAberto(false);
@@ -70,6 +70,7 @@ export function TelaProdutos() {
       toast.success("Produto atualizado com sucesso!");
       fecharModal();
       window.location.reload();
+      console.clear();
     } catch (error) {
       toast.error("Erro ao atualizar produto.");
       console.error(error.response?.data || error);
@@ -95,6 +96,7 @@ export function TelaProdutos() {
       toast.success("Produto cadastrado com sucesso!");
       fecharModal();
       window.location.reload();
+      console.clear();
     } catch (error) {
       toast.error("Erro ao cadastrar produto.");
       console.error(error.response?.data || error);
@@ -158,7 +160,7 @@ export function TelaProdutos() {
             <Skeleton borderRadius={10} width={1410} height={90} />
           </div>
 
-          <div className="flex items-center fixed bottom-[7vh] right-[44vw]">
+          <div className="flex items-center fixed bottom-[5vh] right-[44vw]">
             <Skeleton circle width={65} height={65} />
           </div>
         </div>
@@ -169,14 +171,7 @@ export function TelaProdutos() {
   
   return (
     <div className="flex flex-col w-full overflow-x-hidden opacity-0 animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
-      <button
-        className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%]
-        w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] absolute z-[100] left-[50vw] bottom-[9.8vh]
-        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"git add
-        onClick={abrirModalCadastro}
-      >
-        + 
-      </button>
+  
 
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
@@ -215,16 +210,6 @@ export function TelaProdutos() {
         displayButton={display}
         mostrarBotaoExportar={true}
       />
-
-      <div className="w-[7.5vw] items-center justify-center flex fixed bottom-[7vh] right-[42vw]">
-        <button
-          title="Cadastrar Produto"
-          onClick={abrirModalCadastro}
-          className="border-0 bg-[#3A577B] text-[26px] text-[#eee] font-[600] rounded-[50%] w-[6vh] h-[6vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200 "
-        >
-          +
-        </button>
-      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export function RotasApp() {
   useSetAba();
 
   return (
-
+    <div className='overflow-hidden'>
     <Routes>
       <Route path="/login" element={<Login />} />
 
@@ -64,6 +64,7 @@ export function RotasApp() {
       </Route>
 
     </Routes >
+    </div>
   )
 }
 
