@@ -89,7 +89,7 @@ export function MiniHistoricoAlerta({ endpoint }) {
     if (carregando) return <div className="p-4 text-center">Carregando alertas...</div>;
     if (erro) return <div className="p-4 text-red-500 text-center">{erro}</div>;
     if (!alertaPrincipal) return <div className="p-4 text-center">Nenhum alerta crítico no momento</div>;
-    console.log("Data de validade recebida:", alertaPrincipal.produto.dataValidade);
+    // console.log("Data de validade recebida:", alertaPrincipal.produto.dataValidade);
 
 
     // Extrai informações do produto do alerta principal
@@ -104,7 +104,7 @@ export function MiniHistoricoAlerta({ endpoint }) {
     const hoje = dayjs();
     const diasParaVencer = dataValidade.diff(hoje, 'day');
 
-    console.log("Dias para vencer:", diasParaVencer);
+    // console.log("Dias para vencer:", diasParaVencer);
 
     const mensagem = (
         <span className='text-[3vh] animate-pulsar'>

@@ -2,6 +2,7 @@ package com.example.safestock.controller;
 
 import com.example.safestock.dto.FuncionarioMapper;
 import com.example.safestock.dto.FuncionarioRemover;
+import com.example.safestock.dto.RegistroUsoDTO;
 import com.example.safestock.model.Produto;
 import com.example.safestock.model.RegistroUso;
 import com.example.safestock.service.RegistroUsoService;
@@ -30,9 +31,10 @@ public class RegistroUsoController {
     }
 
     @GetMapping
-    public List<RegistroUso> listarRegistrosUso(){
+    public List<RegistroUsoDTO> listarRegistrosUso() {
         return registroUsoService.listarRegistrosUso();
     }
+
 
     @DeleteMapping("/testedeletar/{id}")
     public ResponseEntity<Void> deletarRegistroUso(@PathVariable Long id) {

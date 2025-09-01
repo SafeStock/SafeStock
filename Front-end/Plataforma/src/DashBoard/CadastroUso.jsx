@@ -80,8 +80,6 @@ export function CadastroUso({ fecharModal }) {
       
     })
 
-console.log(novoUso)
-
       .then(async response => {
         console.log(novoUso);
         if (!response.ok) throw new Error('Erro no cadastro');

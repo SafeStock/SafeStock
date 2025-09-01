@@ -87,7 +87,7 @@ const formatarTelefone = (telefone) => {
       .then((response) => {
         // 1. Processar dados da tabela principal
         const dadosBrutos = response.data;
-
+        console.log("Dados brutos recebidos:", dadosBrutos);
         // Garante que é um array
         const lista = Array.isArray(dadosBrutos)
           ? dadosBrutos

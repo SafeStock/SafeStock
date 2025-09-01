@@ -49,13 +49,14 @@ export function HistoricoUso() {
   const cadastrarRegistro = async (dados) => {
     try {
       await axios.post(
-        "http://localhost:8080/api/registroUso/cadastro",
+        "http://localhost:8080/api/registroUso/cadastro", console.log("Dados do cadastro:", dados),
         { ...dados, quantidade: Number(dados.quantidade), funcionario: { id: Number(dados.responsavelId) } },
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
       toast.success("Registro cadastrado com sucesso!");
       fecharModal();
-      setTimeout(() => navigate("/dashboardlimpeza"), 1000);
+      window.location.reload();
+      console.clear();
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Erro ao cadastrar registro";
       toast.error(errorMsg);
@@ -97,7 +98,7 @@ export function HistoricoUso() {
                  <Skeleton borderRadius={10} width={1410} height={90} />
                </div>
      
-               <div className="flex items-center fixed bottom-[7vh] right-[44vw]">
+               <div className="flex items-center fixed bottom-[5vh] right-[44vw]">
                  <Skeleton circle width={65} height={65} />
                </div>
              </div>
@@ -107,7 +108,7 @@ export function HistoricoUso() {
 
   return (
     <div
-      className="flex flex-col w-full overflow-x-hidden p-4 opacity-0 animate-fadeInContent"
+      className="flex flex-col w-full overflow-hidden p-4 opacity-0 animate-fadeInContent"
       style={{ animationDelay: '0.2s' }}
     >
       
@@ -125,7 +126,7 @@ export function HistoricoUso() {
         NewText={`Histórico de Uso`}
         titles={["Produto", "Quantidade", "Responsável", "Data Saída"]}
         tabela="registroUso"
-        campos={["produto", "quantidade", "funcionarios.nome", "dataHoraSaida"]}
+        campos={["produto", "quantidade", "funcionarioNome", "dataHoraSaida"]}
         displayButton={display}
         abrirModal={abrirModalEdicao}
         
