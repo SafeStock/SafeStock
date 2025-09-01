@@ -7,6 +7,7 @@ import { exportarExcel } from "../../Hooks/exportarExcel";
 import { Download } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 
 
 
@@ -15,10 +16,10 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
   const token = sessionStorage.getItem('authToken');
 
 
-const formatarTelefone = (telefone) => {
-  if (!telefone) return "";
-  return telefone.replace(/\D/g, ""); // remove tudo que não for número
-};
+  const formatarTelefone = (telefone) => {
+    if (!telefone) return "";
+    return telefone.replace(/\D/g, ""); // remove tudo que não for número
+  };
 
 
   function formatarDataOuDataHora(dataString) {
@@ -159,25 +160,37 @@ const formatarTelefone = (telefone) => {
     buscarDados();
     // eslint-disable-next-line
   }, [tabela]);
-
   const confirmarExclusao = (id) => {
-    const confirmacao = window.confirm(`Tem certeza que deseja excluir este item?`);
-    if (confirmacao) {
-      axios.delete(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(() => {
-          alert("Excluído com sucesso!");
-          buscarDados();
+    Swal.fire({
+      title: 'Deseja realmente excluir este Produto?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn-confirm',
+        cancelButton: 'btn-cancel',
+        reverseButtons: true
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         })
-        .catch(() => {
-          alert("Erro ao excluir.");
-        });
-    }
+          .then(() => {
+            Swal.fire('Excluído!', 'O item foi excluído com sucesso.', 'success');
+            buscarDados(); // Atualiza a tabela sem reload
+          })
+          .catch(() => {
+            Swal.fire('Erro', 'Não foi possível excluir o item.', 'error');
+          });
+      }
+    });
   };
+
 
   // Atualizando cadastros de forma dinamica
   const atualizarCadastro = async (id, dadosAtualizados) => {

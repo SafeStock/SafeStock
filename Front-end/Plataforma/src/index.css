@@ -161,3 +161,13 @@ html {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
+
+.btn-confirm {
+  background-color: #e74c3c !important; /* vermelho */
+  color: white !important;
+}
+
+.btn-cancel {
+  background-color: #3498db !important; /* azul */
+  color: white !important;
+}
