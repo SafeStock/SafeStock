@@ -15,7 +15,7 @@ export function DashLimpeza() {
 
   if (loading) {
     return (
-      <div className="flex flex-col overflow-x-hidden overflow-y-hidden w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
+      <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
         <div className="flex w-full max-w-[800px] gap-2 animate-fadeIn">
           <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
             <Skeleton borderRadius={6} width={550} height={75} />
@@ -34,15 +34,16 @@ export function DashLimpeza() {
           </div>
 
           <div className="fixed flex flex-col top-[14.5vh] right-[0.2vw] gap-[1.2vh]">
-            <Skeleton borderRadius={10} width={600} height={670} />
+            <Skeleton borderRadius={10} width={600} height={680} />
           </div>
         </div>
       </div>
     );
   }
 
+
   return (
-    <div className="h-full overflow-x-hidden overflow-y-hidden w-[100vw] bg-transparent flex flex-col justify-end items-end opacity-0 animate-fadeInContent">
+    <div className=" h-full w-full flex flex-col items-center justify-center animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
       <AreaTittle texto={`Boas Vindas, ${nome}!`} />
       <AreaWorkDashLimpeza />
     </div>

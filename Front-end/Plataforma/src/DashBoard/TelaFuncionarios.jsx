@@ -148,24 +148,12 @@ export function TelaFuncionarios() {
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
           <Cadastro
-            titulo={modoCadastro ? "Cadastrar Funcionário" : "Editar Funcionário"}
-            campos={[
-              { name: "nome", label: "Nome:", placeholder: "Digite o nome do funcionário" },
-              { name: "sobrenome", label: "Sobrenome:", placeholder: "Digite o sobrenome do funcionário" },
-              { name: "cargo", label: "Cargo:", placeholder: "Digite o cargo do funcionário" },
-            ]}
             onSubmit={handlePrimeiraEtapa}
             buttonLabel="Próximo"
             initialValues={dadosSelecionados}
           />
         ) : (
           <Cadastro
-            titulo={modoCadastro ? "Cadastrar Funcionário" : "Editar Funcionário"}
-            campos={[
-              { name: "email", label: "Email:", placeholder: "Digite o email do funcionário" },
-              { name: "senha", label: "Senha:", placeholder: "Digite a senha" },
-              { name: "telefone", label: "Telefone:", placeholder: "Digite o telefone do funcionário" },
-            ]}
             onSubmit={handleSegundaEtapa}
             buttonLabel={modoCadastro ? "Cadastrar" : "Salvar"}
             initialValues={dadosSelecionados}

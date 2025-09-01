@@ -134,6 +134,7 @@ html {
 .animate-pulsar-color {
   animation: pulsar-color 1s ease-in-out infinite;
 }
+
 @keyframes fadeInContent {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -141,4 +142,22 @@ html {
 
 .animate-fadeInContent {
   animation: fadeInContent 0.8s ease-out forwards;
+}
+
+.cadastro-etapa-1 {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+.cadastro-etapa-2 {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

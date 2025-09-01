@@ -34,7 +34,7 @@ export function DashPrincipalDono() {
           </div>
 
           <div className="fixed flex flex-col top-[14.5vh] right-[0.2vw] gap-[1.2vh]">
-            <Skeleton borderRadius={10} width={600} height={670} />
+            <Skeleton borderRadius={10} width={600} height={680} />
           </div>
         </div>
       </div>

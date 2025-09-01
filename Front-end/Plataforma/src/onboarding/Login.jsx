@@ -79,12 +79,12 @@ export function Login() {
       console.log(sessionStorage.getItem('authToken'));
 
       // console.log(data); // aqui você vê o que chegou da API
-      toast.success("Login realizado com sucesso!");
       setColor("#2F4700");
       setStar('');
       setCarregando(true);
       setEmail(""); // limpa campos
       setSenha("");
+      toast.success("Login realizado com sucesso!");
       irParaDashboard(data.cargo);
     
     } catch (error) {
@@ -153,8 +153,8 @@ export function Login() {
                   <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh] ">Senha</button>?
                 </p>
               </div> */}
-{/* 
-              <div className="text-[2.5vh] w-[100%] flex justify-center ">
+
+              {/* <div className="text-[2.5vh] w-[100%] flex justify-center ">
                 <span
                   className={`${mensagemErro ? "opacity-100" : "opacity-0"
                     } transition-opacity duration-300`}
