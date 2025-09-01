@@ -90,7 +90,7 @@ export function CadastroProduto() {
 
     return (
         <div className={corpoDiv}>
-            <ToastContainer position="top-right" autoClose={3000} />
+            
             <div className={formularioDiv}>
                 {etapa === 1 && (
     <div className="h-[85vh] w-[65vh]" style={{ animation: "fade-in-right 0.5s ease-out" }}>

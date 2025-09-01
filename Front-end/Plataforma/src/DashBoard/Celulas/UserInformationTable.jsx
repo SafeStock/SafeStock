@@ -90,18 +90,8 @@ export function UserInformationTable({
 
   return (
     <div className="relative top-[1vh]">
-      {/* Toast container */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      
+      
 
       <div className="w-full bg-[white] sticky top-0 z-50 shadow-md">
         <table className="w-full text-[#3A577B] border-collapse table-fixed">

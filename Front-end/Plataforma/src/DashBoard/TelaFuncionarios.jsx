@@ -37,7 +37,7 @@ export function TelaFuncionarios() {
       );
       toast.success("Funcionário atualizado com sucesso!");
       window.location.reload();
-      console.clear();  
+      console.clear();
     } catch (error) {
       toast.error("Erro ao atualizar cadastro.");
       console.error(error.response?.data || error);
@@ -109,31 +109,31 @@ export function TelaFuncionarios() {
   // Skeleton de loading
   if (loading) {
     return (
-       <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
-                    <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
-                      <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
-                        <Skeleton borderRadius={6} width={250} height={75} />
-                      </div>
-            
-                      <div className="fixed top-[15.5vh] left-[14vw] flex gap-[20vh]">
-                        <Skeleton borderRadius={6} width={135} height={65} />
-                        <Skeleton borderRadius={6} width={135} height={65} />
-                        <Skeleton borderRadius={6} width={175} height={65} />
-                        <Skeleton borderRadius={6} width={175} height={65} />
-                      </div>
-            
-                      <div className="fixed flex flex-col top-[26vh] right-[1.3vw] gap-[1.2vh]">
-                        <Skeleton borderRadius={10} width={1410} height={90} />
-                        <Skeleton borderRadius={10} width={1410} height={90} />
-                        <Skeleton borderRadius={10} width={1410} height={90} />
-                        <Skeleton borderRadius={10} width={1410} height={90} />
-                      </div>
-            
-                      <div className="flex items-center fixed bottom-[5vh] right-[44vw]">
-                        <Skeleton circle width={65} height={65} />
-                      </div>
-                    </div>
-                  </div>
+      <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
+        <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
+          <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
+            <Skeleton borderRadius={6} width={250} height={75} />
+          </div>
+
+          <div className="fixed top-[15.5vh] left-[14vw] flex gap-[20vh]">
+            <Skeleton borderRadius={6} width={135} height={65} />
+            <Skeleton borderRadius={6} width={135} height={65} />
+            <Skeleton borderRadius={6} width={175} height={65} />
+            <Skeleton borderRadius={6} width={175} height={65} />
+          </div>
+
+          <div className="fixed flex flex-col top-[26vh] right-[1.3vw] gap-[1.2vh]">
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+            <Skeleton borderRadius={10} width={1410} height={90} />
+          </div>
+
+          <div className="flex items-center fixed bottom-[5vh] right-[44vw]">
+            <Skeleton circle width={65} height={65} />
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -143,7 +143,7 @@ export function TelaFuncionarios() {
 
   return (
     <div className="flex flex-col w-full overflow-hidden p-4 opacity-0 animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
-      
+
       {/* Modal */}
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         {etapa === 1 ? (
@@ -165,9 +165,9 @@ export function TelaFuncionarios() {
       <AreaWorkGeral
         NewText="Funcionários"
         titles={["Nome", "Cargo", "E-mail", "Telefone"]}
-        abrirModalCadastro={abrirModalCadastro}
         tabela="funcionarios"
         campos={["nome", "cargo", "email", "telefone"]}
+        abrirModal={abrirModalCadastro} // <--- aqui
         displayButton={display}
         atualizarCadastro={atualizarCadastro}
         mostrarBotaoExportar={false}
