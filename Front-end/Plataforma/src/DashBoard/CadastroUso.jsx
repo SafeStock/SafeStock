@@ -3,14 +3,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 
 export function CadastroUso({ fecharModal }) {
-  const [etapa, setEtapa] = useState(1);
   const [produto, setProduto] = useState("");
   const [quantidade, setQuantidade] = useState("");
   const [dataUso, setDataUso] = useState("");
-  const [responsavel, setResponsavel] = useState("");
-
   const [produtos, setProdutos] = useState([]);
-  const [funcionarios, setFuncionarios] = useState([]);
+
+
 
 
   // Buscar produtos e funcionários de limpeza
@@ -28,7 +26,7 @@ export function CadastroUso({ fecharModal }) {
       headers: { Authorization: "Bearer " + token },
     })
       .then(res => res.json())
-      .then(data => setFuncionarios(data))
+
 
       .catch(err => console.error("Erro ao buscar funcionários:", err));
   }, []);
@@ -51,31 +49,22 @@ export function CadastroUso({ fecharModal }) {
     return true;
   }
 
-  function validarSegundaEtapa() {
-    if (!dataUso.trim() || !responsavel) {
-      toast.error("Preencha todos os campos obrigatórios!");
-      return false;
-    }
-    return true;
-  }
-
-  function proximo(e) {
-    e.preventDefault();
-    if (validarPrimeiraEtapa()) setEtapa(2);
-  }
-
   function cadastrar(e) {
     e.preventDefault();
-    if (!validarSegundaEtapa()) return;
+    if (!validarPrimeiraEtapa()) return;
 
+    const usuarioId = sessionStorage.getItem("usuarioId");
+    console.log(usuarioId);
 
     const novoUso = {
       produto: produtos.find(p => p.id === Number(produto))?.nome || "",
       quantidade: Number(quantidade),
-      dataHoraSaida: new Date().toISOString(), // se quiser mandar agora
-      funcionario: { id: Number(responsavel), nome: funcionarios.find(f => f.id === Number(responsavel))?.nome || "" }
+      dataHoraSaida: dataUso ? new Date(dataUso).toISOString() : new Date().toISOString(),
+      funcionarioId: Number(sessionStorage.getItem("usuarioId"))
     };
 
+
+    console.log(novoUso);
 
     fetch('http://localhost:8080/api/registroUso/cadastro', {
       method: 'POST',
@@ -107,61 +96,40 @@ export function CadastroUso({ fecharModal }) {
   return (
     <div className={corpoDiv}>
       <div className={formularioDiv}>
-        {etapa === 1 && (
-          <div className="h-[85vh] w-[65vh]" style={{ animation: "fade-in-right 0.5s ease-out" }}>
-            <form onSubmit={proximo} className="flex flex-col justify-center items-center gap-[2.9vh] text-[#2F4672]">
-              <h2 className="text-[4vh] font-bold mt-[3vh] mb-[3vh]">Registro de Uso</h2>
 
-              <div className="w-5 flex flex-col gap-[1vh] text-[2.5vh]">
-                <p>Produto</p>
-                <select value={produto} onChange={(e) => setProduto(e.target.value)} className={selectClass}>
-                  <option value="">Selecione o produto</option>
-                  {produtos.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
-                </select>
+        <div className="h-[85vh] w-[65vh]" style={{ animation: "fade-in-right 0.5s ease-out" }}>
+          <form onSubmit={cadastrar} className="flex flex-col justify-center items-center gap-[2.9vh] text-[#2F4672]">
+            <h2 className="text-[4vh] font-bold mt-[3vh] mb-[3vh]">Registro de Uso</h2>
 
-                <p className="mt-[3vh]">Quantidade</p>
-                <input
-                  type="number"
-                  placeholder="Digite a quantidade"
-                  value={quantidade}
-                  onChange={(e) => setQuantidade(e.target.value)}
-                  className={inputClass}
-                />
-              </div>
+            <div className="w-5 flex flex-col gap-[1vh] text-[2.5vh]">
+              <p>Produto</p>
+              <select value={produto} onChange={(e) => setProduto(e.target.value)} className={selectClass}>
+                <option value="">Selecione o produto</option>
+                {produtos.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+              </select>
 
-              <button type="submit" className={bottomClass}>Próximo</button>
-              <h2 className="flex justify-center text-center top-[71vh] text-[#2F4672] absolute">1/2</h2>
-            </form>
-          </div>
-        )}
+              <p className="mt-[3vh]">Quantidade</p>
+              <input
+                type="number"
+                placeholder="Digite a quantidade"
+                value={quantidade}
+                onChange={(e) => setQuantidade(e.target.value)}
+                className={inputClass}
+              />
 
+              <p className="mt-[3vh]">Data do uso</p>
+              <input
+                type="date"
+                value={dataUso}
+                onChange={(e) => setDataUso(e.target.value)}
+                className={inputClass}
+              />
+            </div>
 
-        {etapa === 2 && (
-          <div className="h-[85vh] w-[65vh]" style={{ animation: "fade-in-right 0.5s ease-out" }}>
-            <form onSubmit={cadastrar} className="flex flex-col justify-center items-center gap-[2.9vh] text-[#2F4672]">
-              <h2 className="text-[4vh] font-bold mt-[3vh] mb-[3vh]">Registro de Uso</h2>
+            <button type="submit" className={bottomClass}>Resgitrar</button>
 
-              <div className="w-5 flex flex-col gap-[1vh] text-[2.5vh]">
-                <p>Data do uso</p>
-                <input
-                  type="date"
-                  value={dataUso}
-                  onChange={(e) => setDataUso(e.target.value)}
-                  className={inputClass}
-                />
-
-                <p className="mt-[3vh]">Responsável</p>
-                <select value={responsavel} onChange={(e) => setResponsavel(e.target.value)} className={selectClass}>
-                  <option value="">Selecione o responsável</option>
-                  {funcionarios.map(f => <option key={f.id} value={f.id}>{f.nome}</option>)}
-                </select>
-              </div>
-
-              <button type="submit" className={bottomClass}>Cadastrar</button>
-              <h2 className="flex justify-center text-center top-[71vh] text-[#2F4672] absolute">2/2</h2>
-            </form>
-          </div>
-        )}
+          </form>
+        </div>
 
       </div>
     </div>
