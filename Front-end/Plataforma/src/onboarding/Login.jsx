@@ -69,14 +69,16 @@ export function Login() {
       const data = await response.json();
       console.log(data);
 
-      // 💾 Salvar o token e o nome no sessionStorage
+      // 💾 
       if (data.token) {
         sessionStorage.setItem('authToken', data.token);
         sessionStorage.setItem('usuario', data.nome);
-        sessionStorage.setItem('cargo', data.cargo); // ajuste se seu back devolver o nome assim
+        sessionStorage.setItem('cargo', data.cargo); 
+        sessionStorage.setItem("usuarioId", data.id);
       }
     
-      console.log(sessionStorage.getItem('authToken'));
+      // console.log(sessionStorage.getItem('authToken'));
+
 
       // console.log(data); // aqui você vê o que chegou da API
       setColor("#2F4700");

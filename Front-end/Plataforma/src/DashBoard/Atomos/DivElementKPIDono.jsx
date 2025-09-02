@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { ListaDinamica } from "./ListaDinamica";
 import { GraficoEstoqueBar } from "../Atomos/GraficoEstoqueBar";
@@ -9,27 +9,77 @@ import { useSetAba } from "../../Hooks/setAba";
 import { Modal } from "../Atomos/Modal"; 
 import { CadastroUso } from "../CadastroUso"; 
 
+// Componente de KPI pequeno (lado esquerdo)
 
 // Componente de KPI pequeno (lado esquerdo)
-export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
-    return (
-        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
-            <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[65%] h-full flex flex-row items-end justify-around">
-                    <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
-                    <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
-                        <strong className="text-[5vh]">{Qtd}</strong>
-                    </div>
-                </div>
-            </div>
-            <div className="w-[80%] h-[0.2vh] bg-[#9AC7D9]"></div>
-            <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[81%] h-full">
-                    <p className="text-[1.9vh] mt-[1vh] text-center">{Titulo}</p>
-                </div>
-            </div>
+export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
+  const [Qtd, setQtd] = useState("-");
+  const [erro, setErro] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true; // evita setState se componente desmontar
+
+    async function fetchQtd() {
+      try {
+        const res = await fetch(endpoint, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
+
+        
+        // console.log(`Resposta do endpoint ${endpoint}: status=${res.status}, content-type=${res.headers.get("content-type")}`);
+
+        let data;
+
+        if (res.headers.get("content-type")?.includes("application/json")) {
+          data = await res.json();
+          // console.log("data JSON:", data);
+        } else {
+          console.warn("Resposta não é JSON, retornando placeholder.");
+          data = { qtd: "-" };
+        }
+
+        if (isMounted) {
+          setQtd(typeof data === "number" ? data : data.qtd ?? "-");
+          setErro(false);
+        }
+      } catch (err) {
+        console.error(`Erro ao buscar Qtd do endpoint ${endpoint}:`, err);
+        if (isMounted) {
+          setQtd("-");
+          setErro(true);
+        }
+      }
+    }
+
+    fetchQtd(); // fetch inicial
+    const interval = setInterval(fetchQtd, 5000); // atualiza a cada 5s
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [endpoint]);
+
+  return (
+    <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+      <div className="w-full h-[48.5%] flex items-center justify-center">
+        <div className="w-[65%] h-full flex flex-row items-end justify-around">
+          <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
+          <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
+            <strong className="text-[5vh]">{Qtd}</strong>
+          </div>
         </div>
-    );
+      </div>
+      <div className="w-[80%] h-[0.2vh] bg-[#9AC7D9]"></div>
+      <div className="w-full h-[48.5%] flex items-center justify-center">
+        <div className="w-[81%] h-full">
+          <p className="text-[1.9vh] mt-[1vh] text-center">
+            {Titulo} {erro && "(Erro)"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // Componente de KPI grande (lado esquerdo)
