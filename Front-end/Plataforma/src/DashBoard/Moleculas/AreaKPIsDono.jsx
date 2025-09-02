@@ -26,19 +26,21 @@ export function AreaKPIsDonoLateralEsquerda() {
   const [qtd4, setQtd4] = useState("-");
 
   useEffect(() => {
-    const promises = endpoints.map(endpoint => fetch(endpoint, { method: "GET", headers }));
-    Promise.all(promises)
-      .then(responses => {
-        const data = responses.map(response => response.json());
-        setQtd1(data[0]);
-        setQtd2(data[1]);
-        setQtd3(data[2]);
-        setQtd4(data[3]);
-      })
-      .catch(error => {
-        console.error("Erro ao buscar dados:", error);
-      });
-  }, []);
+  const promises = endpoints.map(endpoint => fetch(endpoint, { method: "GET", headers }));
+
+  Promise.all(promises)
+    .then(responses => Promise.all(responses.map(r => r.json())))
+    .then(data => {
+      setQtd1(data[0]);
+      setQtd2(data[1]);
+      setQtd3(data[2]);
+      setQtd4(data[3]);
+    })
+    .catch(error => {
+      console.error("Erro ao buscar dados:", error);
+    });
+}, []);
+
 
   return (
     <div className="h-[95%] w-[55%] flex flex-col justify-start items-center ml-[5vw]">
