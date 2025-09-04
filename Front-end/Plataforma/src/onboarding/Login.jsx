@@ -98,7 +98,7 @@ export function Login() {
   }
 
   return (
-    <div className="flex flex-row w-full h-screen bg-gray-100 justify-center items-center relative overflow-hidden">
+    <div className="flex flex-row w-full h-screen bg-gray-100 justify-center items-center relative overflow-hidden animate-fadeInContent">
 
       <main className="flex flex-column justify-center items-center absolute mr-[26vw] max-w-[1200px]">
 

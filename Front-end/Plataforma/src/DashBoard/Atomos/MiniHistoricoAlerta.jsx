@@ -83,13 +83,11 @@ function MiniHistoricoAlerta({ endpoint }) {
     const validadeProduto = alertaPrincipal.produto?.dataValidade;
     if (!validadeProduto) return <div className="p-4 text-center">Produto sem data de validade cadastrada</div>;
 
-    const dataValidade = dayjs(validadeProduto);
-    const hoje = dayjs();
-    const diasParaVencer = dataValidade.diff(hoje, 'day');
+
 
     const mensagem = (
         <span className='text-[3vh] animate-pulsar'>
-            <strong className='text-[#73b1e8]'>{nomeProduto}</strong> está a <strong className='text-[#ff0303]'>{diasParaVencer} dias do vencimento</strong>!
+            <strong className='text-[#73b1e8]'>{nomeProduto}</strong> está  próximo ao<strong className='text-[#ff0303]'> vencimento!</strong>
         </span>
     );
 
@@ -115,7 +113,7 @@ MiniHistoricoAlerta.propTypes = {
     endpoint: PropTypes.string.isRequired
 };
 
-// --- ErrorBoundary ---
+
 class MiniHistoricoAlertaErrorBoundary extends Component {
     constructor(props) {
         super(props);
