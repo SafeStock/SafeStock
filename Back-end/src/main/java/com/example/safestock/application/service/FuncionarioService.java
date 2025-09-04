@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("funcionarioServiceV2")
 public class FuncionarioService implements FuncionarioUseCase {
@@ -26,6 +27,11 @@ public class FuncionarioService implements FuncionarioUseCase {
     @Override
     public List<Funcionario> buscarFuncionarios() {
         return funcionarioRepository.buscarFuncionario();
+    }
+
+    @Override
+    public Optional<Funcionario> buscarFuncionarioPorId(Long id) {
+        return funcionarioRepository.buscarFuncionarioId(id);
     }
 
     @Override

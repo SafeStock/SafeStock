@@ -9,6 +9,7 @@ import com.example.safestock.infrastructure.jpa.JpaFuncionarioRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -34,6 +35,12 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
         return jpa.findAll().stream()
                 .map(FuncionarioMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Funcionario> buscarFuncionarioId(Long id) {
+        return jpa.findById(id)
+                .map(FuncionarioMapper::toDomain);
     }
 
     @Override
