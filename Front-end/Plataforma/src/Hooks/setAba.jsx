@@ -15,6 +15,10 @@ export function useSetAba() {
         document.title = "Cadastro | SafeStock";
         break;
 
+      case "/dashboard/CadastroProduto":
+        document.title = "Cadastro de Produtos | SafeStock";
+        break;
+
       case "/dashboard/telafuncionarios":
         document.title = "Funcionários | SafeStock";
         break;
@@ -38,6 +42,11 @@ export function useSetAba() {
       case "/dashboard/telaprodutos":
         document.title = "Produtos | SafeStock";
         break;  
+
+      case "/dashboard/exportarrelatorio":
+        document.title = "Exportar Relatório | SafeStock";
+        break;
+        
     }
   }, [location.pathname]);
 }

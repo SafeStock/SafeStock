@@ -1,33 +1,85 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { ListaDinamica } from "./ListaDinamica";
 import { GraficoEstoqueBar } from "../Atomos/GraficoEstoqueBar";
-import { MiniHistoricoAlerta } from "../Atomos/MiniHistoricoAlerta";
+import MiniHistoricoAlerta from "../Atomos/MiniHistoricoAlerta";
 import { getToken } from '../Moleculas/getToken';
-import { Formulario } from "../Formulario";
 import { useNavigate } from "react-router-dom";
 import { useSetAba } from "../../Hooks/setAba";
+import { Modal } from "../Atomos/Modal"; 
+import { CadastroUso } from "../CadastroUso"; 
 
 // Componente de KPI pequeno (lado esquerdo)
-export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, Qtd }) {
-    return (
-        <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh]  shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
-            <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[65%] h-full flex flex-row items-end justify-around">
-                    <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
-                    <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
-                        <strong className="text-[5vh]">{Qtd}</strong>
-                    </div>
-                </div>
-            </div>
-            <div className="w-[80%] h-[0.2vh] bg-[#9AC7D9]"></div>
-            <div className="w-full h-[48.5%] flex items-center justify-center">
-                <div className="w-[81%] h-full">
-                    <p className="text-[1.9vh] mt-[1vh] text-center">{Titulo}</p>
-                </div>
-            </div>
+
+// Componente de KPI pequeno (lado esquerdo)
+export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
+  const [Qtd, setQtd] = useState("-");
+  const [erro, setErro] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true; // evita setState se componente desmontar
+
+    async function fetchQtd() {
+      try {
+        const res = await fetch(endpoint, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
+
+        
+        // console.log(`Resposta do endpoint ${endpoint}: status=${res.status}, content-type=${res.headers.get("content-type")}`);
+
+        let data;
+
+        if (res.headers.get("content-type")?.includes("application/json")) {
+          data = await res.json();
+          // console.log("data JSON:", data);
+        } else {
+          console.warn("Resposta não é JSON, retornando placeholder.");
+          data = { qtd: "-" };
+        }
+
+        if (isMounted) {
+          setQtd(typeof data === "number" ? data : data.qtd ?? "-");
+          setErro(false);
+        }
+      } catch (err) {
+        console.error(`Erro ao buscar Qtd do endpoint ${endpoint}:`, err);
+        if (isMounted) {
+          setQtd("-");
+          setErro(true);
+        }
+      }
+    }
+
+    fetchQtd(); // fetch inicial
+    const interval = setInterval(fetchQtd, 5000); // atualiza a cada 5s
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [endpoint]);
+
+  return (
+    <div className="w-[12.4vw] h-[18vh] rounded-[2vh] items-center flex flex-col mt-[1vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]">
+      <div className="w-full h-[48.5%] flex items-center justify-center">
+        <div className="w-[65%] h-full flex flex-row items-end justify-around">
+          <img src={ImgUrl} className="w-[42.5%] h-[80%]" alt={Titulo} />
+          <div className="w-[35%] h-full flex items-end justify-center text-[#9AC7D9]">
+            <strong className="text-[5vh]">{Qtd}</strong>
+          </div>
         </div>
-    );
+      </div>
+      <div className="w-[80%] h-[0.2vh] bg-[#9AC7D9]"></div>
+      <div className="w-full h-[48.5%] flex items-center justify-center">
+        <div className="w-[81%] h-full">
+          <p className="text-[1.9vh] mt-[1vh] text-center">
+            {Titulo} {erro && "(Erro)"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // Componente de KPI grande (lado esquerdo)
@@ -57,162 +109,100 @@ export function DivElementKPIDonoBigLeft({
     );
 }
 
+
 export function DivElementKPIDonoBigRight({
-    NameUse = "Histórico de Uso",
-    buttonNameUse = "Ver Histórico",
-    customEndpoint,
-    customCampos,
-    customHeight = "35vh",
-    NavigateOn = "none"
+  NameUse = "Histórico de Uso",
+  buttonNameUse = "Registrar Uso",
+  customEndpoint,
+  customCampos,
+  customHeight = "35vh",
+  NavigateOn = "none"
 }) {
-    // const navigate = useNavigate();
-    const token = getToken();
+  const token = getToken();
+  const [modalAberto, setModalAberto] = useState(false);
+  const abrirModal = () => setModalAberto(true);
+  const fecharModal = () => setModalAberto(false);
+  const navigate = useNavigate();
+  const useAba = useSetAba();
 
-    const [modalAberto, setModalAberto] = useState(false);
+  const handleRedirect = (path) => {
+    navigate(path);
+    useAba;
+  };
 
-    const formatarDadosUso = (dados) => {
-        return dados.map(item => ({
-            ...item,
-            produto: item.produto || "-",
-            quantidade: item.quantidade ? `${item.quantidade}` : "-",
-            dataValidade: formatarDataEspecifica(item.dataValidade),
-            dataHoraSaida: formatarDataEspecifica(item.dataHoraSaida)
-        }));
-    };
+  const formatarDataEspecifica = (dataString) => {
+    if (!dataString) return "-";
+    const data = dayjs(dataString);
+    if (!data.isValid()) return "-";
+    const temHora = data.hour() !== 0 || data.minute() !== 0;
+    return temHora ? data.format("DD-MM-YYYY HH:mm") : data.format("DD-MM-YYYY");
+  };
 
-    const formatarDataEspecifica = (dataString) => {
-        if (!dataString) return "-";
-        const data = dayjs(dataString);
-        if (!data.isValid()) return "-";
-        const temHora = data.hour() !== 0 || data.minute() !== 0;
-        return temHora
-            ? data.format("DD-MM-YYYY HH:mm")
-            : data.format("DD-MM-YYYY");
-    };
+  const formatarDadosUso = (dados) => {
+    return dados.map(item => ({
+      ...item,
+      produto: item.produto || "-",
+      quantidade: item.quantidade ? `${item.quantidade}` : "-",
+      dataHoraSaida: formatarDataEspecifica(item.dataHoraSaida),
+      funcionarioNome: item.funcionarioNome || "-"
+    }));
+  };
 
-    const abrirModal = () => setModalAberto(true);
-    const fecharModal = () => setModalAberto(false);
+  return (
+    <div className="w-full h-full rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
+      {/* Título */}
+      <div className="w-full h-[20%] flex justify-center items-center">
+        <p className="text-[#3A577B] font-[700] text-[3.5vh]">{NameUse}</p>
+      </div>
 
-    const navigate = useNavigate();
+      {/* Lista */}
+      <div className="w-full" style={{ height: customHeight }}>
+        <ListaDinamica
+          endpoint={customEndpoint}
+          campos={customCampos || ["produto", "quantidade", "funcionarioNome", "dataHoraSaida"]}
+          token={token}
+          formataDados={formatarDadosUso}
+          hideTitle
+          compact
+          disableAutoDate={true}
+          nomesCampos={{
+            produto: "Produto",
+            quantidade: "Quantidade",
+            funcionarioNome: "Responsável",
+            dataHoraSaida: "Saída"
+          }}
+        />
+      </div>
 
-    const useAba = useSetAba();
+      {/* Botões */}
+      <div className="flex justify-center items-center relative top-[19vh]">
+        {/* Botão que navega */}
+        <button
+          className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh] p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+          onClick={() => handleRedirect("historicouso")}
+          style={{ display: NavigateOn }}
+        >
+          Ver Histórico
+        </button>
 
-    const handleRedirect = (path) => {
-        navigate(path);
-        useAba;
-    };
+        {/* Botão que abre modal */}
+        <button
+          className=" border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh] p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
+          onClick={abrirModal}
+          style={{ display: NavigateOn === "block" ? "none" : "block" }}
+        >
+          {buttonNameUse}
+        </button>
+      </div>
 
-    return (
-        <div className="w-full h-full  rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col ">
-            <div className="w-full h-[20%] flex justify-center items-center ">
-                <p className="text-[#3A577B] font-[700] text-[3.5vh] ">{NameUse}</p>
-            </div>
-
-            <div className="w-full " style={{ height: customHeight }}>
-                <ListaDinamica
-                    endpoint={customEndpoint}
-                    campos={customCampos || ["produto", "quantidade", "dataValidade", "dataHoraSaida"]}
-                    token={token}
-                    formataDados={formatarDadosUso}
-                    hideTitle
-                    compact
-                    disableAutoDate={true}
-                    nomesCampos={{
-                        'produto': 'Produto',
-                        'quantidade': 'Quantidade',
-                        'dataValidade': 'Validade',
-                        'dataHoraSaida': 'Saída'
-                    }}
-                />
-            </div>
-
-            <div className="flex justify-center items-center relative top-[19vh] ">
-
-                <button
-                    className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
-        p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
-        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
-                    onClick={() => handleRedirect('historicouso')} style={{ display: NavigateOn }}>
-                    {buttonNameUse}
-                </button>
-
-
-                <button
-                    className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh]
-        p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] 
-        hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
-                    onClick={abrirModal} style={{ display: NavigateOn === "block" ? "none" : "block" }}
-                >
-                    {buttonNameUse}
-                </button>
-            </div>
-
-
-            {/* Modal centralizado */}
-            {modalAberto && (
-                <div
-                    style={{
-                        position: "fixed",
-                        inset: 0,
-                        zIndex: 1000,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "rgba(0,0,0,0.5)",
-                    }}
-                >
-                    <div
-                        style={{
-                            background: "#fff",
-                            borderRadius: "1rem",
-                            boxShadow: "0 5px 20px rgba(0,0,0,0.2)",
-                            padding: "10vh",
-                            // minWidth: "320px",
-                            // width: "400px",
-                            width: "25vw",
-                            height: "30vw",
-                            maxHeight: "60vh",
-                            overflow: "hidden",
-                            position: "relative",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <button
-                            onClick={fecharModal}
-                            style={{
-                                position: "absolute",
-                                top: 12,
-                                right: 18,
-                                background: "transparent",
-                                border: "none",
-                                fontSize: "1.5rem",
-                                color: "#888",
-                                cursor: "pointer",
-                            }}
-                            aria-label="Fechar"
-                        >
-                            ×
-                        </button>
-                        <Formulario
-                            titulo="Registrar Uso"
-                            campos={[
-                                { name: "nome", label: "Nome:", placeholder: "Digite o nome do produto" },
-                                { name: "quantidade", label: "Quantidade:", placeholder: "Digite a quantidade de produtos" },
-                                { name: "dataValidade", label: "Data de validade:", placeholder: "Digite a data de validade (ex: 08/27)" },
-                                { name: "dataRetirada", label: "Data de retirada:", placeholder: "Digite a data de retirada (ex: 08/27)" }
-                            ]}
-                            onSubmit={fecharModal}
-                        />
-                    </div>
-                </div>
-            )}
-
-        </div>
-    );
+      {/* Modal com CadastroUso */}
+      <Modal isOpen={modalAberto} onClose={fecharModal}>
+        <CadastroUso fecharModal={fecharModal} />
+      </Modal>
+    </div>
+  );
 }
+
 
 // Componentes auxiliares
 export function AlertaInformationDiv({ tamanho, children }) {

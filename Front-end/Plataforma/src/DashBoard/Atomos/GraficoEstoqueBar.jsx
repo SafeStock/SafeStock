@@ -25,7 +25,7 @@ export function GraficoEstoqueBar() {
           atual: item.quantidade
         }));
         setDadosGrafico(dadosFormatados);
-        console.log(data);
+
       })
       .catch((err) => {
         console.error("Erro ao buscar dados do gráfico:", err);

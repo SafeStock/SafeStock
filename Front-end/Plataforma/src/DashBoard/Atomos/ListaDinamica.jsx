@@ -74,6 +74,7 @@ export function ListaDinamica({
                     : formatarDadosPadrao(resposta.data);
 
                 setDados(dadosFormatados);
+                console.log(dadosFormatados);
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
                 setErro(`Erro ao carregar dados: ${error.response?.data?.message || error.message}`);

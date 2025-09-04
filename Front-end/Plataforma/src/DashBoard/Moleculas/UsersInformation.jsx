@@ -5,23 +5,22 @@ import 'dayjs/locale/pt-br';
 import axios from 'axios';
 import { exportarExcel } from "../../Hooks/exportarExcel";
 import { Download } from "lucide-react";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 
 
-export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBotaoExportar = true }) {
+
+export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar = true }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
 
 
   const formatarTelefone = (telefone) => {
     if (!telefone) return "";
-    const numeros = telefone.replace(/\D/g, "");
-    if (numeros.length === 11) {
-      return numeros.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-    } else if (numeros.length === 10) {
-      return numeros.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-    }
-    return telefone;
+    return telefone.replace(/\D/g, ""); // remove tudo que não for número
   };
+
 
   function formatarDataOuDataHora(dataString) {
     if (!dataString) return "-";
@@ -89,7 +88,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
       .then((response) => {
         // 1. Processar dados da tabela principal
         const dadosBrutos = response.data;
-
+        console.log("Dados brutos recebidos:", dadosBrutos);
         // Garante que é um array
         const lista = Array.isArray(dadosBrutos)
           ? dadosBrutos
@@ -110,7 +109,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
         }));
 
         setDados(dadosFormatados);
-        console.log("Dados formatados:", dadosFormatados);
+        // console.log("Dados formatados:", dadosFormatados);
 
         // 2. Processar alertas SEPARADAMENTE
         // Extrai alertas independentemente da estrutura
@@ -121,7 +120,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           dadosAlertas = [];
         }
 
-        console.log("Dados recebidos:", dadosAlertas);
+        // console.log("Dados recebidos:", dadosAlertas);
 
         // Filtra alertas válidos (com status e dataValidade)
         const alertasValidos = dadosAlertas.filter(a =>
@@ -131,7 +130,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           a.produto.dataValidade
         );
 
-        console.log("Alertas válidos:", alertasValidos);
+        // console.log("Alertas válidos:", alertasValidos);
 
         // Ordena por prioridade e data mais próxima
         const alertasOrdenados = [...alertasValidos].sort((a, b) => {
@@ -149,7 +148,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           return dataA - dataB;
         });
 
-        console.log("Alertas ordenados:", alertasOrdenados);
+        // console.log("Alertas ordenados:", alertasOrdenados);
 
         const alerta = alertasOrdenados[0] || null;
         console.log("Alerta principal selecionado:", alerta);
@@ -161,25 +160,37 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
     buscarDados();
     // eslint-disable-next-line
   }, [tabela]);
-
   const confirmarExclusao = (id) => {
-    const confirmacao = window.confirm(`Tem certeza que deseja excluir este item?`);
-    if (confirmacao) {
-      axios.delete(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(() => {
-          alert("Excluído com sucesso!");
-          buscarDados();
+    Swal.fire({
+      title: 'Deseja realmente excluir este Produto?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn-confirm',
+        cancelButton: 'btn-cancel',
+        reverseButtons: true
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         })
-        .catch(() => {
-          alert("Erro ao excluir.");
-        });
-    }
+          .then(() => {
+            Swal.fire('Excluído!', 'O item foi excluído com sucesso.', 'success');
+            buscarDados(); // Atualiza a tabela sem reload
+          })
+          .catch(() => {
+            Swal.fire('Erro', 'Não foi possível excluir o item.', 'error');
+          });
+      }
+    });
   };
+
 
   // Atualizando cadastros de forma dinamica
   const atualizarCadastro = async (id, dadosAtualizados) => {
@@ -190,7 +201,7 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
 
     try {
       await axios.put(
-        `http://localhost:8080/api/${tabela}/editar/${id}`,
+        `http://localhost:8080/api/${tabela}/atualizar/${id}`,
         dadosAtualizados,
         {
           headers: {
@@ -199,10 +210,9 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
           }
         }
       );
-      alert("Cadastro atualizado com sucesso!");
       buscarDados(); // Atualiza a lista após editar
     } catch (error) {
-      alert("Erro ao atualizar cadastro.");
+      toast.error("Erro ao atualizar cadastro.");
       console.error(error.response?.data || error);
     }
   };
@@ -223,7 +233,6 @@ export function UserInformation({ abrirModal, tabela, campos, titles, mostrarBot
         titles={titles}
         campos={campos}
         dados={dados}
-        abrirModal={abrirModal}
         confirmarExclusao={confirmarExclusao}
         atualizarCadastro={atualizarCadastro}
         mostrarIconeUser={tabela === "funcionarios"}

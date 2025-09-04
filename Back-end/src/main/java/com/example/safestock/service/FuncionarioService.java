@@ -1,6 +1,7 @@
 package com.example.safestock.service;
 
 import com.example.safestock.dto.FuncionarioListar;
+import com.example.safestock.model.enums.CargoFuncionario;
 import com.example.safestock.repository.RegistroUsoRepository;
 import org.springframework.security.core.Authentication;
 import com.example.safestock.config.GerenciadorTokenJwt;
@@ -28,6 +29,18 @@ public class FuncionarioService {
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
     private final RegistroUsoRepository registroUsoRepository;
+
+    // Novo método
+    public Optional<Funcionario> findById(Long id) {
+        return funcionarioRepository.findById(id);
+    }
+
+    // Opcionalmente, se quiser lançar exceção direto:
+    public Funcionario getByIdOrThrow(Long id) {
+        return funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+    }
+
 
     public FuncionarioService(PasswordEncoder passwordEncoder,
                               FuncionarioRepository funcionarioRepository,
@@ -64,10 +77,15 @@ public class FuncionarioService {
         return FuncionarioMapper.of(funcionarioAutenticado, token);
     }
 
-    public List<FuncionarioListar> listarTodos(){
-        List<Funcionario> funcionarioEncontrado = funcionarioRepository.findAll();
-        return funcionarioEncontrado.stream().map(FuncionarioMapper::of).toList();
+    public List<FuncionarioListar> listarTodosExcetoLogadoEDono(String emailLogado) {
+        List<Funcionario> funcionariosEncontrados = funcionarioRepository
+                .findByEmailNotAndCargoNot(emailLogado, CargoFuncionario.dono);
+
+        return funcionariosEncontrados.stream()
+                .map(FuncionarioMapper::of)
+                .toList();
     }
+
 
     @Transactional
     public void deletarFuncionario(Long id) {
@@ -82,14 +100,30 @@ public class FuncionarioService {
 
     public Optional<Funcionario> atualizarFuncionario(Long id, Funcionario novoFuncionario) {
         return funcionarioRepository.findById(id).map(funcionario -> {
-            funcionario.setNome(novoFuncionario.getNome());
-            funcionario.setEmail(novoFuncionario.getEmail());
-            funcionario.setSobrenome(novoFuncionario.getSobrenome());
-            funcionario.setSenha(passwordEncoder.encode(novoFuncionario.getSenha()));
-            funcionario.setTelefone(novoFuncionario.getTelefone());
-            funcionario.setCargo(novoFuncionario.getCargo());
+
+            if (novoFuncionario.getNome() != null) {
+                funcionario.setNome(novoFuncionario.getNome());
+            }
+            if (novoFuncionario.getSobrenome() != null) {
+                funcionario.setSobrenome(novoFuncionario.getSobrenome());
+            }
+            if (novoFuncionario.getEmail() != null) {
+                funcionario.setEmail(novoFuncionario.getEmail());
+            }
+            if (novoFuncionario.getTelefone() != null) {
+                funcionario.setTelefone(novoFuncionario.getTelefone());
+            }
+            if (novoFuncionario.getCargo() != null) {
+                funcionario.setCargo(novoFuncionario.getCargo());
+            }
+            if (novoFuncionario.getSenha() != null && !novoFuncionario.getSenha().isEmpty()) {
+                funcionario.setSenha(passwordEncoder.encode(novoFuncionario.getSenha()));
+            }
+
             return funcionarioRepository.save(funcionario);
         });
     }
+
+
 
 }

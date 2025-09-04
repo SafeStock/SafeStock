@@ -26,8 +26,12 @@ public class CrecheController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Creche> listarCrechePorId(@PathVariable Long id){
-        Optional<Creche> creche = crecheService.buscarCrechePorId(id);
-        return creche.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            Creche creche = crecheService.buscarPorId(id); // método que retorna diretamente
+            return ResponseEntity.ok(creche);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
@@ -37,11 +41,13 @@ public class CrecheController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Creche> removerCreche(@PathVariable Long id){
-        if (crecheService.buscarCrechePorId(id).isPresent()){
+    public ResponseEntity<Void> removerCreche(@PathVariable Long id){
+        try {
             crecheService.removerCrechePorId(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")

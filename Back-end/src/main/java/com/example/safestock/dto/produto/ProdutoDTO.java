@@ -3,6 +3,7 @@ package com.example.safestock.dto.produto;
 import com.example.safestock.model.Creche;
 import com.example.safestock.model.Relatorio;
 import com.example.safestock.model.enums.CategoriaProduto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
@@ -26,9 +27,11 @@ public class ProdutoDTO {
     @Schema(description = "Limite de uso do produto", example = "5")
     private int limiteSemanalDeUso;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Schema(description = "Validade do produto", example = "15/07/2025")
     private LocalDate dataValidade;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Schema(description = "Entrada do produto", example = "15/05/2025")
     private LocalDate dataEntrada;
 

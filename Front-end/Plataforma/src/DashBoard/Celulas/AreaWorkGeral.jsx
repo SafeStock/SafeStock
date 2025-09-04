@@ -4,7 +4,6 @@ import { ButtonAdd } from "../Moleculas/ButtonAdd";
 
 export function AreaWorkGeral({ NewText, titles, abrirModal, tabela, campos, displayButton, atualizarCadastro, mostrarBotaoExportar}) {
 
-
   return (
     <div className="flex flex-col tamanho-variavel bg-transparent">
       <AreaTittle texto={NewText} />
@@ -18,7 +17,7 @@ export function AreaWorkGeral({ NewText, titles, abrirModal, tabela, campos, dis
           atualizarCadastro={atualizarCadastro}
           mostrarBotaoExportar={mostrarBotaoExportar}
         />
-        <ButtonAdd abrirModal={abrirModal} displayButton={displayButton} />
+        <ButtonAdd displayButton={displayButton} onAdd={abrirModal} />
       </div>
     </div>
   );

@@ -3,7 +3,9 @@ package com.example.safestock.service;
 import com.example.safestock.dto.produto.ProdutoListar;
 import com.example.safestock.dto.produto.ProdutoMapper;
 import com.example.safestock.model.Produto;
+import com.example.safestock.repository.HistoricoAlertasRepository;
 import com.example.safestock.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,8 +17,12 @@ public class ProdutoService {
 
     public final ProdutoRepository produtoRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    public final HistoricoAlertasRepository historicoAlertasRepository;
+
+    public ProdutoService(ProdutoRepository produtoRepository,
+                          HistoricoAlertasRepository historicoAlertasRepository) {
         this.produtoRepository = produtoRepository;
+        this.historicoAlertasRepository = historicoAlertasRepository;
     }
 
     public Long contarProdutosCadastrados() {
@@ -54,8 +60,17 @@ public class ProdutoService {
         });
     }
 
-    public void deletarProdutos(Long id) {
-        produtoRepository.deleteById(id);
+    @Transactional
+
+    public void deletarProdutos(Long produtoId) {
+        Produto produto = produtoRepository.findById(produtoId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        // Deleta os históricos relacionados antes do produto
+        historicoAlertasRepository.deleteByProduto(produto);
+
+        // Agora pode deletar o produto
+        produtoRepository.deleteById(produtoId);
     }
 
     public List<ProdutoListar> listarProdutosProximosDaValidade() {

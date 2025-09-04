@@ -5,7 +5,8 @@ import imagemObjeto from "../assets/ComponentOfLoginCadastro.svg";
 import logo from "../assets/LogocomNome.svg";
 import Animation from "../lotties/Animation - 1745693504754.json";
 import Lottie from "lottie-react";
-
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export function Login() {
@@ -13,9 +14,8 @@ export function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [mensagemErro, setMensagemErro] = useState("");
-  const [color, setColor] = useState("");
   const [star, setStar] = useState("");
+  const [color, setColor] = useState("");
   const [carregando, setCarregando] = useState(false);
 
   const irParaDashboard = () => {
@@ -39,14 +39,12 @@ export function Login() {
     e.preventDefault();
   
     if (!email || !senha) {
-      setMensagemErro("Preencha todos os campos obrigatórios");
-      setColor("#FF0000");
-      setStar('*');
+      toast.error("Preencha todos os campos obrigatórios");
       return;
     }
   
     if (!validarEmail(email)) {
-      setMensagemErro("Email inválido");
+      toast.error("Email inválido");
       setColor("#FF0000");
       setStar('*');
       return;
@@ -69,28 +67,31 @@ export function Login() {
       }
 
       const data = await response.json();
+      console.log(data);
 
-      // 💾 Salvar o token e o nome no sessionStorage
+      // 💾 
       if (data.token) {
         sessionStorage.setItem('authToken', data.token);
         sessionStorage.setItem('usuario', data.nome);
-        sessionStorage.setItem('cargo', data.cargo); // ajuste se seu back devolver o nome assim
+        sessionStorage.setItem('cargo', data.cargo); 
+        sessionStorage.setItem("usuarioId", data.id);
       }
     
-      console.log(sessionStorage.getItem('authToken'));
+      // console.log(sessionStorage.getItem('authToken'));
 
-      console.log(data); // aqui você vê o que chegou da API
-      setMensagemErro(`Login realizado com sucesso!`);
+
+      // console.log(data); // aqui você vê o que chegou da API
       setColor("#2F4700");
       setStar('');
       setCarregando(true);
       setEmail(""); // limpa campos
       setSenha("");
+      toast.success("Login realizado com sucesso!");
       irParaDashboard(data.cargo);
     
     } catch (error) {
       console.error(error);
-      setMensagemErro("Credenciais inválidas ou erro no servidor");
+      toast.error("Credenciais inválidas ou erro no servidor");
       setColor("#FF0000");
       setStar('*');
     }
@@ -155,7 +156,7 @@ export function Login() {
                 </p>
               </div> */}
 
-              <div className="text-[2.5vh] w-[100%] flex justify-center ">
+              {/* <div className="text-[2.5vh] w-[100%] flex justify-center ">
                 <span
                   className={`${mensagemErro ? "opacity-100" : "opacity-0"
                     } transition-opacity duration-300`}
@@ -163,7 +164,7 @@ export function Login() {
                 >
                   {mensagemErro || "mensagem de erro"}
                 </span>
-              </div>
+              </div> */}
 
             </>
           ) : (
