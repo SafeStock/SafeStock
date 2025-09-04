@@ -9,9 +9,7 @@ import { useLocation } from "react-router-dom";
 export function NavBar() {
 
   const useAba = useSetAba();
-
   const navigate = useNavigate();
-
   const location = useLocation();
 
   const handleRedirect = (path) => {

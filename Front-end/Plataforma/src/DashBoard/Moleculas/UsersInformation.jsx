@@ -6,7 +6,6 @@ import axios from 'axios';
 import { exportarExcel } from "../../Hooks/exportarExcel";
 import { Download } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
-import { toast } from "react-toastify";
 import Swal from 'sweetalert2';
 
 
@@ -182,7 +181,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
         })
           .then(() => {
             Swal.fire('Excluído!', 'O item foi excluído com sucesso.', 'success');
-            buscarDados(); // Atualiza a tabela sem reload
+            buscarDados(); 
           })
           .catch(() => {
             Swal.fire('Erro', 'Não foi possível excluir o item.', 'error');
@@ -212,7 +211,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
       );
       buscarDados(); // Atualiza a lista após editar
     } catch (error) {
-      toast.error("Erro ao atualizar cadastro.");
+      
       console.error(error.response?.data || error);
     }
   };
