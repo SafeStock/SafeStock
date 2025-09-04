@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController("produtoControllerV2")
 @RequestMapping("/api/produtos_v2")
 public class ProdutoController {
 

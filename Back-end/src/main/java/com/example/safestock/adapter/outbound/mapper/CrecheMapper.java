@@ -22,8 +22,8 @@ public class CrecheMapper {
         e.setTelefone(d.getTelefone());
         e.setCnpj(d.getCnpj());
 
-        if (d.getFuncionario() != null) {
-            List<FuncionarioEntity> funcionarios = d.getFuncionario().stream()
+        if (d.getFuncionarios() != null) {
+            List<FuncionarioEntity> funcionarios = d.getFuncionarios().stream()
                     .map(f -> {
                         FuncionarioEntity fe = new FuncionarioEntity();
                         fe.setId(f.getId()); // shallow
@@ -35,8 +35,8 @@ public class CrecheMapper {
             e.setFuncionarios(Collections.emptyList());
         }
 
-        if (d.getProduto() != null) {
-            List<ProdutoEntity> produtos = d.getProduto().stream()
+        if (d.getProdutos() != null) {
+            List<ProdutoEntity> produtos = d.getProdutos().stream()
                     .map(p -> {
                         ProdutoEntity pe = new ProdutoEntity();
                         pe.setId(p.getId()); // shallow
@@ -71,7 +71,7 @@ public class CrecheMapper {
                         return f;
                     })
                     .collect(Collectors.toList());
-            d.setFuncionario(funcionarios);
+            d.setFuncionarios(funcionarios);
         }
 
         if (e.getProdutos() != null) {
@@ -83,7 +83,7 @@ public class CrecheMapper {
                         return p;
                     })
                     .collect(Collectors.toList());
-            d.setProduto(produtos);
+            d.setProdutos(produtos);
         }
 
         return d;

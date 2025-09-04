@@ -33,9 +33,9 @@ public class HistoricoAlertasMapper {
                         re.setIdRelatorio(r.getIdRelatorio());
                         return re;
                     }).collect(Collectors.toList());
-            e.setRelatorios(rels);
+            e.setRelatorio(rels);
         } else {
-            e.setRelatorios(Collections.emptyList());
+            e.setRelatorio(Collections.emptyList());
         }
 
         return e;
@@ -57,8 +57,8 @@ public class HistoricoAlertasMapper {
             d.setProduto(p);
         }
 
-        if (e.getRelatorios() != null) {
-            List<com.example.safestock.domain.model.Relatorio> rels = e.getRelatorios().stream()
+        if (e.getRelatorio() != null) {
+            List<com.example.safestock.domain.model.Relatorio> rels = e.getRelatorio().stream()
                     .map(re -> {
                         com.example.safestock.domain.model.Relatorio r = new com.example.safestock.domain.model.Relatorio();
                         r.setIdRelatorio(re.getIdRelatorio());

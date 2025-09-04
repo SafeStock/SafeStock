@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@RestController
+@RestController("registroUsoControllerV2")
 @RequestMapping("/api/registro_uso_v2")
 public class RegistroUsoController {
 
@@ -24,7 +24,7 @@ public class RegistroUsoController {
 
     @PostMapping("/api/registro_uso_v2")
     public ResponseEntity<RegistroUsoResponse> create(@RequestBody @Valid RegistroUsoRequest req) {
-        // monta domínio a partir do DTO
+
         RegistroUso d = new RegistroUso();
         d.setProduto(req.getProduto());
         d.setDataValidade(req.getDataValidade());

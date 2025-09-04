@@ -1,7 +1,5 @@
 package com.example.safestock.domain.model;
 
-import com.example.safestock.domain.model.Creche;
-import com.example.safestock.domain.model.RegistroUso;
 import com.example.safestock.domain.enuns.CargoFuncionario;
 import java.util.List;
 
@@ -84,5 +82,19 @@ public class Funcionario {
         this.telefone = telefone;
     }
 
+    public Creche getCreche() {
+        return creche;
+    }
 
+    public void setCreche(Creche creche) {
+        this.creche = creche;
+    }
+
+    public List<RegistroUso> getRegistroUso() {
+        return registroUso;
+    }
+
+    public void setRegistroUso(List<RegistroUso> registroUso) {
+        this.registroUso = registroUso;
+    }
 }

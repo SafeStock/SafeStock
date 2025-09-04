@@ -13,32 +13,45 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController("funcionarioControllerV2")
 @RequestMapping("/api/funcionarios_v2")
 public class FuncionarioController {
 
     private final FuncionarioUseCase useCase;
 
-    public FuncionarioController(FuncionarioUseCase useCase) { this.useCase = useCase; }
-
-    @PostMapping
-    public ResponseEntity<FuncionarioResponse> create(@RequestBody @Valid FuncionarioRequest req) {
-        Funcionario d = new Funcionario();
-        d.setNome(req.getNome());
-        d.setSobrenome(req.getSobrenome());
-        d.setCargo(req.getCargo());
-        d.setEmail(req.getEmail());
-        d.setSenha(req.getSenha());
-        d.setTelefone(req.getTelefone());
-        if (req.getCrecheId() != null) {
-            Creche c = new Creche(); c.setId(req.getCrecheId()); d.setCreche(c);
-        }
-
-        Funcionario saved = useCase.criar(d);
-        FuncionarioResponse r = new FuncionarioResponse();
-        r.setId(saved.getId()); r.setNome(saved.getNome()); r.setSobrenome(saved.getSobrenome()); r.setEmail(saved.getEmail()); r.setTelefone(saved.getTelefone());
-        if (saved.getCrecheId() != null) r.setCrecheId(saved.getCrecheId().getId());
-
-        return ResponseEntity.created(URI.create("/api/funcionarios_v2/" + r.getId())).body(r);
+    public FuncionarioController(FuncionarioUseCase useCase) {
+        this.useCase = useCase;
     }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<Funcionario>> buscarFuncionarios() {
+        return ResponseEntity.ok(useCase.buscarFuncionarios());
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletarFuncionario(@PathVariable Long id) {
+        useCase.deletarFuncionario(id);
+        return ResponseEntity.noContent().build();
+    }
+
+//    @PostMapping
+//    public ResponseEntity<FuncionarioResponse> create(@RequestBody @Valid FuncionarioRequest req) {
+//        Funcionario d = new Funcionario();
+//        d.setNome(req.getNome());
+//        d.setSobrenome(req.getSobrenome());
+//        d.setCargo(req.getCargo());
+//        d.setEmail(req.getEmail());
+//        d.setSenha(req.getSenha());
+//        d.setTelefone(req.getTelefone());
+//        if (req.getCrecheId() != null) {
+//            Creche c = new Creche(); c.setId(req.getCrecheId()); d.setCreche(c);
+//        }
+//
+//        Funcionario saved = useCase.criar(d);
+//        FuncionarioResponse r = new FuncionarioResponse();
+//        r.setId(saved.getId()); r.setNome(saved.getNome()); r.setSobrenome(saved.getSobrenome()); r.setEmail(saved.getEmail()); r.setTelefone(saved.getTelefone());
+//        if (saved.getCreche() != null) r.setCrecheId(saved.getCreche().getId());
+//
+//        return ResponseEntity.created(URI.create("/api/funcionarios_v2/" + r.getId())).body(r);
+//    }
 }

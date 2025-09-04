@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController("relatorioControllerV2")
 @RequestMapping("/api/relatorios_v2")
 public class RelatorioController {
 

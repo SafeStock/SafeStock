@@ -5,7 +5,7 @@ import com.example.safestock.application.port.out.HistoricoAlertasRepository;
 import com.example.safestock.domain.model.HistoricoAlertas;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("historicoAlertasServiceV2")
 public class HistoricoAlertasService implements HistoricoAlertasUseCase {
 
     private final HistoricoAlertasRepository historicoAlertasRepository;

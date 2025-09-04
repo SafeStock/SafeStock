@@ -63,4 +63,20 @@ public class Creche {
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
     }
+
+    public List<Funcionario> getFuncionarios() {
+        return funcionario;
+    }
+
+    public void setFuncionarios(List<Funcionario> funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public List<Produto> getProdutos() {
+        return produto;
+    }
+
+    public void setProdutos(List<Produto> produto) {
+        this.produto = produto;
+    }
 }

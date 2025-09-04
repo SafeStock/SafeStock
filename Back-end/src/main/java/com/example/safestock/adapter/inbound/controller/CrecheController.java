@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController("crecheControllerV2")
 @RequestMapping("/api/creche_v2")
 public class CrecheController {
 

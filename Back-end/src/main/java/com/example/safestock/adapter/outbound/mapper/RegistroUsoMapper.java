@@ -2,6 +2,7 @@ package com.example.safestock.adapter.outbound.mapper;
 
 import com.example.safestock.domain.model.Funcionario;
 import com.example.safestock.domain.model.RegistroUso;
+import com.example.safestock.domain.model.Relatorio;
 import com.example.safestock.infrastructure.entity.FuncionarioEntity;
 import com.example.safestock.infrastructure.entity.RegistroUsoEntity;
 import com.example.safestock.infrastructure.entity.RelatorioEntity;
@@ -9,7 +10,6 @@ import com.example.safestock.infrastructure.entity.RelatorioEntity;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public class RegistroUsoMapper {
 
@@ -22,17 +22,22 @@ public class RegistroUsoMapper {
         e.setQuantidade(d.getQuantidade());
         e.setDataHoraSaida(d.getDataHoraSaida());
 
+        // ✅ Converte Funcionario → FuncionarioEntity
         if (d.getFuncionario() != null) {
             FuncionarioEntity fe = new FuncionarioEntity();
             fe.setId(d.getFuncionario().getId());
+            fe.setNome(d.getFuncionario().getNome());
+            fe.setSobrenome(d.getFuncionario().getSobrenome());
             e.setFuncionario(fe);
         }
 
+        // ✅ Converte lista de Relatorio → RelatorioEntity
         if (d.getRelatorio() != null) {
             List<RelatorioEntity> rels = d.getRelatorio().stream()
                     .map(r -> {
                         RelatorioEntity re = new RelatorioEntity();
                         re.setIdRelatorio(r.getIdRelatorio());
+                        re.setDataRelatorio(r.getDataRelatorio());
                         return re;
                     }).collect(Collectors.toList());
             e.setRelatorio(rels);
@@ -52,6 +57,7 @@ public class RegistroUsoMapper {
         d.setQuantidade(e.getQuantidade());
         d.setDataHoraSaida(e.getDataHoraSaida());
 
+        // ✅ Converte FuncionarioEntity → Funcionario
         if (e.getFuncionario() != null) {
             Funcionario f = new Funcionario();
             f.setId(e.getFuncionario().getId());
@@ -60,10 +66,11 @@ public class RegistroUsoMapper {
             d.setFuncionario(f);
         }
 
+        // ✅ Converte lista de RelatorioEntity → Relatorio
         if (e.getRelatorio() != null) {
-            List<com.example.safestock.domain.model.Relatorio> rels = e.getRelatorio().stream()
+            List<Relatorio> rels = e.getRelatorio().stream()
                     .map(re -> {
-                        com.example.safestock.domain.model.Relatorio r = new com.example.safestock.domain.model.Relatorio();
+                        Relatorio r = new Relatorio();
                         r.setIdRelatorio(re.getIdRelatorio());
                         r.setDataRelatorio(re.getDataRelatorio());
                         return r;

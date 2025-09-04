@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service("registroUsoServiceV2")
 public class RegistroUsoService implements RegistroUsoUseCase {
 
     private final RegistroUsoRepository registroUsoRepository;

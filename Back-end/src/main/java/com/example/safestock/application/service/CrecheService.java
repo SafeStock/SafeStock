@@ -5,7 +5,7 @@ import com.example.safestock.application.port.out.CrecheRepository;
 import com.example.safestock.domain.model.Creche;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("crecheServiceV2")
 public class CrecheService implements CrecheUseCase {
 
     private final CrecheRepository crecheRepository;

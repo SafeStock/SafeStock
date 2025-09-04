@@ -5,7 +5,7 @@ import com.example.safestock.application.port.out.RelatorioRepository;
 import com.example.safestock.domain.model.Relatorio;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("relatorioServiceV2")
 public class RelatorioService implements RelatorioUseCase {
 
     private final RelatorioRepository relatorioRepository;

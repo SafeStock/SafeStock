@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController("historicoAlertasControllerV2")
 @RequestMapping("/api/historico_alertas_v2")
 public class HistoricoAlertasController {
 

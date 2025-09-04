@@ -1,7 +1,5 @@
 package com.example.safestock.infrastructure.entity;
 
-import com.example.safestock.model.Funcionario;
-import com.example.safestock.model.Relatorio;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -29,10 +27,10 @@ public class RegistroUsoEntity {
 
     @ManyToOne
     @JoinColumn(name = "fkFuncionario")
-    private Funcionario funcionario;
+    private FuncionarioEntity funcionario;
 
     @OneToMany(mappedBy = "registroUso", cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<Relatorio> relatorio;
+    private List<RelatorioEntity> relatorio;
 
     public RegistroUsoEntity() {
     }
@@ -84,19 +82,19 @@ public class RegistroUsoEntity {
         this.id = id;
     }
 
-    public Funcionario getFuncionario() {
+    public FuncionarioEntity getFuncionario() {
         return funcionario;
     }
 
-    public void setFuncionario(Funcionario funcionario) {
+    public void setFuncionario(FuncionarioEntity funcionario) {
         this.funcionario = funcionario;
     }
 
-    public List<Relatorio> getRelatorio() {
+    public List<RelatorioEntity> getRelatorio() {
         return relatorio;
     }
 
-    public void setRelatorio(List<Relatorio> relatorio) {
+    public void setRelatorio(List<RelatorioEntity> relatorio) {
         this.relatorio = relatorio;
     }
 
