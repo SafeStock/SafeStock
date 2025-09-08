@@ -6,6 +6,7 @@ import com.example.safestock.application.port.in.ProdutoUseCase;
 import com.example.safestock.domain.model.Creche;
 import com.example.safestock.domain.model.Produto;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,9 @@ public class ProdutoController {
 
     private final ProdutoUseCase useCase;
 
-    public ProdutoController(ProdutoUseCase useCase) { this.useCase = useCase; }
+    public ProdutoController(@Qualifier("produtoServiceV2") ProdutoUseCase useCase) {
+        this.useCase = useCase;
+    }
 
     @PostMapping
     public ResponseEntity<ProdutoResponse> create(@RequestBody @Valid ProdutoRequest req) {

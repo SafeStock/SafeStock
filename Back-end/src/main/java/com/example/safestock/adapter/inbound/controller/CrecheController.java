@@ -5,6 +5,7 @@ import com.example.safestock.adapter.inbound.dto.CrecheResponse;
 import com.example.safestock.application.port.in.CrecheUseCase;
 import com.example.safestock.domain.model.Creche;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class CrecheController {
     private final CrecheUseCase useCase;
 
 
-    public CrecheController(CrecheUseCase useCase) {
+    public CrecheController(@Qualifier("crecheServiceV2") CrecheUseCase useCase) {
         this.useCase = useCase;
     }
 

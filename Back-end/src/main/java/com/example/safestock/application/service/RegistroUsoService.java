@@ -3,6 +3,7 @@ package com.example.safestock.application.service;
 import com.example.safestock.application.port.in.RegistroUsoUseCase;
 import com.example.safestock.application.port.out.RegistroUsoRepository;
 import com.example.safestock.domain.model.RegistroUso;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class RegistroUsoService implements RegistroUsoUseCase {
 
     private final RegistroUsoRepository registroUsoRepository;
 
-    public RegistroUsoService(RegistroUsoRepository registroUsoRepository) {
+    public RegistroUsoService(@Qualifier("registroUsoRepositoryImpl") RegistroUsoRepository registroUsoRepository) {
         this.registroUsoRepository = registroUsoRepository;
     }
 

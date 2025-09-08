@@ -7,7 +7,7 @@ import com.example.safestock.infrastructure.entity.HistoricoAlertasEntity;
 import com.example.safestock.infrastructure.jpa.JpaHistoricoAlertasRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("historicoAlertasRepositoryImpl")
 public class HistoricoAlertasRepositoryImpl implements HistoricoAlertasRepository {
 
     private final JpaHistoricoAlertasRepository jpa;

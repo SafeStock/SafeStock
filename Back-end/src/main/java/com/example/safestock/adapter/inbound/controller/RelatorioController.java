@@ -8,6 +8,7 @@ import com.example.safestock.domain.model.Produto;
 import com.example.safestock.domain.model.RegistroUso;
 import com.example.safestock.domain.model.Relatorio;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class RelatorioController {
 
     private final RelatorioUseCase useCase;
 
-    public RelatorioController(RelatorioUseCase useCase) {
+    public RelatorioController(@Qualifier("relatorioServiceV2") RelatorioUseCase useCase) {
         this.useCase = useCase;
     }
 

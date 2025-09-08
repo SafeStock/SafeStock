@@ -7,7 +7,7 @@ import com.example.safestock.infrastructure.entity.CrecheEntity;
 import com.example.safestock.infrastructure.jpa.JpaCrecheRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("crecheRepositoryImpl")
 public class CrecheRepositoryImpl implements CrecheRepository {
 
     private final JpaCrecheRepository jpa;

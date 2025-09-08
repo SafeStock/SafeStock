@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "HistoricoAlertas")
+@Table(name = "HistoricoAlertasV2")
 public class HistoricoAlertasEntity {
 
     @Id

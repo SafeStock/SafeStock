@@ -7,7 +7,7 @@ import com.example.safestock.infrastructure.entity.ProdutoEntity;
 import com.example.safestock.infrastructure.jpa.JpaProdutoRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("produtoRepositoryImpl")
 public class ProdutoRepositoryImpl implements ProdutoRepository {
 
     private final JpaProdutoRepository jpa;

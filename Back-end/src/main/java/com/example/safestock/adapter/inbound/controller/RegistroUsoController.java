@@ -6,6 +6,7 @@ import com.example.safestock.application.port.in.RegistroUsoUseCase;
 import com.example.safestock.domain.model.Funcionario;
 import com.example.safestock.domain.model.RegistroUso;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class RegistroUsoController {
 
     private final RegistroUsoUseCase useCase;
 
-    public RegistroUsoController(RegistroUsoUseCase useCase) {
+    public RegistroUsoController(@Qualifier("registroUsoServiceV2") RegistroUsoUseCase useCase) {
         this.useCase = useCase;
     }
 

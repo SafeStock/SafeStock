@@ -7,7 +7,7 @@ import com.example.safestock.infrastructure.entity.RelatorioEntity;
 import com.example.safestock.infrastructure.jpa.JpaRelatorioRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("relatorioRepositoryImpl")
 public class RelatorioRepositoryImpl implements RelatorioRepository {
 
     private final JpaRelatorioRepository jpa;

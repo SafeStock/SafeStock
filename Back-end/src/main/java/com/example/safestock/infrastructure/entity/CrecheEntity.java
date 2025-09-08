@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
-@Table(name = "Creche")
+@Table(name = "CrecheV2")
 public class CrecheEntity {
 
     @Id

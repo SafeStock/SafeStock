@@ -3,6 +3,7 @@ package com.example.safestock.application.service;
 import com.example.safestock.application.port.in.FuncionarioUseCase;
 import com.example.safestock.application.port.out.FuncionarioRepository;
 import com.example.safestock.domain.model.Funcionario;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class FuncionarioService implements FuncionarioUseCase {
 
     private final FuncionarioRepository funcionarioRepository;
 
-    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
+    public FuncionarioService(@Qualifier("funcionarioRepositoryImpl") FuncionarioRepository funcionarioRepository) {
         this.funcionarioRepository = funcionarioRepository;
     }
 

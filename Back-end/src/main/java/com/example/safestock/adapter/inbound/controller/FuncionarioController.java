@@ -8,6 +8,7 @@ import com.example.safestock.domain.model.Creche;
 import com.example.safestock.domain.model.Funcionario;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class FuncionarioController {
 
     private final FuncionarioUseCase useCase;
 
-    public FuncionarioController(FuncionarioUseCase useCase) {
+    public FuncionarioController(@Qualifier("funcionarioServiceV2") FuncionarioUseCase useCase) {
         this.useCase = useCase;
     }
 
