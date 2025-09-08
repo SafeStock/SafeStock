@@ -7,7 +7,7 @@ export function AreaWorkGeral({ NewText, titles, abrirModal, tabela, campos, dis
   return (
     <div className="flex flex-col tamanho-variavel bg-transparent">
       <AreaTittle texto={NewText} />
-      <div className="relative bottom-[3vh] flex flex-col w-[100vw] h-[85.7vh] items-center ">
+      <div className="relative bottom-[3vh] flex flex-col w-[100vw] h-[85.7vh] items-center">
         <AreaWork
           titles={titles}
           abrirModal={abrirModal}
