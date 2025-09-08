@@ -89,7 +89,7 @@ export function UserInformationTable({
   const dadosValidos = Array.isArray(dados) ? dados.filter(item => item) : [];
 
   return (
-    <div className="relative top-[1vh]">
+    <div className="relative top-[1vh] ">
 
 
       <div className="w-full bg-[white] sticky top-0 z-50 shadow-md">

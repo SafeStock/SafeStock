@@ -1,7 +1,7 @@
 export function Logo() {
     return (
         <div className="absolute">
-            <img src="/src/assets/LogoNoComment.svg" className="w-[2.8vw] h-[5.6vh] ml-[0.2vh] mt-[81vh] z-0"/>
+            <img src="/src/assets/LogoNoComment.svg" className="w-[3vw] h-[6vh] ml-[0.1vw] mt-[84vh] z-0"/>
             </div>   
     )
 }

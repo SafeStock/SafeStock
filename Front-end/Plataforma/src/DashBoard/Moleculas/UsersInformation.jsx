@@ -222,7 +222,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
         <button
           title="Baixar arquivo Excel"
           onClick={() => exportarExcel(dados, titles, tabela, campos)}
-          className="bg-[transparent] border-none outline-none cursor-pointer active:scale-80 transition"
+          className="bg-[transparent] border-none  cursor-pointer active:scale-80 transition"
         >
           <Download size={24} />
         </button>
