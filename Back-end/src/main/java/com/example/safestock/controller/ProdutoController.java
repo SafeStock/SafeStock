@@ -117,8 +117,7 @@ public class ProdutoController {
     @GetMapping("/kpi/totalretiradoestoque")
     public ResponseEntity<KpiQtd> contarProdutosSaidaEstoque() {
         try {
-            Long total = registroUsoService.contarPordutosRetiradosDoEstoque();
-            if (total == null) total = 0L;
+            Long total = registroUsoService.contarProdutosRetiradosDoEstoqueMesAtual();
             return ResponseEntity.ok(new KpiQtd(total));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new KpiQtd(0L));

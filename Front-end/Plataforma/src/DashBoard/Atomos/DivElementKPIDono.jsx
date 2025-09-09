@@ -9,9 +9,7 @@ import { useSetAba } from "../../Hooks/setAba";
 import { Modal } from "../Atomos/Modal"; 
 import { CadastroUso } from "../CadastroUso"; 
 
-// Componente de KPI pequeno (lado esquerdo)
 
-// Componente de KPI pequeno (lado esquerdo)
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
   const [Qtd, setQtd] = useState("-");
   const [erro, setErro] = useState(false);

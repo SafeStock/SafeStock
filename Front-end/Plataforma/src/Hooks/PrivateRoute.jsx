@@ -8,7 +8,7 @@ export function PrivateRoute({ allowedRoles }) {
     return <Navigate to="/login" replace />;
   }
 
-  // Se passar allowedRoles, verifica se o cargo está incluso
+  
   if (allowedRoles && !allowedRoles.includes(cargo)) {
     return <Navigate to="/login" replace />;
   }

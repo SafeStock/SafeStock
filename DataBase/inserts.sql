@@ -32,7 +32,6 @@ INSERT INTO Produto (nome, categoria_Produto, quantidade, limite_Semanal_De_Uso,
 ('Desodorizador', 0, 45, 50, '2025-09-20', '2025-07-20', 1),
 ('Cera Líquida', 1, 60, 70, '2025-09-25', '2025-07-25', 1);
 
-
 INSERT INTO Registro_Uso (data_Hora_Saida, data_Validade, produto, quantidade,fk_funcionario) VALUES
 ('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10, 4),
 ('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5, 5),
