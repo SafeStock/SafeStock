@@ -17,7 +17,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
 
   const formatarTelefone = (telefone) => {
     if (!telefone) return "";
-    return telefone.replace(/\D/g, ""); // remove tudo que não for número
+    return telefone.replace(/\D/g, ""); 
   };
 
 
@@ -85,10 +85,10 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
       }
     })
       .then((response) => {
-        // 1. Processar dados da tabela principal
+        
         const dadosBrutos = response.data;
         console.log("Dados brutos recebidos:", dadosBrutos);
-        // Garante que é um array
+        
         const lista = Array.isArray(dadosBrutos)
           ? dadosBrutos
           : Array.isArray(dadosBrutos[tabela])
@@ -131,9 +131,9 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
 
         // console.log("Alertas válidos:", alertasValidos);
 
-        // Ordena por prioridade e data mais próxima
+    
         const alertasOrdenados = [...alertasValidos].sort((a, b) => {
-          // Prioridade: críticos primeiro
+    
           const prioridadeA = a.status === 'critico' ? 0 : 1;
           const prioridadeB = b.status === 'critico' ? 0 : 1;
 
@@ -141,7 +141,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
             return prioridadeA - prioridadeB;
           }
 
-          // Mesma prioridade: ordena pela data mais próxima
+    
           const dataA = new Date(a.produto.dataValidade);
           const dataB = new Date(b.produto.dataValidade);
           return dataA - dataB;
@@ -152,7 +152,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
         const alerta = alertasOrdenados[0] || null;
         console.log("Alerta principal selecionado:", alerta);
       })
-      .catch((error) => { // Corrigido o .catch
+      .catch((error) => { 
         console.error(`Erro ao buscar ${tabela}:`, error);
       });
   }; useEffect(() => {
@@ -191,7 +191,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
   };
 
 
-  // Atualizando cadastros de forma dinamica
+  
   const atualizarCadastro = async (id, dadosAtualizados) => {
     if (!token || token.trim() === "") {
       alert("Token inválido ou não informado");
@@ -209,7 +209,7 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
           }
         }
       );
-      buscarDados(); // Atualiza a lista após editar
+      buscarDados(); 
     } catch (error) {
       
       console.error(error.response?.data || error);

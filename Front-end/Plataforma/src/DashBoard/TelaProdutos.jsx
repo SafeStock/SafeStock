@@ -13,7 +13,7 @@ export function TelaProdutos() {
   const [etapa, setEtapa] = useState(1);
   const [dadosPrimeiraEtapa, setDadosPrimeiraEtapa] = useState({});
   const [produtoSelecionado, setProdutoSelecionado] = useState({});
-  const [modoCadastro, setModoCadastro] = useState(false);
+   const [modoCadastro, setModoCadastro] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
   const token = sessionStorage.getItem("authToken");
   const cargo = sessionStorage.getItem("cargo");

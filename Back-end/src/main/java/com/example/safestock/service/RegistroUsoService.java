@@ -8,6 +8,7 @@ import com.example.safestock.repository.FuncionarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 @Service
 public class RegistroUsoService {
@@ -33,9 +34,15 @@ public class RegistroUsoService {
                 .toList();
     }
 
-    public Long contarPordutosRetiradosDoEstoque() {
-        return registroUsoRepository.sumQuantidadeRegistroDeUso();
+    public Long contarProdutosRetiradosDoEstoqueMesAtual() {
+        LocalDate hoje = LocalDate.now();
+        int ano = hoje.getYear();
+        int mes = hoje.getMonthValue();
+
+        Long total = registroUsoRepository.sumQuantidadeRegistroDeUsoMes(ano, mes);
+        return total != null ? total : 0L;
     }
+
 
     @Transactional
     public void deletarRegistroUso(Long id) {

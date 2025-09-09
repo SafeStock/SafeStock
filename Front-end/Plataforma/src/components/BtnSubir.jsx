@@ -3,22 +3,22 @@ import { useEffect, useState } from 'react';
 
 export default function BtnSubir() {
 
-    //Estado de Visibilidade - 'False' esconde o botão
+  
     const [visibilidade, setVisibilidade] = useState(false);
 
-    //Função que verifica a condição para o botão aparecer
+  
     useEffect(() => {
         const checarVisibilidade = () => {
             setVisibilidade(window.scrollY > 2500);
         };
 
-        // Estado de Escuta - Ativa toda vez que o scroll é utilizado
+  
         window.addEventListener('scroll', checarVisibilidade);
         return () => window.removeEventListener('scroll', checarVisibilidade);
     }, []);
 
 
-    //Função para subir a tela
+    
     const subirTela = () => {
         window.scrollTo({
             top: 0,
@@ -26,7 +26,7 @@ export default function BtnSubir() {
         });
     };
 
-    //Renderiza as ações
+    
     return (
         <>
             {visibilidade && (
