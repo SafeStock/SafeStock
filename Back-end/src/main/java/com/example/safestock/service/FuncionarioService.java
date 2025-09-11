@@ -30,6 +30,18 @@ public class FuncionarioService {
     private final AuthenticationManager authenticationManager;
     private final RegistroUsoRepository registroUsoRepository;
 
+    // Novo método
+    public Optional<Funcionario> findById(Long id) {
+        return funcionarioRepository.findById(id);
+    }
+
+    // Opcionalmente, se quiser lançar exceção direto:
+    public Funcionario getByIdOrThrow(Long id) {
+        return funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+    }
+
+
     public FuncionarioService(PasswordEncoder passwordEncoder,
                               FuncionarioRepository funcionarioRepository,
                               GerenciadorTokenJwt gerenciadorTokenJwt,

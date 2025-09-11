@@ -56,6 +56,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**"),
+            new AntPathRequestMatcher("/api/produtos/kpi/**")
     };
 
     @Bean
@@ -71,7 +72,7 @@ public class SecurityConfiguracao {
                         .authenticated()
                 )
                 .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(autenticacaoJwtEntryPoint)) // agora sim!
+                        .authenticationEntryPoint(autenticacaoJwtEntryPoint))
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

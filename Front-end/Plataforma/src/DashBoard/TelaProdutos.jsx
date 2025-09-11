@@ -5,8 +5,8 @@ import { CadastroProduto } from "./CadastroProduto";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css';
+import { AnimacaoProduto } from "./Moleculas/AnimacaoLoading";
+// import { useLocation } from "react-router-dom";
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -16,6 +16,10 @@ export function TelaProdutos() {
   const [modoCadastro, setModoCadastro] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
   const token = sessionStorage.getItem("authToken");
+  const cargo = sessionStorage.getItem("cargo");
+  const display = cargo === "dono" ? "none" : "flex";
+  // const location = useLocation();
+  // const tela = location.pathname === "/dashboard/telafuncionarios" ? "none" : "flex";
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
@@ -127,44 +131,13 @@ export function TelaProdutos() {
     return false;
   };
 
-  const cargo = sessionStorage.getItem('cargo');
-  let display = cargo === 'limpeza' ? 'flex' : 'none';
+
 
   
   if (loading) {
     return (
-      <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
-        <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
-          <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
-            <Skeleton borderRadius={6} width={220} height={75} />
-          </div>
-
-          <div className="flex items-center fixed top-[6vh] right-[6vw]">
-            <Skeleton circle width={50} height={50} />
-          </div>
-
-          <div className="fixed top-[15.5vh] left-[14vw] flex gap-[7vh]">
-            <Skeleton borderRadius={6} width={135} height={65} />
-            <Skeleton borderRadius={6} width={135} height={65} />
-            <Skeleton borderRadius={6} width={135} height={65} />
-            <Skeleton borderRadius={6} width={135} height={65} />
-            <Skeleton borderRadius={6} width={175} height={65} />
-            <Skeleton borderRadius={6} width={175} height={65} />
-          </div>
-
-          <div className="fixed flex flex-col top-[26vh] right-[1.3vw] gap-[1.2vh]">
-            <Skeleton borderRadius={10} width={1410} height={90} />
-            <Skeleton borderRadius={10} width={1410} height={90} />
-            <Skeleton borderRadius={10} width={1410} height={90} />
-            <Skeleton borderRadius={10} width={1410} height={90} />
-            <Skeleton borderRadius={10} width={1410} height={90} />
-          </div>
-
-          <div className="flex items-center fixed bottom-[5vh] right-[44vw]">
-            <Skeleton circle width={65} height={65} />
-          </div>
-        </div>
-      </div>
+      <AnimacaoProduto 
+      displayButton={display}/>
     );
   }
 

@@ -73,7 +73,6 @@ export function CadastroProduto() {
                 .then(async response => {
                     if (!response.ok) throw new Error('Erro no cadastro');
                     toast.success("Produto cadastrado com sucesso!");
-                    setTimeout(() => window.location.reload(), 1000);
                 })
                 .catch(error => {
                     console.error(error);
@@ -116,7 +115,7 @@ export function CadastroProduto() {
 )}
 
 {etapa === 2 && (
-    <div className="h-[85vh] w-[65vh]" style={{ animation: "fade-in-right 0.5s ease-out" }}>
+    <div className="h-[85vh] w-[65vh] animate-fadeInContent" >
         <form onSubmit={cadastrar} className="flex flex-col justify-center items-center gap-[2.9vh] text-[#2F4672]">
             <h2 className="text-[4vh] font-bold mt-[3vh] mb-[3vh] relative">Cadastro de Produto</h2>
             <div className="w-5 flex flex-col gap-[1vh] text-[2.5vh]">
@@ -128,7 +127,7 @@ export function CadastroProduto() {
                 <input type="date" value={dataEntrada} onChange={(e) => setDataEntrada(e.target.value)} className={inputClass} />
             </div>
             <button type="submit" className={bottomClass}>Cadastrar</button>
-            <h2 className="flex justify-center text-center top-[71vh] text-[#2F4672] absolute">2/2</h2>
+            <h2 className="flex justify-center text-center top-[64vh] text-[#2F4672] absolute">2/2</h2>
         </form>
     </div>
 )}

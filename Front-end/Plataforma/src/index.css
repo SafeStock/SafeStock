@@ -83,6 +83,17 @@ html {
   }
 }
 
+.animate-fade-in-rigt {
+  animation: fadeOutRight 0.5s ease-out forwards;
+}
+
+
+.animate-fade-in-left {
+  animation: fadeInRight 0.5s ease-out forwards;
+}
+
+
+
 /* index.css */
 .scrollbar-custom::-webkit-scrollbar {
   width: 8px;
@@ -140,16 +151,26 @@ html {
   100% { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeOutContent {
+  100% { opacity: 0; transform: translateY(20px); }
+  0% { opacity: 1; transform: translateY(0); }
+}
+
+
 .animate-fadeInContent {
-  animation: fadeInContent 0.8s ease-out forwards;
+  animation: fadeInContent 0.8s ease-in forwards;
 }
 
-.cadastro-etapa-1 {
-  animation: fadeOut 0.5s ease-out forwards;
+.animate-fadeOutContent {
+  animation: fadeInContent 0.8s ease-in forwards;
 }
 
-.cadastro-etapa-2 {
-  animation: fadeIn 0.5s ease-out forwards;
+.animate-fadeOut {
+  animation: fadeOut 2s ease-out forwards;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 2s ease-out forwards;
 }
 
 @keyframes fadeOut {

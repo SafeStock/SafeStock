@@ -69,14 +69,16 @@ export function Login() {
       const data = await response.json();
       console.log(data);
 
-      // 💾 Salvar o token e o nome no sessionStorage
+      // 💾 
       if (data.token) {
         sessionStorage.setItem('authToken', data.token);
         sessionStorage.setItem('usuario', data.nome);
-        sessionStorage.setItem('cargo', data.cargo); // ajuste se seu back devolver o nome assim
+        sessionStorage.setItem('cargo', data.cargo); 
+        sessionStorage.setItem("usuarioId", data.id);
       }
     
-      console.log(sessionStorage.getItem('authToken'));
+      // console.log(sessionStorage.getItem('authToken'));
+
 
       // console.log(data); // aqui você vê o que chegou da API
       setColor("#2F4700");
@@ -96,7 +98,7 @@ export function Login() {
   }
 
   return (
-    <div className="flex flex-row w-full h-screen bg-gray-100 justify-center items-center relative overflow-hidden">
+    <div className="flex flex-row w-full h-screen bg-gray-100 justify-center items-center relative overflow-hidden animate-fadeInContent">
 
       <main className="flex flex-column justify-center items-center absolute mr-[26vw] max-w-[1200px]">
 

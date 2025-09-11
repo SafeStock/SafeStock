@@ -35,8 +35,8 @@ export function UserInformationTable({
     if (atualizarCadastro) {
       const dadosParaAtualizar = { ...dadosEditados };
 
-      // Evita enviar senha em branco
-      if (!dadosParaAtualizar.senha) delete dadosParaAtualizar.senha;
+      // // Evita enviar senha em branco
+      // if (!dadosParaAtualizar.senha) delete dadosParaAtualizar.senha;
 
       // Validação de enums
       const enums = {

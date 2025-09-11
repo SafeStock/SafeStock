@@ -3,9 +3,9 @@ import { NavBarArea } from "./NavBarArea"
 
 export function DonoLayout() {
   return (
-    <div>
+    <div className='animate-fadeInContent'>
       <NavBarArea />
-      <div className="">
+      <div>
         <Outlet />
       </div>
     </div>

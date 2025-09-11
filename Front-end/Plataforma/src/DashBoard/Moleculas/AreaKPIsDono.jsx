@@ -18,6 +18,7 @@ const headers = {
   'Authorization': `Bearer ${getToken()}`,
   'Content-Type': 'application/json'
 };
+console.log(headers);
 
 export function AreaKPIsDonoLateralEsquerda() {
   const [qtd1, setQtd1] = useState("-");
@@ -26,19 +27,52 @@ export function AreaKPIsDonoLateralEsquerda() {
   const [qtd4, setQtd4] = useState("-");
 
   useEffect(() => {
-  const promises = endpoints.map(endpoint => fetch(endpoint, { method: "GET", headers }));
+  const fetchKpis = async () => {
+    try {
+      const promises = endpoints.map(endpoint =>
+        fetch(endpoint, { headers }) // <- passando headers
+      );
 
-  Promise.all(promises)
-    .then(responses => Promise.all(responses.map(r => r.json())))
-    .then(data => {
-      setQtd1(data[0]);
-      setQtd2(data[1]);
-      setQtd3(data[2]);
-      setQtd4(data[3]);
-    })
-    .catch(error => {
-      console.error("Erro ao buscar dados:", error);
-    });
+      const responses = await Promise.all(promises);
+
+      const data = await Promise.all(
+        responses.map(async (res, idx) => {
+          if (!res.ok) {
+            console.warn(`Erro no endpoint ${endpoints[idx]}: status ${res.status}`);
+            return { qtd: 0 };
+          }
+
+          const contentType = res.headers.get("content-type") || "";
+          if (!contentType.includes("application/json")) {
+            // console.warn(`Resposta do endpoint ${endpoints[idx]} não é JSON. Content-Type: ${contentType}`);
+            return { qtd: 0 };
+          }
+
+          try {
+            return await res.json();
+          } catch (e) {
+            console.warn(`Falha ao converter JSON do endpoint ${endpoints[idx]}`, e);
+            return { qtd: 0 };
+          }
+        })
+      );
+
+      // Garantir que temos números para os estados
+      setQtd1(data[0]?.qtd ?? 0);
+      setQtd2(data[1]?.qtd ?? 0);
+      setQtd3(data[2]?.qtd ?? 0);
+      setQtd4(data[3]?.qtd ?? 0);
+
+    } catch (error) {
+      console.error("Erro geral ao buscar KPIs:", error);
+      setQtd1(0);
+      setQtd2(0);
+      setQtd3(0);
+      setQtd4(0);
+    }
+  };
+
+  fetchKpis();
 }, []);
 
 
@@ -49,24 +83,28 @@ export function AreaKPIsDonoLateralEsquerda() {
           ImgUrl={"/src/assets/Stonks.svg"}
           Qtd={qtd1}
           Titulo="Produtos próximo ao limite de uso"
+          endpoint={endpoints[0]}
         />
         <DivisionDivElementKPIDono />
         <DivElementKPIDonoLittleLeft
           ImgUrl={"/src/assets/BoxKPI.svg"}
           Qtd={qtd2}
           Titulo="Produtos presentes no estoque"
+          endpoint={endpoints[1]}
         />
         <DivisionDivElementKPIDono />
         <DivElementKPIDonoLittleLeft
           ImgUrl={"/src/assets/GetOutBox.svg"}
           Qtd={qtd3}
           Titulo="Produtos retirados do estoque"
+          endpoint={endpoints[2]}
         />
         <DivisionDivElementKPIDono />
         <DivElementKPIDonoLittleLeft
           ImgUrl={"/src/assets/CalendarExpired.svg"}
           Qtd={qtd4}
           Titulo="Produto próximo da validade"
+          endpoint={endpoints[3]}
         />
       </div>
 
