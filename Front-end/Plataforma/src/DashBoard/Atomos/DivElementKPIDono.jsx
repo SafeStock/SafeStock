@@ -6,8 +6,8 @@ import MiniHistoricoAlerta from "../Atomos/MiniHistoricoAlerta";
 import { getToken } from '../Moleculas/getToken';
 import { useNavigate } from "react-router-dom";
 import { useSetAba } from "../../Hooks/setAba";
-import { Modal } from "../Atomos/Modal"; 
-import { CadastroUso } from "../CadastroUso"; 
+import { Modal } from "../Atomos/Modal";
+import { CadastroUso } from "../CadastroUso";
 
 
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
@@ -23,7 +23,7 @@ export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
 
-        
+
         // console.log(`Resposta do endpoint ${endpoint}: status=${res.status}, content-type=${res.headers.get("content-type")}`);
 
         let data;
@@ -82,29 +82,29 @@ export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
 
 // Componente de KPI grande (lado esquerdo)
 export function DivElementKPIDonoBigLeft({
-    tamanho,
-    displayAlerta = "none",
-    displayGrafico = "none",
+  tamanho,
+  displayAlerta = "none",
+  displayGrafico = "none",
 }) {
-    return (
-        <div
-            className="w-[95%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
-            style={{ height: tamanho }}
-        >
-            <div className="w-full flex flex-col h-[38vh]" style={{ display: displayGrafico }}>
-                <div className="text-[#3A577B] w-full h-[8vh] flex justify-center items-end text-[23px] font-[600]">
-                    Movimentação do Estoque
-                </div>
-                <GraficoEstoqueBar />
-            </div>
-
-            <div className="w-full h-full flex flex-col" style={{ display: displayAlerta }}>
-                <MiniHistoricoAlerta
-                    endpoint='http://localhost:8080/api/historicoAlertas'
-                />
-            </div>
+  return (
+    <div
+      className="w-[95%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
+      style={{ height: tamanho }}
+    >
+      <div className="w-full flex flex-col h-[38vh]" style={{ display: displayGrafico }}>
+        <div className="text-[#3A577B] w-full h-[8vh] flex justify-center items-end text-[23px] font-[600]">
+          Movimentação do Estoque
         </div>
-    );
+        <GraficoEstoqueBar />
+      </div>
+
+      <div className="w-full h-full flex flex-col" style={{ display: displayAlerta }}>
+        <MiniHistoricoAlerta
+          endpoint='http://localhost:8080/api/historicoAlertas'
+        />
+      </div>
+    </div>
+  );
 }
 
 
@@ -137,14 +137,28 @@ export function DivElementKPIDonoBigRight({
   };
 
   const formatarDadosUso = (dados) => {
-    return dados.map(item => ({
-      ...item,
-      produto: item.produto || "-",
-      quantidade: item.quantidade ? `${item.quantidade}` : "-",
-      dataHoraSaida: formatarDataEspecifica(item.dataHoraSaida),
-      funcionarioNome: item.funcionarioNome || "-"
-    }));
+    const agora = dayjs();
+    const mesAtual = agora.month(); // 0 = Janeiro
+    const anoAtual = agora.year();
+
+    return dados
+      // filtra só os registros do mês/ano atual
+      .filter(item => {
+        const dataItem = dayjs(item.dataHoraSaida);
+        return dataItem.isValid() && dataItem.month() === mesAtual && dataItem.year() === anoAtual;
+      })
+      // ordena desc (mais recente primeiro)
+      .sort((a, b) => dayjs(b.dataHoraSaida).valueOf() - dayjs(a.dataHoraSaida).valueOf())
+      // formata
+      .map(item => ({
+        ...item,
+        produto: item.produto || "-",
+        quantidade: item.quantidade ? `${item.quantidade}` : "-",
+        dataHoraSaida: formatarDataEspecifica(item.dataHoraSaida),
+        funcionarioNome: item.funcionarioNome || "-"
+      }));
   };
+
 
   return (
     <div className="w-full h-full rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)] flex flex-col">
@@ -172,9 +186,7 @@ export function DivElementKPIDonoBigRight({
         />
       </div>
 
-      {/* Botões */}
       <div className="flex justify-center items-center relative top-[19vh]">
-        {/* Botão que navega */}
         <button
           className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh] p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
           onClick={() => handleRedirect("historicouso")}
@@ -182,8 +194,6 @@ export function DivElementKPIDonoBigRight({
         >
           Ver Histórico
         </button>
-
-        {/* Botão que abre modal */}
         <button
           className=" border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh] p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
           onClick={abrirModal}
@@ -193,7 +203,6 @@ export function DivElementKPIDonoBigRight({
         </button>
       </div>
 
-      {/* Modal com CadastroUso */}
       <Modal isOpen={modalAberto} onClose={fecharModal}>
         <CadastroUso fecharModal={fecharModal} />
       </Modal>
@@ -204,19 +213,19 @@ export function DivElementKPIDonoBigRight({
 
 // Componentes auxiliares
 export function AlertaInformationDiv({ tamanho, children }) {
-    return (
-        <div className="h-[13vh] z-[1]" style={{ width: tamanho }}>
-            {children}
-        </div>
-    );
+  return (
+    <div className="h-[13vh] z-[1]" style={{ width: tamanho }}>
+      {children}
+    </div>
+  );
 }
 
-export function AlertExibition({  children }) {
-    return (
-        <div className="w-full h-[6vh] text-[19px] flex justify-center items-center animate-pulsar">
-            {children}
-        </div>
-    );
+export function AlertExibition({ children }) {
+  return (
+    <div className="w-full h-[6vh] text-[19px] flex justify-center items-center animate-pulsar">
+      {children}
+    </div>
+  );
 }
 
 export function StatusAlertExibition({ cor, status }) {
