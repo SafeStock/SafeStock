@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 export function CadastroUso({ fecharModal }) {
   const [produto, setProduto] = useState("");
   const [quantidade, setQuantidade] = useState("");
-  const [dataUso, setDataUso] = useState("");
   const [produtos, setProdutos] = useState([]);
 
   useEffect(() => {
@@ -23,6 +22,19 @@ export function CadastroUso({ fecharModal }) {
       window.location.reload();
     }, 2000);
   };
+
+  function getDataHoraLocal() {
+    const agora = new Date();
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, "0");
+    const dia = String(agora.getDate()).padStart(2, "0");
+    const horas = String(agora.getHours()).padStart(2, "0");
+    const minutos = String(agora.getMinutes()).padStart(2, "0");
+    const segundos = String(agora.getSeconds()).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}T${horas}:${minutos}:${segundos}`;
+  }
+
 
   function validarEtapa1() {
     const quantidadeNum = Number(quantidade);
@@ -61,11 +73,11 @@ export function CadastroUso({ fecharModal }) {
     const novoUso = {
       produto: produtoSelecionado.nome,
       quantidade: quantidadeNum,
-      dataHoraSaida: dataUso ? new Date(dataUso).toISOString() : new Date().toISOString(),
+      dataHoraSaida: getDataHoraLocal(),
       funcionarioId: Number(sessionStorage.getItem("usuarioId"))
     };
 
-    // Atualiza o estoque
+
     fetch(`http://localhost:8080/api/produtos/atualizar/${produtoSelecionado.id}`, {
       method: 'PUT',
       headers: {
@@ -103,9 +115,9 @@ export function CadastroUso({ fecharModal }) {
   }
 
   // Estilos
-  const selectClass = "w-[20vw] p-[1.5vh] rounded-[8px] border border-transparent shadow focus:outline-none";
-  const inputClass = "w-[18vw] p-[1.5vh] rounded-[8px] border border-transparent shadow focus:outline-none";
-  const bottomClass = "cursor-pointer text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[0.8vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition duration-200 mb-[3vh] mt-[1vh] w-[40%] h-[4.5vh] mx-auto";
+  const selectClass = "w-[20vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none";
+  const inputClass = "w-[18vw] p-[1.5vh] rounded-[8px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] focus:outline-none";
+  const bottomClass = "cursor-pointer text-[#fff] font-extrabold text-[2vh] bg-[#2F4672] p-[0.8vh] rounded-[30px] border border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition duration-200 mb-[3vh] mt-[5vh] w-[40%] h-[4.5vh] mx-auto";
   const corpoDiv = "min-h-screen flex items-center justify-center bg-gray-100";
   const formularioDiv = "flex flex-row items-center justify-center bg-white p-8 rounded-lg shadow-md gap-[10vh]";
 
@@ -127,7 +139,7 @@ export function CadastroUso({ fecharModal }) {
                 ))}
               </select>
 
-              <p className="mt-[3vh]">Quantidade</p>
+              <p className="mt-[6vh]">Quantidade</p>
               <input
                 type="number"
                 placeholder="Digite a quantidade"
@@ -136,13 +148,6 @@ export function CadastroUso({ fecharModal }) {
                 className={inputClass}
               />
 
-              <p className="mt-[3vh]">Data do uso</p>
-              <input
-                type="date"
-                value={dataUso}
-                onChange={(e) => setDataUso(e.target.value)}
-                className={inputClass}
-              />
             </div>
 
             <button type="submit" className={bottomClass}>Registrar</button>

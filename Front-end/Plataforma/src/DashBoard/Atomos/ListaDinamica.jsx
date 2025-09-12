@@ -43,20 +43,35 @@ export function ListaDinamica({
             ? data.format("DD-MM-YYYY HH:mm")
             : data.format("DD-MM-YYYY");
     };
-
     const formatarDadosPadrao = (dados) => {
         if (disableAutoDate) return dados;
 
-        return dados.map(item => {
-            const novoItem = { ...item };
-            Object.keys(novoItem).forEach(key => {
-                if (key.toLowerCase().includes("data")) {
-                    novoItem[key] = formatarDataBr(novoItem[key]);
-                }
+        return dados
+            // ordena pelo campo de data original
+            .sort((a, b) => {
+                const dataA = a.dataHoraSaida || a.data;
+                const dataB = b.dataHoraSaida || b.data;
+
+                if (!dataA) return 1;
+                if (!dataB) return -1;
+
+                return dayjs(dataB).valueOf() - dayjs(dataA).valueOf(); // mais recente primeiro
+            })
+            // só depois formata
+            .map(item => {
+                const novoItem = { ...item };
+
+                Object.keys(novoItem).forEach(key => {
+                    if (key.toLowerCase().includes("data")) {
+                        novoItem[key] = formatarDataBr(item[key]); // formata só na exibição
+                    }
+                });
+
+                return novoItem;
             });
-            return novoItem;
-        });
     };
+
+
 
     useEffect(() => {
         if (!token || !endpoint) return;
@@ -70,13 +85,11 @@ export function ListaDinamica({
                 });
 
                 const dadosFormatados = formataDados
-                    ? formataDados(resposta.data)
+                    ? formataDados(resposta.data) // <== aqui entra sua formatarDadosUso
                     : formatarDadosPadrao(resposta.data);
 
                 setDados(dadosFormatados);
-                console.log(dadosFormatados);
             } catch (error) {
-                console.error("Erro ao buscar dados:", error);
                 setErro(`Erro ao carregar dados: ${error.response?.data?.message || error.message}`);
             } finally {
                 setCarregando(false);
@@ -85,6 +98,7 @@ export function ListaDinamica({
 
         buscarDados();
     }, [token, endpoint, atualizar, formataDados, disableAutoDate]);
+
 
     if (carregando) return <div className="p-4 text-center">Carregando...</div>;
     if (erro) return <div className="p-4 text-red-500 text-center">{erro}</div>;
@@ -108,7 +122,7 @@ export function ListaDinamica({
             )}
 
 
-            {/* Cabeçalho da tabela */}
+
             <div className="w-full bg-white sticky top-[10vh] z-50 shadow-md ">
                 <table className="w-full text-[#3A577B] border-collapse table-fixed ">
                     <colgroup>
@@ -130,7 +144,6 @@ export function ListaDinamica({
                 </table>
             </div>
 
-            {/* Corpo da tabela */}
             <div className="h-[45.8vh] w-full overflow-y-auto">
                 <table className="w-full text-[#3A577B] border-separate border-spacing-[2vh] table-fixed">
                     <colgroup>
