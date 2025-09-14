@@ -1,0 +1,42 @@
+package com.example.safestock.application.service;
+
+import com.example.safestock.application.port.in.FuncionarioUseCase;
+import com.example.safestock.application.port.out.FuncionarioRepository;
+import com.example.safestock.domain.model.Funcionario;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service("funcionarioServiceV2")
+public class FuncionarioService implements FuncionarioUseCase {
+
+    private final FuncionarioRepository funcionarioRepository;
+
+    public FuncionarioService(@Qualifier("funcionarioRepositoryImpl") FuncionarioRepository funcionarioRepository) {
+        this.funcionarioRepository = funcionarioRepository;
+    }
+
+//    @Override
+//    public Funcionario criar(Funcionario funcionario) {
+//        // Regras de negócio aqui (ex: validações)
+//        return funcionarioRepository.save(funcionario);
+//    }
+
+    @Override
+    public List<Funcionario> buscarFuncionarios() {
+        return funcionarioRepository.buscarFuncionario();
+    }
+
+    @Override
+    public Optional<Funcionario> buscarFuncionarioPorId(Long id) {
+        return funcionarioRepository.buscarFuncionarioId(id);
+    }
+
+    @Override
+    public void deletarFuncionario(Long id) {
+        funcionarioRepository.deleteFuncionario(id);
+    }
+}
