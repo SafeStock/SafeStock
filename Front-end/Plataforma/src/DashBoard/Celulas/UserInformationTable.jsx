@@ -99,9 +99,9 @@ export function UserInformationTable({
           </colgroup>
           <thead>
             <tr>
-              {mostrarIcone && <th className=" text-center"></th>}
+              {mostrarIcone && <th className=""></th>}
               {titles.map((title, i) => (
-                <th key={title || i} className="p-[2.1vh] text-center text-[2.5vh] bg-[white] ">
+                <th key={title || i} className="p-[2vh] text-center text-[2.5vh] bg-[white] ">
                   {title}
                 </th>
               ))}

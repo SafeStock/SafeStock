@@ -6,7 +6,6 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { AnimacaoProduto } from "./Moleculas/AnimacaoLoading";
-// import { useLocation } from "react-router-dom";
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -18,21 +17,11 @@ export function TelaProdutos() {
   const token = sessionStorage.getItem("authToken");
   const cargo = sessionStorage.getItem("cargo");
   const display = cargo === "dono" ? "none" : "flex";
-  // const location = useLocation();
-  // const tela = location.pathname === "/dashboard/telafuncionarios" ? "none" : "flex";
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
+    const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
-
-  // const abrirModalCadastro = () => {
-  //   setModoCadastro(true);
-  //   setProdutoSelecionado({});
-  //   setDadosPrimeiraEtapa({});
-  //   setEtapa(1);
-  //   setModalAberto(true);
-  // };
 
   const fecharModal = () => {
     setModalAberto(false);

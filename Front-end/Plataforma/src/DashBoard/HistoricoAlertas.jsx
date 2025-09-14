@@ -5,7 +5,8 @@ import {  AnimacaoPadrao } from "./Moleculas/AnimacaoLoading";
 export function HistoricoAlertas() {
   const [loading, setLoading] = useState(true);
   const cargo = sessionStorage.getItem("cargo");
-  const display = cargo === "dono" ? "flex" : "none";
+  const display = cargo === "dono" ? "none" : "flex";
+
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
