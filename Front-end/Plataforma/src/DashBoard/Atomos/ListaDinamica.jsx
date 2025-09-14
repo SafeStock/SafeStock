@@ -102,7 +102,7 @@ export function ListaDinamica({
 
     if (carregando) return <div className="p-4 text-center">Carregando...</div>;
     if (erro) return <div className="p-4 text-red-500 text-center">{erro}</div>;
-    if (!dados || dados.length === 0) return <div className="p-4 text-center">Nenhum dado encontrado.</div>;
+    if (!dados || dados.length === 0) return <div className="p-4 text-center">Nenhum produto registrado</div>;
 
     return (
         <div className=" w-full">

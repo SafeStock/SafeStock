@@ -65,7 +65,7 @@ export function NavBar() {
 
       <BtnRedirecNavBar
       imagemUrl="/src/assets/exportIcon.svg"
-      onClick={() => handleRedirect('exportarrelatorio')}
+    onClick={() => handleRedirect('/dashboard/exportarrelatorio ')} //Arruma essa linha, coloca a url certa, tem q ser o caminho/dash junto se n da errado
       title="Exportar Relatório"
       ativado={location.pathname === "/dashboard/exportarrelatorio"}
       />
