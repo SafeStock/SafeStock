@@ -11,15 +11,15 @@ export function useSetAba() {
         document.title = "Login | SafeStock";
         break;
 
-      case "/dashboard/cadastro":
+      case "/cadastro":
         document.title = "Cadastro | SafeStock";
         break;
 
-      case "/dashboard/CadastroProduto":
+      case "/CadastroProduto":
         document.title = "Cadastro de Produtos | SafeStock";
         break;
 
-      case "/dashboard/telafuncionarios":
+      case "/telafuncionarios":
         document.title = "Funcionários | SafeStock";
         break;
 
@@ -27,23 +27,24 @@ export function useSetAba() {
         document.title = "DashBoard | SafeStock";
         break;
 
-      case "/dashboard/historicoalertas":
-        document.title = "Historico | SafeStock";
+      case "/dashboardlimpeza":
+        document.title = "DashBoard | SafeStock";
         break;
 
-      case "/dashboard/historicouso":
-        document.title = "Historico | SafeStock";
+
+      case "/historicoalertas":
+        document.title = "Histórico | SafeStock";
         break;
 
-      case "/dashboard/dashboardlimpeza":
-        document.title = "DashBord | SafeStock";
+      case "/historicouso":
+        document.title = "Histórico | SafeStock";
         break;
 
-      case "/dashboard/telaprodutos":
+      case "/telaprodutos":
         document.title = "Produtos | SafeStock";
         break;  
 
-      case "/dashboard/exportarrelatorio":
+      case "/exportarrelatorio":
         document.title = "Exportar Relatório | SafeStock";
         break;
         
