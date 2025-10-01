@@ -110,19 +110,21 @@ export function AnimacaoExport() {
                 <Skeleton borderRadius={6} width='24vw' height='8vh' />
             </div>
 
+            <div className="flex items-center fixed top-[15vh] left-[43vw]">
+                <Skeleton borderRadius={6} width='15vw' height='7vh' />
+            </div>
+
             <div className="flex flex-row justify-center items-center h-[90vh] w-[100vw] ">
 
-
-                <div className="flex items-center justify-start flex-col  gap-[3vh] relative top-[5vh] right-[23.5vw] ml-[6vw] mb-[10vh]">
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
+                <div className="flex items-center justify-start flex-col  gap-[8vh] relative top-[5vh] right-[20vw] ml-[6vw] mb-[10vh] ">
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
                 </div>
 
-                <div className="flex items-center justify-start flex-col  gap-[3vh] relative top-[5vh] right-[23.5vw] ml-[6vw] mb-[10vh]">
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                  
+                <div className="flex items-center justify-start flex-col  gap-[8vh] relative top-[5vh] right-[20vw] ml-[6vw] mb-[10vh]">
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
+
                 </div>
 
             </div>
