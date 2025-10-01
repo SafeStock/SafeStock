@@ -34,15 +34,11 @@ export function AnimacaoDash() {
 
 
 
-export function AnimacaoPadrao({ displayButton, tela }) {
+export function AnimacaoPadrao({ displayButton }) {
     return <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
         <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
             <div className="flex items-center fixed top-[4vh] left-[8.5vw]"  >
                 <Skeleton borderRadius={6} width='23vw' height='8vh' />
-            </div>
-
-            <div className="flex items-center fixed top-[6vh] right-[6vw]" style={{ display: tela }}>
-                <Skeleton circle width={50} height={50} />
             </div>
 
             <div className="fixed top-[15.5vh] left-[15vw] flex gap-[14vw]">
@@ -72,10 +68,6 @@ export function AnimacaoProduto(displayButton) {
         <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
             <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
                 <Skeleton borderRadius={6} width='13vw' height='8vh' />
-            </div>
-
-            <div className="flex items-center fixed top-[6vh] right-[6vw]">
-                <Skeleton circle width={50} height={50} />
             </div>
 
             <div className="fixed top-[15.5vh] left-[16vw] flex gap-[10vh]">

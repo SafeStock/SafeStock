@@ -3,7 +3,7 @@ import { NavBarArea } from "./NavBarArea"
 
 export function LimpezaLayout() {
   return (
-    <div className='animate-fadeInContent'>
+    <div className=''>
       <NavBarArea />
       <div className="">  
         <Outlet />

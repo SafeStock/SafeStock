@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: safestock-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: SafeStock2024!
+      MYSQL_DATABASE: safestock
+      MYSQL_USER: safestock_user
+      MYSQL_PASSWORD: SafeStock123!
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./safeStock_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./inserts.sql:/docker-entrypoint-initdb.d/02-inserts.sql
+      - ./mysql.conf:/etc/mysql/conf.d/custom.cnf
+    networks:
+      - safestock-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  safestock-network:
+    driver: bridge
