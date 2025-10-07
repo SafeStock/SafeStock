@@ -7,10 +7,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
+import { saveAs } from "file-saver";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 registerLocale("pt-BR", ptBR);
 
 export function AreaWorkExportar() {
-  const [loading, setLoading] = useState(false);
   const [month, setMonth] = useState(null);
 
   const API_BASE = "http://localhost:8080/api";
@@ -39,6 +41,11 @@ export function AreaWorkExportar() {
         headers,
       });
 
+      if (res.status !== 200) {
+        console.error("Backend export failed with status:", res.status);
+        return false;
+      }
+
       const blob = new Blob([res.data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
@@ -52,43 +59,69 @@ export function AreaWorkExportar() {
   }
 
   async function fetchJson(url) {
-    const token = sessionStorage.getItem("authToken");
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    const params = {};
-    if (month) params.month = month.toISOString().slice(0, 7);
-    const res = await axios.get(url, { params, headers });
-    return res.data;
+    try {
+      const token = sessionStorage.getItem("authToken");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const params = {};
+      if (month) params.month = month.toISOString().slice(0, 7);
+      const res = await axios.get(url, { params, headers });
+
+      if (res.status !== 200) {
+        console.error("Failed to fetch data with status:", res.status);
+        return [];
+      }
+      if(month === null){
+        toast.error("Exportando dados sem filtro de mês");
+        return
+      }
+
+      return res.data;
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      return [];
+    }
   }
 
   async function handleExportKey(key) {
-    if (!endpoints[key]) return;
-    setLoading(true);
-
-    const meta = endpoints[key];
-    const outName = `${meta.label.replace(/\s+/g, "_")}_${month ? format(month, "yyyy-MM") : "all"}`;
-
-    const ok = await tryBackendExport(meta.table, outName + ".xlsx");
-
-    if (!ok) {
-      try {
-        const data = await fetchJson(meta.fetchUrl);
-        const titles = data.length > 0 ? Object.keys(data[0]) : [];
-        const campos = titles;
-        await exportarExcel(data, titles, outName, campos);
-      } catch (err) {
-        console.error("Client-side export failed", err);
-      }
+    console.log(`Iniciando exportação para a chave: ${key}`);
+    if (!endpoints[key]) {
+        console.error(`Chave inválida: ${key}`);
+        return;
     }
 
-    setLoading(false);
+    if (!month) {
+        toast.error("Por favor, selecione uma data antes de exportar o relatório.");
+        return;
+    }
+
+    console.log(`Exportando relatório: ${endpoints[key].label}`);
+    const outName = `${endpoints[key].label.replace(/\s+/g, "_")}${month ? `_${format(month, "yyyy-MM")}` : ""}`;
+
+    const ok = await tryBackendExport(endpoints[key].table, outName + ".xlsx");
+
+    if (!ok) {
+        try {
+            const data = await fetchJson(endpoints[key].fetchUrl);
+            const titles = data.length > 0 ? Object.keys(data[0]) : [];
+            const campos = titles;
+            await exportarExcel(data, titles, outName, campos);
+        } catch (err) {
+            console.error("Client-side export failed", err);
+            toast.error("Erro ao exportar o relatório");
+        }
+    }
+
+    toast.success(`Relatório ${endpoints[key].label} exportado com sucesso!`);
   }
 
   async function handleExportAll() {
-    setLoading(true);
-    const ok = await tryBackendExport(
-      "all",
-      `Relatorios_Todos_${month ? format(month, "yyyy-MM") : "all"}.xlsx`
-    );
+    if (!month) {
+        toast.error("Por favor, selecione uma data antes de exportar o relatório geral.");
+        return;
+    }
+
+    const outName = `Relatorios_Todos_${format(month, "yyyy-MM")}.xlsx`;
+    const ok = await tryBackendExport("all", outName);
 
     if (!ok) {
       try {
@@ -102,32 +135,36 @@ export function AreaWorkExportar() {
           tabelas.push({ nome: endpoints[k].label, dados: data, titles, campos });
         }
 
-        await exportarExcelMulti(tabelas, `Relatorios_Todos_${month ? format(month, "yyyy-MM") : "all"}`);
+        await exportarExcelMulti(tabelas, outName);
       } catch (err) {
         console.error("Client-side multi export failed", err);
       }
     }
 
-    setLoading(false);
+    toast.success("Relatório Geral exportado com sucesso!");
   }
 
   return (
-    <div className="flex flex-col items-center gap-[1vh] h-[85vh] w-[100vw] text-[#3A577B] mt-[1vh]">
-      <div className="flex items-center border-[0.2vh] rounded-[2vh] p-[1vw]">
-        <div>📅</div>
-        <DatePicker
-          selected={month}
-          onChange={(date) => setMonth(date)}
-          dateFormat="MMMM yyyy"
-          showMonthYearPicker
-          isClearable
-          placeholderText="Selecione o mês"
-          className="border-none outline-none"
-          locale="pt-BR"
-        />
+    <div className="flex flex-col items-center gap-[1vh] h-[85vh] w-[100vw] mt-[1vh]">
+      <div className="flex flex-row items-center">
+        
+        <div className="flex items-center p-[1vw]">
+        <div className="cursor-pointer text-[3vh]">📅</div>
+          <DatePicker
+            selected={month}
+            onChange={(date) => setMonth(date)}
+            dateFormat="MMMM yyyy"
+            showMonthYearPicker
+            isClearable
+            placeholderText="Selecione o mês"
+            className="border-none outline-none text-center text-[2vh]"
+            locale="pt-BR"
+          />
+        </div>
+
       </div>
 
-      <div className="flex flex-row justify-center gap-[5vw] mt-[3vh] ml-[5vh]">
+      <div className="flex flex-row justify-center gap-[5vw] mt-[3vh] ml-[5vh] text-[#3A577B]">
         <div className="flex flex-col gap-[4vh]">
           <ExportInformationDiv titulo="Relatório Geral" onExport={handleExportAll} />
           <ExportInformationDiv titulo="Registros de Uso" onExport={() => handleExportKey("registros")} />
