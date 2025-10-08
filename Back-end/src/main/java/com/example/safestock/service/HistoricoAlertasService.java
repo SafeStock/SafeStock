@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HistoricoAlertasService {
@@ -39,5 +42,25 @@ public class HistoricoAlertasService {
         return historicoAlertasRepository.existsByProdutoAndStatusAndDataHoraAfter(produto, status, dataHora);
     }
 
+    public List<Map<String, Object>> buscarAlertasComoMapa(String month) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        List<HistoricoAlertas> alertas = historicoAlertasRepository.findAll();
+        return alertas.stream()
+            .filter(alerta -> {
+                if (month == null) return true;
+                String dataHora = alerta.getDataHora().format(formatter);
+                return dataHora.equals(month);
+            })
+            .map(alerta -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("Id", alerta.getId());
+                map.put("Mensagem", alerta.getDescricao());
+                map.put("Data e Hora", alerta.getDataHora());
+                map.put("Status", alerta.getStatus());
+                map.put("Produto", alerta.getProduto() != null ? alerta.getProduto().getNome() : "Não informado");
+                return map;
+            })
+            .toList();
+    }
 }
 

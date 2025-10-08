@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ExportInformationDiv } from "../Moleculas/ExportInformationDiv";
 import axios from "axios";
-import { exportarExcel, exportarExcelMulti } from "../../Hooks/exportarExcel";
 import { format } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 registerLocale("pt-BR", ptBR);
 
 export function AreaWorkExportar() {
-  const [month, setMonth] = useState(null);
+  const [month, setMonth] = useState(new Date());
 
   const API_BASE = "http://localhost:8080/api";
   const endpoints = {
@@ -94,24 +93,28 @@ export function AreaWorkExportar() {
         return;
     }
 
+    const data = await fetchJson(endpoints[key].fetchUrl);
+    if (data.length === 0) {
+        toast.error("Nenhum dado encontrado para exportar.");
+        return;
+    }
+
     console.log(`Exportando relatório: ${endpoints[key].label}`);
     const outName = `${endpoints[key].label.replace(/\s+/g, "_")}${month ? `_${format(month, "yyyy-MM")}` : ""}`;
 
-    const ok = await tryBackendExport(endpoints[key].table, outName + ".xlsx");
+    try {
+        const ok = await tryBackendExport(endpoints[key].table, outName + ".xlsx");
 
-    if (!ok) {
-        try {
-            const data = await fetchJson(endpoints[key].fetchUrl);
-            const titles = data.length > 0 ? Object.keys(data[0]) : [];
-            const campos = titles;
-            await exportarExcel(data, titles, outName, campos);
-        } catch (err) {
-            console.error("Client-side export failed", err);
-            toast.error("Erro ao exportar o relatório");
+        if (!ok) {
+            toast.error("Erro ao exportar o relatório. Nenhum dado encontrado.");
+            return;
         }
-    }
 
-    toast.success(`Relatório ${endpoints[key].label} exportado com sucesso!`);
+        toast.success(`Relatório ${endpoints[key].label} exportado com sucesso!`);
+    } catch (err) {
+        console.error("Erro ao exportar o relatório", err);
+        toast.error("Erro ao exportar o relatório. Verifique os logs para mais detalhes.");
+    }
   }
 
   async function handleExportAll() {
@@ -121,43 +124,42 @@ export function AreaWorkExportar() {
     }
 
     const outName = `Relatorios_Todos_${format(month, "yyyy-MM")}.xlsx`;
-    const ok = await tryBackendExport("all", outName);
 
-    if (!ok) {
-      try {
-        const keys = Object.keys(endpoints);
-        const tabelas = [];
+    try {
+        const res = await axios.get(`${API_BASE}/export/consolidated`, {
+            params: { month: month.toISOString().slice(0, 7) },
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("authToken")}` },
+        });
 
-        for (const k of keys) {
-          const data = await fetchJson(endpoints[k].fetchUrl);
-          const titles = data.length > 0 ? Object.keys(data[0]) : [];
-          const campos = titles;
-          tabelas.push({ nome: endpoints[k].label, dados: data, titles, campos });
+        if (res.status === 204) {
+            toast.error("Nenhum dado encontrado para exportar no relatório geral.");
+            return;
         }
 
-        await exportarExcelMulti(tabelas, outName);
-      } catch (err) {
-        console.error("Client-side multi export failed", err);
-      }
+        const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(blob, outName);
+        toast.success("Relatório geral exportado com sucesso!");
+    } catch (err) {
+        console.error("Erro ao exportar o relatório geral", err);
+        toast.error("Erro ao exportar o relatório geral. Verifique os logs para mais detalhes.");
     }
-
-    toast.success("Relatório Geral exportado com sucesso!");
   }
 
   return (
     <div className="flex flex-col items-center gap-[1vh] h-[85vh] w-[100vw] mt-[1vh]">
-      <div className="flex flex-row items-center">
-        
-        <div className="flex items-center p-[1vw]">
+      <div className="flex flex-row items-center gap-[1vw]">
         <div className="cursor-pointer text-[3vh]">📅</div>
+        <div className="flex items-center p-[1vw] outline-1 rounded-[1vw] text-[#dadada]">
           <DatePicker
             selected={month}
             onChange={(date) => setMonth(date)}
             dateFormat="MMMM yyyy"
             showMonthYearPicker
             isClearable
-            placeholderText="Selecione o mês"
-            className="border-none outline-none text-center text-[2vh]"
+            placeholderText={month ? format(month, "MMMM yyyy") : format(new Date(), "MMMM yyyy")}
+             className="border-none outline-none text-center text-[1.7vh]"
             locale="pt-BR"
           />
         </div>

@@ -9,7 +9,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 @Service
 public class RegistroUsoService {
     private final RegistroUsoRepository registroUsoRepository;
@@ -52,5 +55,26 @@ public class RegistroUsoService {
 
     public void deletarRegistro(Long id) {
         registroUsoRepository.deleteById(id);
+    }
+
+    public List<Map<String, Object>> buscarRegistrosComoMapa(String month) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        List<RegistroUso> registros = registroUsoRepository.findAll();
+        return registros.stream()
+            .filter(registro -> {
+                if (month == null) return true;
+                String dataSaida = registro.getDataHoraSaida().format(formatter);
+                return dataSaida.equals(month);
+            })
+            .map(registro -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("Id", registro.getId());
+                map.put("Data", registro.getDataHoraSaida());
+                map.put("Quantidade", registro.getQuantidade());
+                map.put("Produto", registro.getProduto());
+                map.put("Responsável", registro.getFuncionario() != null ? registro.getFuncionario().getNome() : "Não informado");
+                return map;
+            })
+            .toList();
     }
 }
