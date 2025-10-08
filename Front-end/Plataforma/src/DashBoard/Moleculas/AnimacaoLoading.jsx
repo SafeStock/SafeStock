@@ -2,7 +2,6 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 
 
-
 export function AnimacaoDash() {
 
     return (
@@ -31,8 +30,6 @@ export function AnimacaoDash() {
         </div>
     );
 }
-
-
 
 export function AnimacaoPadrao({ displayButton }) {
     return <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
