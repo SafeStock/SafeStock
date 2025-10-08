@@ -48,10 +48,10 @@ export function GraficoEstoqueBar() {
         <BarChart data={dadosGrafico} barCategoryGap="17%">
           <CartesianGrid stroke="#e0e0e0" vertical={false} />
           <XAxis dataKey="name" tick={{ fill: '#2f4563', fontSize: '1.6vh', fontWeight: '550' }} />
-          <YAxis tick={{ fill: '#2f4300' }} />
+          <YAxis tick={{ fill: '#2f4563', fontSize: '2.1vh', fontWeight: '450' }} />
           <Tooltip
             contentStyle={{ background: 'white', borderRadius: '13px', border: '1.5px solid #b0b0b0', boxShadow: '-8px 4px 10px rgba(0, 0, 0, 0.4)' }}
-            position={{ x: 570, y: 175 }}
+            position={{ x: 645, y: -40 }}
             cursor={{ fill: 'transparent' }}
           />
           <Legend

@@ -153,7 +153,9 @@ export function UserInformation({ tabela, campos, titles }) {
       .catch((error) => { 
         console.error(`Erro ao buscar ${tabela}:`, error);
       });
-  }; useEffect(() => {
+  }; 
+  
+  useEffect(() => {
     buscarDados();
     // eslint-disable-next-line
   }, [tabela]);
