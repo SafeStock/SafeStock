@@ -20,10 +20,10 @@ export function Login() {
 
   const irParaDashboard = () => {
   setTimeout(() => {
-    if (sessionStorage.getItem('cargo') === 'dono' || sessionStorage.getItem('cargo') === 'administracao') {
-      navigate('/dashboard');
-    } else if (sessionStorage.getItem('cargo') === 'limpeza') {
+    if  (sessionStorage.getItem('cargo') === 'limpeza') {
       navigate('/dashboardlimpeza');
+    } else {
+      navigate('/dashboard');
     }
   }, 2200);
 };

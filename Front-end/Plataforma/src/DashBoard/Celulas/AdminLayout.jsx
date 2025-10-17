@@ -3,7 +3,7 @@ import { NavBarArea } from "./NavBarArea"
 
 export function AdminLayout() {
   return (
-    <div className='animate-fadeInContent'>
+    <div>
       <NavBarArea />
       <div className="">
         <Outlet />

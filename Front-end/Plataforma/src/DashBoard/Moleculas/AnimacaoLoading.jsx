@@ -2,7 +2,6 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 
 
-
 export function AnimacaoDash() {
 
     return (
@@ -32,17 +31,11 @@ export function AnimacaoDash() {
     );
 }
 
-
-
-export function AnimacaoPadrao({ displayButton, tela }) {
+export function AnimacaoPadrao({ displayButton }) {
     return <div className="flex flex-col w-full items-center justify-center min-h-screen p-4 bg-gray-100 gap-4">
         <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
             <div className="flex items-center fixed top-[4vh] left-[8.5vw]"  >
                 <Skeleton borderRadius={6} width='23vw' height='8vh' />
-            </div>
-
-            <div className="flex items-center fixed top-[6vh] right-[6vw]" style={{ display: tela }}>
-                <Skeleton circle width={50} height={50} />
             </div>
 
             <div className="fixed top-[15.5vh] left-[15vw] flex gap-[14vw]">
@@ -72,10 +65,6 @@ export function AnimacaoProduto(displayButton) {
         <div className="flex w-full max-w-[900px] gap-2 animate-fadeIn">
             <div className="flex items-center fixed top-[4vh] left-[8.5vw]">
                 <Skeleton borderRadius={6} width='13vw' height='8vh' />
-            </div>
-
-            <div className="flex items-center fixed top-[6vh] right-[6vw]">
-                <Skeleton circle width={50} height={50} />
             </div>
 
             <div className="fixed top-[15.5vh] left-[16vw] flex gap-[10vh]">
@@ -110,19 +99,21 @@ export function AnimacaoExport() {
                 <Skeleton borderRadius={6} width='24vw' height='8vh' />
             </div>
 
+            <div className="flex items-center fixed top-[15vh] left-[43vw]">
+                <Skeleton borderRadius={6} width='15vw' height='7vh' />
+            </div>
+
             <div className="flex flex-row justify-center items-center h-[90vh] w-[100vw] ">
 
-
-                <div className="flex items-center justify-start flex-col  gap-[3vh] relative top-[5vh] right-[23.5vw] ml-[6vw] mb-[10vh]">
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
+                <div className="flex items-center justify-start flex-col  gap-[8vh] relative top-[5vh] right-[20vw] ml-[6vw] mb-[10vh] ">
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
                 </div>
 
-                <div className="flex items-center justify-start flex-col  gap-[3vh] relative top-[5vh] right-[23.5vw] ml-[6vw] mb-[10vh]">
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                    <Skeleton borderRadius={10} width='42vw' height='15vh' />
-                  
+                <div className="flex items-center justify-start flex-col  gap-[8vh] relative top-[5vh] right-[20vw] ml-[6vw] mb-[10vh]">
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
+                    <Skeleton borderRadius={10} width='42vw' height='10vh' />
+
                 </div>
 
             </div>

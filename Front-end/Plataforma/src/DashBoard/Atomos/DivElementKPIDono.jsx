@@ -189,7 +189,7 @@ export function DivElementKPIDonoBigRight({
       <div className="flex justify-center items-center relative top-[19vh]">
         <button
           className="border-0 bg-[#3A577B] text-[14px] text-[#eee] font-[600] rounded-[3vh] p-[1.5vh] cursor-pointer hover:bg-[white] hover:text-[#2F4772] hover:border-[1px] hover:border-[#2F4772] transition-colors duration-200"
-          onClick={() => handleRedirect("historicouso")}
+          onClick={() => handleRedirect("/historicouso")}
           style={{ display: NavigateOn }}
         >
           Ver Histórico

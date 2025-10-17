@@ -9,7 +9,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -104,4 +107,40 @@ public class ProdutoService {
                 .toList();
     }
 
+    public List<Map<String, Object>> buscarProdutosComoMapa(String month) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+
+        if (month != null) {
+            try {
+                formatter.parse(month); // Valida o formato do mês
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Formato de mês inválido. Use o formato yyyy-MM.");
+            }
+        }
+
+        List<Produto> produtos = produtoRepository.findAll();
+
+        if (produtos.isEmpty()) {
+            throw new IllegalStateException("Nenhum produto encontrado no banco de dados.");
+        }
+
+        return produtos.stream()
+            .filter(produto -> {
+                if (month == null) return true;
+                String dataEntrada = produto.getDataEntrada().format(formatter);
+                return dataEntrada.equals(month);
+            })
+            .map(produto -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("Id", produto.getId());
+                map.put("Nome", produto.getNome());
+                map.put("Categoria", produto.getCategoriaProduto());
+                map.put("Quantidade", produto.getQuantidade());
+                map.put("Data de Validade", produto.getDataValidade());
+                map.put("Limite de Uso", produto.getLimiteSemanalDeUso());
+                map.put("Data de Entrada", produto.getDataEntrada());
+                return map;
+            })
+            .toList();
+    }
 }

@@ -3,14 +3,12 @@ import { UserInformationTable } from "../Celulas/UserInformationTable";
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import axios from 'axios';
-import { exportarExcel } from "../../Hooks/exportarExcel";
-import { Download } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
 
 
 
-export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar = true }) {
+export function UserInformation({ tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
 
@@ -155,7 +153,9 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
       .catch((error) => { 
         console.error(`Erro ao buscar ${tabela}:`, error);
       });
-  }; useEffect(() => {
+  }; 
+  
+  useEffect(() => {
     buscarDados();
     // eslint-disable-next-line
   }, [tabela]);
@@ -218,16 +218,6 @@ export function UserInformation({ tabela, campos, titles, mostrarBotaoExportar =
 
   return (
     <div className="relative right-[3.5vh]">
-      <div className={`relative bottom-[4vh] left-[95%] ${!mostrarBotaoExportar ? 'invisible' : ''}`}>
-        <button
-          title="Baixar arquivo Excel"
-          onClick={() => exportarExcel(dados, titles, tabela, campos)}
-          className="bg-[transparent] border-none  cursor-pointer active:scale-80 transition"
-        >
-          <Download size={24} />
-        </button>
-      </div>
-
       <UserInformationTable
         titles={titles}
         campos={campos}

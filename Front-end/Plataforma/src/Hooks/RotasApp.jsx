@@ -25,7 +25,7 @@ export function RotasApp() {
       <Route path="/login" element={<Login />} />
 
       <Route element={<PrivateRoute allowedRoles={["dono"]} />}>
-        <Route path="/dashboard" element={<DonoLayout />}>
+        <Route path="/" element={<DonoLayout />}>
           <Route index element={<DashPrincipalDono />} />
           <Route path="telafuncionarios" element={<TelaFuncionarios />} />
           <Route path="cadastro" element={<Cadastro />} />
@@ -38,8 +38,9 @@ export function RotasApp() {
 
 
       <Route element={<PrivateRoute allowedRoles={["administracao"]} />}>
-        <Route path="/dashboard" element={<AdminLayout />}>
+        <Route path="/" element={<AdminLayout />}>
           <Route index element={<DashPrincipalDono />} />
+          <Route path="dashboard" element={<DashPrincipalDono />} />
           <Route path="cadastro" element={<Cadastro />} />
           <Route path="telafuncionarios" element={<TelaFuncionarios />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
@@ -58,8 +59,6 @@ export function RotasApp() {
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
-
-
         </Route>
       </Route>
     
