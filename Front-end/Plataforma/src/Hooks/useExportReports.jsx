@@ -5,7 +5,6 @@ const BASE = "/api";
 async function safeGet(url) {
   try {
     const res = await axios.get(url);
-    // axios may return 204 with no content
     if (res.status === 204) return [];
     return res.data || [];
   } catch (err) {
@@ -16,7 +15,6 @@ async function safeGet(url) {
 
 function filterByMonth(list, month) {
   if (!month) return list;
-  // month expected in format YYYY-MM
   return (list || []).filter((item) => JSON.stringify(item).includes(month));
 }
 
