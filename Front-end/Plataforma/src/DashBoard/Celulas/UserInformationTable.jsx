@@ -4,9 +4,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function UserInformationTable({
-  titles,
-  campos,
-  dados,
+  titles = [],             
+  campos = [],             
+  dados = [],              
   tabela,
   confirmarExclusao,
   atualizarCadastro,
@@ -15,6 +15,7 @@ export function UserInformationTable({
 }) {
   const [idLinhaEditando, setIdLinhaEditando] = useState(null);
   const [dadosEditados, setDadosEditados] = useState({});
+  console.log({ titles, campos, dados });
 
   function acessarPropriedade(obj, caminho) {
     if (!obj || !caminho) return undefined;
@@ -47,7 +48,6 @@ export function UserInformationTable({
         }
       }
 
-      // Chama a função de atualização
       atualizarCadastro(linhaId, dadosParaAtualizar)
         .then(() => {
           toast.success("Funcionário atualizado com sucesso!");
@@ -84,9 +84,18 @@ export function UserInformationTable({
   const dateFields = ["dataNascimento", "dataEntrada", "dataValidade"];
   const dadosValidos = Array.isArray(dados) ? dados.filter(item => item) : [];
 
-  return (
-    <div className="relative top-[1vh] ">
+  // ✅ Garante que os dados mínimos existam antes de renderizar
+  if (!Array.isArray(titles) || !Array.isArray(campos)) {
+    return <p>Erro: estrutura da tabela inválida.</p>;
+  }
 
+  if (dadosValidos.length === 0) {
+    return <p>Nenhum dado disponível.</p>;
+  }
+
+  return (
+    <div className="relative top-[1vh]">
+      <ToastContainer />
 
       <div className="w-full bg-[white] sticky top-0 z-50 shadow-md">
         <table className="w-full text-[#3A577B] border-collapse table-fixed">
@@ -99,9 +108,9 @@ export function UserInformationTable({
           </colgroup>
           <thead>
             <tr>
-              {mostrarIcone && <th className=""></th>}
+              {mostrarIcone && <th></th>}
               {titles.map((title, i) => (
-                <th key={title || i} className="p-[2vh] text-center text-[2.5vh] bg-[white] ">
+                <th key={title || i} className="p-[2vh] text-center text-[2.5vh] bg-[white]">
                   {title}
                 </th>
               ))}
@@ -144,7 +153,7 @@ export function UserInformationTable({
                     </td>
                   )}
 
-                  {campos.map((campo, j) => (
+                  {Array.isArray(campos) && campos.map((campo, j) => (
                     <td key={campo || j} className="text-center w-auto">
                       {isEditing ? (
                         enumOptions[campo] ? (
