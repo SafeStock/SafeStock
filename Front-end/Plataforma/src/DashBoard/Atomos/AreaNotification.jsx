@@ -1,5 +1,3 @@
-import { Notification } from "./Notification";
-
 export function AreaNotification() {
   return (
   <div className=" h-[86vh] bg-[white] overflow-y-auto flex flex-col items-center">
