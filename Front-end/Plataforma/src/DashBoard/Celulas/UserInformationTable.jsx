@@ -12,6 +12,11 @@ export function UserInformationTable({
   atualizarCadastro,
   mostrarIcone,
   mostrarIconesAlteracao,
+  currentPage,
+  setCurrentPage,
+  totalPages,
+  itemsPerPage,
+  onItemsPerPageChange
 }) {
   const [idLinhaEditando, setIdLinhaEditando] = useState(null);
   const [dadosEditados, setDadosEditados] = useState({});
@@ -256,6 +261,27 @@ export function UserInformationTable({
             })}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center items-center mt-4  ">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 0}
+          className=" py-1 bg-[#3A577B] text-white rounded disabled:bg-gray-300 "
+        >
+          Anterior
+        </button>
+        
+        <span>
+          Página {currentPage + 1} de {totalPages}
+        </span>
+        
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage >= totalPages - 1}
+          className=" py-1 bg-[#3A577B] text-white rounded disabled:bg-gray-300"
+        >
+          Próximo
+        </button>
       </div>
     </div>
   );

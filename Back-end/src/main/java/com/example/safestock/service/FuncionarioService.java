@@ -3,6 +3,10 @@ package com.example.safestock.service;
 import com.example.safestock.dto.FuncionarioListar;
 import com.example.safestock.model.enums.CargoFuncionario;
 import com.example.safestock.repository.RegistroUsoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import com.example.safestock.config.GerenciadorTokenJwt;
 import com.example.safestock.dto.FuncionarioMapper;
@@ -123,6 +127,19 @@ public class FuncionarioService {
             return funcionarioRepository.save(funcionario);
         });
     }
+
+    public Page<FuncionarioListar> listarTodosExcetoLogadoEDonoPaginado(
+            String emailLogado, int page, int size, String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Funcionario> funcionariosPage = funcionarioRepository.findAllExcetoLogadoEDono(
+                emailLogado,
+                CargoFuncionario.dono,
+                pageable
+        );
+        return funcionariosPage.map(FuncionarioMapper::of);
+    }
+
 
 
 

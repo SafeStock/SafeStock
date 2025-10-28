@@ -10,10 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 
-@CrossOrigin(origins = "http://localhost:5173" )
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("api/funcionarios")
 public class FuncionarioController {
@@ -21,20 +21,25 @@ public class FuncionarioController {
     @Autowired
     private FuncionarioService funcionarioService;
 
+    // ✅ LISTAR FUNCIONÁRIOS COM PAGINAÇÃO
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<FuncionarioListar>> listarFuncionarios() {
+    public ResponseEntity<Page<FuncionarioListar>> listarFuncionarios(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy
+    ) {
         String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<FuncionarioListar> funcionariosEncontrados = this.funcionarioService
-                .listarTodosExcetoLogadoEDono(emailLogado);
 
-        if (funcionariosEncontrados.isEmpty()){
-            return ResponseEntity.status(204).build();
+        Page<FuncionarioListar> funcionariosPaginados =
+                funcionarioService.listarTodosExcetoLogadoEDonoPaginado(emailLogado, page, size, sortBy);
+
+        if (funcionariosPaginados.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.status(200).body(funcionariosEncontrados);
+        return ResponseEntity.ok(funcionariosPaginados);
     }
-
 
     @DeleteMapping("/deletar/{id}")
     @SecurityRequirement(name = "Bearer")
@@ -64,18 +69,18 @@ public class FuncionarioController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenDTO> login(@RequestBody FuncionarioLogin funcionarioLogin){
-        final  Funcionario funcionario = FuncionarioMapper.of(funcionarioLogin);
+        final Funcionario funcionario = FuncionarioMapper.of(funcionarioLogin);
         TokenDTO funcionarioTokenDto = this.funcionarioService.autenticar(funcionario);
-
-        return  ResponseEntity.status(200).body(funcionarioTokenDto);
+        return ResponseEntity.ok(funcionarioTokenDto);
     }
 
     @PutMapping("/atualizar/{id}")
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody FuncionarioAtualizar funcionarioAtualizar) {
-
-        Funcionario funcionario = FuncionarioMapper.of(id, funcionarioAtualizar); // <- corrigido aqui
-
+    public ResponseEntity<Funcionario> atualizarFuncionario(
+            @PathVariable Long id,
+            @RequestBody FuncionarioAtualizar funcionarioAtualizar
+    ) {
+        Funcionario funcionario = FuncionarioMapper.of(id, funcionarioAtualizar);
         return funcionarioService.atualizarFuncionario(id, funcionario)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
