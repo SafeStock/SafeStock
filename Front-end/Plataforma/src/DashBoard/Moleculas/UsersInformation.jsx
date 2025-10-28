@@ -16,24 +16,35 @@ export function UserInformation({ tabela, campos, titles }) {
       return;
     }
 
-    axios.get(`http://localhost:8080/api/funcionarios?page=${currentPage}&size=${itemsPerPage}`, {
+    const endpoint = tabela === "funcionarios"
+      ? `http://localhost:8080/api/funcionarios?page=${currentPage}&size=${itemsPerPage}`
+      : tabela === "produtos"
+        ? `http://localhost:8080/api/produtos?page=${currentPage}&size=${itemsPerPage}`
+        : ''; // Adicione outros endpoints conforme necessário
+
+    if (!endpoint) {
+      console.warn("Tabela não suportada");
+      return;
+    }
+
+    axios.get(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
       .then((response) => {
-        const funcionariosPaginados = response.data;
-        if (funcionariosPaginados.content) {
-          setDados(funcionariosPaginados.content); // Acessa a lista de funcionários
-          setTotalPages(funcionariosPaginados.totalPages); // Atualiza o total de páginas
+        const dadosPaginados = response.data;
+        if (dadosPaginados.content) {
+          setDados(dadosPaginados.content); // Acessa a lista de dados
+          setTotalPages(dadosPaginados.totalPages); // Atualiza o total de páginas
         } else {
           setDados([]); // Se não houver conteúdo, define como vazio
           setTotalPages(0); // Define total de páginas como 0
         }
       })
       .catch((error) => {
-        console.error(`Erro ao buscar funcionários:`, error);
+        console.error(`Erro ao buscar dados:`, error);
       });
   };
 
@@ -44,25 +55,36 @@ export function UserInformation({ tabela, campos, titles }) {
 
   const confirmarExclusao = (id) => {
     Swal.fire({
-      title: 'Deseja realmente excluir este funcionário?',
+      title: `Deseja realmente excluir este ${tabela === "funcionarios" ? "funcionário" : "produto"}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sim, excluir',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:8080/api/funcionarios/deletar/${id}`, {
+        const endpoint = tabela === "funcionarios" 
+          ? `http://localhost:8080/api/funcionarios/deletar/${id}`
+          : tabela === "produtos"
+            ? `http://localhost:8080/api/produtos/deletar/${id}`
+            : ''; // Adicione outros endpoints conforme necessário
+
+        if (!endpoint) {
+          console.warn("Tabela não suportada para exclusão");
+          return;
+        }
+
+        axios.delete(endpoint, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         })
           .then(() => {
-            Swal.fire('Excluído!', 'O funcionário foi excluído com sucesso.', 'success');
+            Swal.fire('Excluído!', `O ${tabela === "funcionarios" ? "funcionário" : "produto"} foi excluído com sucesso.`, 'success');
             buscarDados(); 
           })
           .catch(() => {
-            Swal.fire('Erro', 'Não foi possível excluir o funcionário.', 'error');
+            Swal.fire('Erro', 'Não foi possível excluir o item.', 'error');
           });
       }
     });
@@ -74,17 +96,24 @@ export function UserInformation({ tabela, campos, titles }) {
       return;
     }
 
+    const endpoint = tabela === "funcionarios" 
+      ? `http://localhost:8080/api/funcionarios/atualizar/${id}`
+      : tabela === "produtos"
+        ? `http://localhost:8080/api/produtos/atualizar/${id}`
+        : ''; // Adicione outros endpoints conforme necessário
+
+    if (!endpoint) {
+      console.warn("Tabela não suportada para atualização");
+      return;
+    }
+
     try {
-      await axios.put(
-        `http://localhost:8080/api/funcionarios/atualizar/${id}`,
-        dadosAtualizados,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+      await axios.put(endpoint, dadosAtualizados, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      );
+      });
       buscarDados(); 
     } catch (error) {
       console.error(error.response?.data || error);

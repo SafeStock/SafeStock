@@ -6,6 +6,8 @@ import com.example.safestock.model.Produto;
 import com.example.safestock.repository.HistoricoAlertasRepository;
 import com.example.safestock.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,16 +38,12 @@ public class ProdutoService {
         this.produtoRepository.save(novoProduto);
     }
 
-    public List<ProdutoListar> listarTodos(){
-        List<Produto> produtoEncontrado = produtoRepository.findAll();
-        System.out.println("Produtos encontrados: " + produtoEncontrado.size());
-        produtoEncontrado.forEach(produto -> System.out.println(produto.getNome()));
-
-        return produtoEncontrado.stream()
+    public List<ProdutoListar> listarTodos(int page, int size) {
+        Page<Produto> produtosPage = produtoRepository.findAll(PageRequest.of(page, size));
+        return produtosPage.getContent().stream()
                 .map(ProdutoMapper::of)
                 .toList();
     }
-
 
     public Optional<Produto> buscarProdutoPorId(Long id ){
         return produtoRepository.findById(id);

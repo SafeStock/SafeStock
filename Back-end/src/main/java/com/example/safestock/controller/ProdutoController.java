@@ -46,8 +46,10 @@ public class ProdutoController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<ProdutoListar>> listarProdutos(){
-        List<ProdutoListar> produtosEncontrados = this.produtoService.listarTodos();
+    public ResponseEntity<List<ProdutoListar>> listarProdutos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        List<ProdutoListar> produtosEncontrados = this.produtoService.listarTodos(page, size);
         if (produtosEncontrados == null) produtosEncontrados = new ArrayList<>();
         return ResponseEntity.ok(produtosEncontrados);
     }

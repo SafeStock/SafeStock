@@ -4,29 +4,39 @@ import Swal from 'sweetalert2';
 
 export function ProdutosInformation({ abrirModal }) {
   const [produtos, setProdutos] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const itemsPerPage = 5; // Defina o número de itens por página
 
   const buscarProdutos = () => {
-  fetch("http://localhost:8080/api/produtos", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Erro ao buscar produtos");
-      return res.json();
+    fetch(`http://localhost:8080/api/produtos?page=${currentPage}&size=${itemsPerPage}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
-    .then((data) => setProdutos(data))
-    .catch((err) => console.error(err));
-};
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar produtos");
+        return res.json();
+      })
+      .then((data) => {
+        setProdutos(data.content); // Acesse a lista de produtos
+        setTotalPages(data.totalPages); // Atualiza o total de páginas
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Erro ao buscar produtos.");
+      });
+  };
 
-useEffect(() => {
-  buscarProdutos();
-}, []);
-const confirmarExclusao = (id) => {
-  Swal.fire({
-    title: 'Deseja realmente excluir este Produto?',
+  useEffect(() => {
+    buscarProdutos();
+  }, [currentPage]); // Atualiza a lista de produtos quando a página atual muda
+
+  const confirmarExclusao = (id) => {
+    Swal.fire({
+      title: 'Deseja realmente excluir este Produto?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sim, excluir',
@@ -36,28 +46,27 @@ const confirmarExclusao = (id) => {
         cancelButton: 'btn-cancel',
         reverseButtons: true
       }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      fetch(`http://localhost:8080/api/produtos/deletar/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Erro ao deletar");
-          toast.success("Produto deletado com sucesso!");
-          // Aqui você pode atualizar a lista de produtos ou recarregar a página
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:8080/api/produtos/deletar/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         })
-        .catch((err) => {
-          console.error(err);
-          toast.error("Erro ao deletar o produto.");
-        });
-    }
-  });
-};
-
+          .then((res) => {
+            if (!res.ok) throw new Error("Erro ao deletar");
+            toast.success("Produto deletado com sucesso!");
+            buscarProdutos(); // Atualiza a lista de produtos após a exclusão
+          })
+          .catch((err) => {
+            console.error(err);
+            toast.error("Erro ao deletar o produto.");
+          });
+      }
+    });
+  };
 
   const formatarData = (dataStr) => {
     if (!dataStr) return "N/A";
@@ -103,6 +112,29 @@ const confirmarExclusao = (id) => {
           </div>
         </div>
       ))}
+
+      {/* Controles de Paginação */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 0}
+          className="px-3 py-1 bg-[#3A577B] text-white rounded disabled:bg-gray-300"
+        >
+          Anterior
+        </button>
+        
+        <span>
+          Página {currentPage + 1} de {totalPages}
+        </span>
+        
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage >= totalPages - 1}
+          className="px-3 py-1 bg-[#3A577B] text-white rounded disabled:bg-gray-300"
+        >
+          Próximo
+        </button>
+      </div>
     </div>
   );
 }

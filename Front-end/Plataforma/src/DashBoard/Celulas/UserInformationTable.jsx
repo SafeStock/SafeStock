@@ -4,9 +4,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export function UserInformationTable({
-  titles = [],             
-  campos = [],             
-  dados = [],              
+  titles = {titles},             
+  campos = {campos},             
+  dados = {dados},              
   tabela,
   confirmarExclusao,
   atualizarCadastro,
