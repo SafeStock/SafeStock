@@ -34,8 +34,8 @@ public class AlertaService {
     }
 
     //@Scheduled(cron = "0 0 8 * * MON") - uma vez na semana toda segunda
-    // Executa de 15 em 15 segundos
-    @Scheduled(cron = "0/15 * * * * *")
+    // Executa de 5 em 5 segundos para ver o fluxo
+    @Scheduled(cron = "0/5 * * * * *")
     public void verificarVencimentos() {
         List<Produto> produtos = produtoRepository.findAll();
         LocalDate hoje = LocalDate.now();
@@ -72,7 +72,7 @@ public class AlertaService {
         String chave = produto.getId() + "_" + status.name();
         LocalDateTime agora = LocalDateTime.now();
         LocalDateTime ultimoAlerta = cacheAlertas.get(chave);
-        LocalDateTime limite = agora.minusMinutes(2);  // impede alertas repetidos com intervalo menor que 1 minuto
+        LocalDateTime limite = agora.minusSeconds(30);  // impede alertas repetidos com intervalo menor que 30 segundos
 
         boolean precisaCriar = false;
 
