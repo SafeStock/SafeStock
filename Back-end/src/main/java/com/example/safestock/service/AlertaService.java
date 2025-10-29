@@ -4,6 +4,9 @@ import com.example.safestock.model.HistoricoAlertas;
 import com.example.safestock.model.Produto;
 import com.example.safestock.model.enums.StatusAlerta;
 import com.example.safestock.repository.ProdutoRepository;
+import com.example.safestock.service.AlertaRabbitMQService;
+import com.example.safestock.service.EmailService;
+import com.example.safestock.service.HistoricoAlertasService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -19,12 +22,15 @@ public class AlertaService {
     private final ProdutoRepository produtoRepository;
     private final HistoricoAlertasService historicoAlertasService;
     private final EmailService emailService;
+    private final AlertaRabbitMQService alertaRabbitMQService;
 
     public AlertaService(ProdutoRepository produtoRepository,
-                         HistoricoAlertasService historicoAlertasService, EmailService emailService) {
+                         HistoricoAlertasService historicoAlertasService, EmailService emailService,
+                         AlertaRabbitMQService alertaRabbitMQService) {
         this.produtoRepository = produtoRepository;
         this.historicoAlertasService = historicoAlertasService;
         this.emailService = emailService;
+        this.alertaRabbitMQService = alertaRabbitMQService;
     }
 
     //@Scheduled(cron = "0 0 8 * * MON") - uma vez na semana toda segunda
@@ -61,6 +67,7 @@ public class AlertaService {
     }
 
     private final Map<String, LocalDateTime> cacheAlertas = new ConcurrentHashMap<>();
+
     private void verificarEAdicionarAlerta(Produto produto, StatusAlerta status, String descricao) {
         String chave = produto.getId() + "_" + status.name();
         LocalDateTime agora = LocalDateTime.now();
@@ -68,7 +75,6 @@ public class AlertaService {
         LocalDateTime limite = agora.minusMinutes(2);  // impede alertas repetidos com intervalo menor que 1 minuto
 
         boolean precisaCriar = false;
-
 
 
         if (ultimoAlerta == null || ultimoAlerta.isBefore(limite)) {
@@ -98,19 +104,26 @@ public class AlertaService {
 
         historicoAlertasService.cadastrarAlerta(alerta);
 
-        emailService.enviarEmail(
-                "ekkoante@gmail.com",
-                "⚠️ Alerta de Vencimento: " + produto.getNome(),
-                "Prezado(a),\n\n" +
-                        "Informamos que o produto abaixo encontra-se com o seguinte status:\n\n" +
-                        "Produto: " + produto.getNome() + "\n" +
-                        "Status: " + status + "\n" +
-                        "Descrição: " + descricao + "\n\n" +
-                        "Solicitamos a gentileza de verificar e tomar as providências necessárias.\n\n" +
-                        "Atenciosamente,\n" +
-                        "- Stock, Safe"
+        String mensagem = String.format(
+                "Novo alerta: %s | Status: %s | Produto: %s",
+                alerta.getDescricao(),
+                alerta.getStatus(),        // usa o enum StatusAlerta
+                alerta.getProduto().getNome()
         );
+        alertaRabbitMQService.enviarAlerta(mensagem);
 
+        // emailService.enviarEmail(
+        //       "ekkoante@gmail.com",
+        //      "⚠️ Alerta de Vencimento: " + produto.getNome(),
+        //      "Prezado(a),\n\n" +
+        //              "Informamos que o produto abaixo encontra-se com o seguinte status:\n\n" +
+        //              "Produto: " + produto.getNome() + "\n" +
+        //              "Status: " + status + "\n" +
+        //              "Descrição: " + descricao + "\n\n" +
+        //              "Solicitamos a gentileza de verificar e tomar as providências necessárias.\n\n" +
+        //              "Atenciosamente,\n" +
+        //              "- Stock, Safe"
+        //);
 
     }
 }

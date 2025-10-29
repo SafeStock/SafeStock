@@ -83,12 +83,49 @@ html {
   }
 }
 
-.animate-fade-in-rigt {
+@keyframes fadeInLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes Showing{
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes Hiding{
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-showing {
+  animation: Showing 0.5s ease-out forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.5s ease-out forwards;
+}
+
+.animate-fade-out-right {
   animation: fadeOutRight 0.5s ease-out forwards;
 }
 
 
-.animate-fade-in-left {
+.animate-fade-in-right {
   animation: fadeInRight 0.5s ease-out forwards;
 }
 
