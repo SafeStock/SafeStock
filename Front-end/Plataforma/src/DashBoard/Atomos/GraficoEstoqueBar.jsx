@@ -16,9 +16,9 @@ export function GraficoEstoqueBar() {
       }
     })
       .then((res) => res.json())
-      .then((data) => {
-        const produtosOrdenados = [...data].sort((a, b) => b.quantidade - a.quantidade);
-        const qtdProdutosPlotados = produtosOrdenados.slice(0, 6);
+        .then((data) => {
+        // assume backend returns products ordered by quantity or provide top-N endpoint; here we take first 6
+        const qtdProdutosPlotados = data.slice(0, 6);
         const dadosFormatados = qtdProdutosPlotados.map((item) => ({
           name: item.nome,
           esperado: item.limiteSemanalDeUso,

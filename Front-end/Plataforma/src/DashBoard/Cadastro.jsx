@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 export function Cadastro() {
   const [etapa, setEtapa] = useState(1);
@@ -62,8 +62,8 @@ export function Cadastro() {
       }, 500); // animação curta
     }
   }
-
   const recarregar = () => {
+    // Recarrega a página para garantir atualização dos dados
     setTimeout(() => {
       window.location.reload();
     }, 1000);

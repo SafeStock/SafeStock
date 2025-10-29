@@ -29,17 +29,6 @@ public class ProdutoAtualizar {
     @Schema(description = "Validade do produto", example = "15/07/2025")
     private LocalDate dataValidade;
 
-    @Schema(description = "Entrada do produto", example = "15/05/2025")
-    private LocalDate dataEntrada;
-
-    public LocalDate getDataEntrada() {
-        return dataEntrada;
-    }
-
-    public void setDataEntrada(LocalDate dataEntrada) {
-        this.dataEntrada = dataEntrada;
-    }
-
     public LocalDate getDataValidade() {
         return dataValidade;
     }

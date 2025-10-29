@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class ProdutoServiceTest {
         produto.setQuantidade(10);
         produto.setLimiteSemanalDeUso(5);
         produto.setDataValidade(LocalDate.now().plusDays(10));
-        produto.setDataEntrada(LocalDate.now());
+        produto.setDataEntrada(LocalDateTime.now());
         return produto;
     }
 

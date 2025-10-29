@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ProdutoListar {
@@ -31,8 +32,8 @@ public class ProdutoListar {
     @Schema(description = "Validade do produto", example = "15/07/2025")
     private LocalDate dataValidade;
 
-    @Schema(description = "Entrada do produto", example = "15/05/2025")
-    private LocalDate dataEntrada;
+    @Schema(description = "Entrada do produto", example = "2025-05-15T10:30:00")
+    private LocalDateTime dataEntrada;
 
     @Schema(description = "Creche do produto", example = "1")
     private Creche creche;
@@ -56,11 +57,11 @@ public class ProdutoListar {
         this.creche = creche;
     }
 
-    public LocalDate getDataEntrada() {
+    public LocalDateTime getDataEntrada() {
         return dataEntrada;
     }
 
-    public void setDataEntrada(LocalDate dataEntrada) {
+    public void setDataEntrada(LocalDateTime dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
 

@@ -83,7 +83,22 @@ public class RegistroUsoService {
     }
 
     public Page<com.example.safestock.dto.RegistroUsoDTO> listarPaginado(int page, int size) {
+        // Order by dataHoraSaida descending (most recent first) for paged usage history
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataHoraSaida").descending());
         return registroUsoRepository.findAll(pageable).map(RegistroUsoDTO::new);
+    }
+
+    // List registros for a given month ordered by dataValidade ascending
+    public List<com.example.safestock.dto.RegistroUsoDTO> listarPorMesOrdenadoPorValidade(int ano, int mes) {
+        List<RegistroUso> registros = registroUsoRepository.findAll();
+        return registros.stream()
+                .filter(r -> r.getDataHoraSaida() != null && r.getDataHoraSaida().getYear() == ano && r.getDataHoraSaida().getMonthValue() == mes)
+                .sorted((a, b) -> {
+                    if (a.getDataValidade() == null) return 1;
+                    if (b.getDataValidade() == null) return -1;
+                    return a.getDataValidade().compareTo(b.getDataValidade());
+                })
+                .map(com.example.safestock.dto.RegistroUsoDTO::new)
+                .toList();
     }
 }

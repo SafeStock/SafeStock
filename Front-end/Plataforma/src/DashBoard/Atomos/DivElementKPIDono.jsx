@@ -147,8 +147,6 @@ export function DivElementKPIDonoBigRight({
         const dataItem = dayjs(item.dataHoraSaida);
         return dataItem.isValid() && dataItem.month() === mesAtual && dataItem.year() === anoAtual;
       })
-      // ordena desc (mais recente primeiro)
-      .sort((a, b) => dayjs(b.dataHoraSaida).valueOf() - dayjs(a.dataHoraSaida).valueOf())
       // formata
       .map(item => ({
         ...item,

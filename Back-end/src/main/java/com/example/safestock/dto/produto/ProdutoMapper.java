@@ -11,7 +11,7 @@ public class ProdutoMapper {
         produto.setQuantidade(produtoCadastro.getQuantidade());
         produto.setLimiteSemanalDeUso(produtoCadastro.getLimiteSemanalDeUso());
         produto.setDataValidade(produtoCadastro.getDataValidade());
-        produto.setDataEntrada(produtoCadastro.getDataEntrada());
+        // dataEntrada será definida automaticamente pelo service
         return produto;
     }
 
@@ -24,7 +24,7 @@ public class ProdutoMapper {
         produto.setQuantidade(produtoAtualizar.getQuantidade());
         produto.setLimiteSemanalDeUso(produtoAtualizar.getLimiteSemanalDeUso());
         produto.setDataValidade(produtoAtualizar.getDataValidade());
-        produto.setDataEntrada(produtoAtualizar.getDataEntrada());
+        // dataEntrada não é alterada durante atualização
 
         return produto;
     }

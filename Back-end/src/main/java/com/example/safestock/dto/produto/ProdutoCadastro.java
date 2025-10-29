@@ -30,11 +30,6 @@ public class ProdutoCadastro {
     @NotNull
     private LocalDate dataValidade;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Schema(description = "Entrada do produto", example = "2025-05-15")
-    @NotNull
-    private LocalDate dataEntrada;
-
     @Schema(description = "Id da creche", example = "1")
     @NotNull
     private Long crecheId;
@@ -54,9 +49,6 @@ public class ProdutoCadastro {
 
     public LocalDate getDataValidade() { return dataValidade; }
     public void setDataValidade(LocalDate dataValidade) { this.dataValidade = dataValidade; }
-
-    public LocalDate getDataEntrada() { return dataEntrada; }
-    public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }
 
     public Long getCrecheId() { return crecheId; }
     public void setCrecheId(Long crecheId) { this.crecheId = crecheId; }

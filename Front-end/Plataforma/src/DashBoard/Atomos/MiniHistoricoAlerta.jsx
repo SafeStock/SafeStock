@@ -54,15 +54,13 @@ function MiniHistoricoAlerta({ endpoint }) {
 
                 const alertasValidos = dadosAlertas.filter(a => a && a.produto && a.produto.dataValidade);
 
-                const alertasOrdenados = [...alertasValidos].sort((a, b) => {
-                    if (a.status === 'critico' && b.status !== 'critico') return -1;
-                    if (a.status !== 'critico' && b.status === 'critico') return 1;
-                    const dataA = new Date(a.produto.dataValidade);
-                    const dataB = new Date(b.produto.dataValidade);
-                    return dataA - dataB;
-                });
-
-                setAlertaPrincipal(alertasOrdenados[0] || null);
+                // Prioritize critical alerts first (stable), otherwise rely on backend ordering by proximity
+                const criticos = alertasValidos.filter(a => a.status === 'critico');
+                if (criticos.length > 0) {
+                    setAlertaPrincipal(criticos[0]);
+                } else {
+                    setAlertaPrincipal(alertasValidos[0] || null);
+                }
             } catch (error) {
                 console.error('Erro ao buscar alertas:', error);
                 setErro(getErrorMessage(error));

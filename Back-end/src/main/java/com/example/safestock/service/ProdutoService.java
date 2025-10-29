@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -33,11 +34,14 @@ public class ProdutoService {
     }
 
     public void cadastrarProduto(Produto novoProduto){
+        // Define automaticamente a data/hora de entrada como agora
+        novoProduto.setDataEntrada(LocalDateTime.now());
         this.produtoRepository.save(novoProduto);
     }
 
     public List<ProdutoListar> listarTodos(){
-        List<Produto> produtoEncontrado = produtoRepository.findAll();
+        // return all products ordered by dataEntrada (newest first) so recently added products appear on top
+        List<Produto> produtoEncontrado = produtoRepository.findAll(org.springframework.data.domain.Sort.by("dataEntrada").descending());
         System.out.println("Produtos encontrados: " + produtoEncontrado.size());
         produtoEncontrado.forEach(produto -> System.out.println(produto.getNome()));
 
@@ -48,9 +52,17 @@ public class ProdutoService {
 
     // Paginated listing
     public org.springframework.data.domain.Page<ProdutoListar> listarPaginado(int page, int size) {
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        // Order by dataValidade ascending so products closer to expiration come first
+        // For the main listing, order by dataEntrada descending (newest first)
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, org.springframework.data.domain.Sort.by("dataEntrada").descending());
         org.springframework.data.domain.Page<Produto> result = produtoRepository.findAll(pageable);
         return result.map(ProdutoMapper::of);
+    }
+
+    // Non-paged helper: list all products ordered by dataEntrada (newest first)
+    public List<ProdutoListar> listarTodosOrdenadosPorDataEntrada() {
+        List<Produto> produtos = produtoRepository.findAll(org.springframework.data.domain.Sort.by("dataEntrada").descending());
+        return produtos.stream().map(ProdutoMapper::of).toList();
     }
 
 
@@ -65,7 +77,7 @@ public class ProdutoService {
             produto.setQuantidade(novoProduto.getQuantidade());
             produto.setLimiteSemanalDeUso(novoProduto.getLimiteSemanalDeUso());
             produto.setDataValidade(novoProduto.getDataValidade());
-            produto.setDataEntrada(novoProduto.getDataEntrada());
+            // dataEntrada não é alterada durante atualização - mantém o valor original
             return produtoRepository.save(produto);
         });
     }
@@ -134,7 +146,7 @@ public class ProdutoService {
         return produtos.stream()
             .filter(produto -> {
                 if (month == null) return true;
-                String dataEntrada = produto.getDataEntrada().format(formatter);
+                String dataEntrada = produto.getDataEntrada().toLocalDate().format(formatter);
                 return dataEntrada.equals(month);
             })
             .map(produto -> {

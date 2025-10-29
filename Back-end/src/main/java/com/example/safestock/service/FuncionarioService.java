@@ -78,8 +78,9 @@ public class FuncionarioService {
     }
 
     public List<FuncionarioListar> listarTodosExcetoLogadoEDono(String emailLogado) {
-        List<Funcionario> funcionariosEncontrados = funcionarioRepository
-                .findByEmailNotAndCargoNot(emailLogado, CargoFuncionario.dono);
+    // Return all employees (except logged and owner) ordered alphabetically by nome
+    List<Funcionario> funcionariosEncontrados = funcionarioRepository
+        .findByEmailNotAndCargoNot(emailLogado, CargoFuncionario.dono, org.springframework.data.domain.Sort.by("nome").ascending());
 
         return funcionariosEncontrados.stream()
                 .map(FuncionarioMapper::of)
@@ -88,7 +89,8 @@ public class FuncionarioService {
 
     // Novo método paginado
     public org.springframework.data.domain.Page<FuncionarioListar> listarPaginadoExcetoLogadoEDono(String emailLogado, int page, int size) {
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        // Paged listing ordered by nome ascending (A-Z)
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, org.springframework.data.domain.Sort.by("nome").ascending());
         org.springframework.data.domain.Page<Funcionario> pageResult = funcionarioRepository.findByEmailNotAndCargoNot(emailLogado, CargoFuncionario.dono, pageable);
 
         return pageResult.map(FuncionarioMapper::of);
