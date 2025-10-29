@@ -141,20 +141,9 @@ export function UserInformation({ tabela, campos, titles }) {
           a.produto.dataValidade
         );
 
-        const alertasOrdenados = [...alertasValidos].sort((a, b) => {
-          const prioridadeA = a.status === 'critico' ? 0 : 1;
-          const prioridadeB = b.status === 'critico' ? 0 : 1;
-
-          if (prioridadeA !== prioridadeB) {
-            return prioridadeA - prioridadeB;
-          }
-
-          const dataA = new Date(a.produto.dataValidade);
-          const dataB = new Date(b.produto.dataValidade);
-          return dataA - dataB;
-        });
-
-        const alerta = alertasOrdenados[0] || null;
+        // Prioritize critical alerts locally only for immediate UI highlight; otherwise rely on backend ordering
+        const criticos = alertasValidos.filter(a => a.status === 'critico');
+        const alerta = criticos.length > 0 ? criticos[0] : (alertasValidos[0] || null);
         console.log("Alerta principal selecionado:", alerta);
       })
       .catch((error) => { 

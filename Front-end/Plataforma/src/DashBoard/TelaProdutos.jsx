@@ -132,7 +132,7 @@ export function TelaProdutos() {
 
   
   return (
-    <div className="flex flex-col w-full overflow-x-hidden opacity-0 animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
+    <div className="flex flex-col w-full overflow-hidden opacity-0 animate-fadeInContent" style={{ animationDelay: '0.2s' }}>
   
 
       <Modal isOpen={modalAberto} onClose={fecharModal}>

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class Produto {
     private int limiteSemanalDeUso;
 
     private LocalDate dataValidade;
-    private LocalDate dataEntrada;
+    private LocalDateTime dataEntrada;
 
     @ManyToOne
     @JoinColumn(name = "fkCreche")
@@ -46,7 +47,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String nome, CategoriaProduto categoriaProduto, int quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDate dataEntrada) {
+    public Produto(String nome, CategoriaProduto categoriaProduto, int quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDateTime dataEntrada) {
         this.nome = nome;
         this.categoriaProduto = categoriaProduto;
         this.quantidade = quantidade;
@@ -103,11 +104,11 @@ public class Produto {
         this.dataValidade = dataValidade;
     }
 
-    public LocalDate getDataEntrada() {
+    public LocalDateTime getDataEntrada() {
         return dataEntrada;
     }
 
-    public void setDataEntrada(LocalDate dataEntrada) {
+    public void setDataEntrada(LocalDateTime dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
 

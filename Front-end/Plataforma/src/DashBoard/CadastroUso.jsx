@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-export function CadastroUso({ fecharModal }) {
+export function CadastroUso({ fecharModal, atualizarLista }) {
   const [produto, setProduto] = useState("");
   const [quantidade, setQuantidade] = useState("");
   const [produtos, setProdutos] = useState([]);
@@ -17,11 +17,7 @@ export function CadastroUso({ fecharModal }) {
       .catch(err => console.error("Erro ao buscar produtos:", err));
   }, []);
 
-  const recarregar = () => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
-  };
+
 
   function getDataHoraLocal() {
     const agora = new Date();
@@ -104,9 +100,23 @@ export function CadastroUso({ fecharModal }) {
       })
       .then(response => {
         if (!response.ok) throw new Error('Erro no cadastro de uso');
-        toast.success("Uso registradado com sucesso!");
-        recarregar();
-        if (fecharModal) fecharModal();
+        
+        // Primeiro fecha o modal se existir
+        if (fecharModal) {
+          fecharModal();
+        }
+        
+        toast.success("Uso registrado com sucesso!", {
+          autoClose: 2000,
+          onClose: () => {
+            // Tenta usar callback personalizado primeiro, senão usa reload
+            if (atualizarLista) {
+              atualizarLista();
+            } else {
+              window.location.reload();
+            }
+          }
+        });
       })
       .catch(error => {
         console.error(error);

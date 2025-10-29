@@ -35,7 +35,11 @@ public class HistoricoAlertasService {
     // Adicione este método para buscar alertas recentes
     public List<HistoricoAlertas> findAlertasRecentes() {
         LocalDateTime umMesAtras = LocalDateTime.now().minusMonths(1);
-        return historicoAlertasRepository.findByDataHoraAfter(umMesAtras);
+        // Return recent alerts ordered by alert timestamp (most recent first)
+        return historicoAlertasRepository.findByDataHoraAfter(umMesAtras)
+                .stream()
+                .sorted((a, b) -> b.getDataHora().compareTo(a.getDataHora()))
+                .toList();
     }
 
     public List<HistoricoAlertas> listarHistorico (){
@@ -68,6 +72,7 @@ public class HistoricoAlertasService {
     }
 
     public Page<HistoricoAlertas> listarPaginado(int page, int size) {
+        // Default paged listing ordered by dataHora desc (most recent first). If client wants proximity ordering, use findAlertasRecentes or a dedicated endpoint.
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataHora").descending());
         return historicoAlertasRepository.findAll(pageable);
     }

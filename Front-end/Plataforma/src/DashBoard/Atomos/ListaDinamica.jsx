@@ -47,17 +47,7 @@ export function ListaDinamica({
         if (disableAutoDate) return dados;
 
         return dados
-            // ordena pelo campo de data original
-            .sort((a, b) => {
-                const dataA = a.dataHoraSaida || a.data;
-                const dataB = b.dataHoraSaida || b.data;
-
-                if (!dataA) return 1;
-                if (!dataB) return -1;
-
-                return dayjs(dataB).valueOf() - dayjs(dataA).valueOf(); // mais recente primeiro
-            })
-            // só depois formata
+            // apenas formata datas para exibição; a ordenação deve ser feita no backend
             .map(item => {
                 const novoItem = { ...item };
 
