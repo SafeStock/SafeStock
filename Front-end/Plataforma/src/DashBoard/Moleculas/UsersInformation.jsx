@@ -7,8 +7,6 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
 
-
-
 export function UserInformation({ tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
   const [page, setPage] = useState(0);

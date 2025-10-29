@@ -3,7 +3,7 @@ export function Modal({ isOpen, onClose, children }) {
 
   return (
     <div
-      className="w-[100vw] h-[100vh] fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] !important"
+      className="w-[100vw] animate-showing h-[100vh] fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] !important"
       style={{
         position: 'fixed',
         top: 0,

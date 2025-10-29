@@ -88,7 +88,7 @@ export function DivElementKPIDonoBigLeft({
 }) {
   return (
     <div
-      className="w-[95%] bg-white rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
+      className="w-[95%]  rounded-[2vh] shadow-[0_5px_10px_rgba(0,0,0,0.2)]"
       style={{ height: tamanho }}
     >
       <div className="w-full flex flex-col h-[38vh]" style={{ display: displayGrafico }}>
