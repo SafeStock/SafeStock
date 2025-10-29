@@ -46,6 +46,25 @@ public class RegistroUsoController {
         return registroUsoService.listarRegistrosUso();
     }
 
+    @GetMapping("/paged")
+    public ResponseEntity<?> listarPaginado(@RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        var resultado = registroUsoService.listarPaginado(page, size);
+        return ResponseEntity.ok(new java.util.HashMap<String, Object>() {{
+            put("content", resultado.getContent());
+            put("page", resultado.getNumber());
+            put("size", resultado.getSize());
+            put("totalPages", resultado.getTotalPages());
+            put("totalElements", resultado.getTotalElements());
+        }});
+    }
+
+    @GetMapping("/public/paged")
+    public ResponseEntity<?> listarPaginadoPublic(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "5") int size) {
+        return listarPaginado(page, size);
+    }
+
 
     @DeleteMapping("/testedeletar/{id}")
     public ResponseEntity<Void> deletarRegistroUso(@PathVariable Long id) {

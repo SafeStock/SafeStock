@@ -3,6 +3,7 @@ import { UserInformationTable } from "../Celulas/UserInformationTable";
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import axios from 'axios';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
 
@@ -10,7 +11,11 @@ import Swal from 'sweetalert2';
 
 export function UserInformation({ tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
   const token = sessionStorage.getItem('authToken');
+  const isPaged = tabela === "funcionarios" || tabela === "produtos" || tabela === "historicoAlertas" || tabela === "registroUso";
 
 
   const formatarTelefone = (telefone) => {
@@ -20,9 +25,7 @@ export function UserInformation({ tabela, campos, titles }) {
 
 
   function formatarDataOuDataHora(dataString) {
-    if (!dataString) return "-";
     const data = dayjs(dataString);
-    if (!data.isValid()) return dataString;
     const ehMeiaNoite = data.hour() === 0 && data.minute() === 0;
     return ehMeiaNoite
       ? data.format("DD-MM-YYYY")
@@ -76,15 +79,21 @@ export function UserInformation({ tabela, campos, titles }) {
       return;
     }
 
-    axios.get(`http://localhost:8080/api/${tabela}`, {
+    // If requesting funcionarios or produtos, ask for paged endpoint
+    const url = isPaged
+      ? `http://localhost:8080/api/${tabela}/paged?page=${page}&size=${size}`
+      : `http://localhost:8080/api/${tabela}`;
+
+    axios.get(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
       .then((response) => {
-        
-        const dadosBrutos = response.data;
+        const responseData = response.data;
+        // For paged funcionarios endpoint the payload is { content, page, size, totalPages, totalElements }
+        const dadosBrutos = Array.isArray(responseData) ? responseData : (Array.isArray(responseData.content) ? responseData.content : responseData);
         console.log("Dados brutos recebidos:", dadosBrutos);
         
         const lista = Array.isArray(dadosBrutos)
@@ -106,6 +115,13 @@ export function UserInformation({ tabela, campos, titles }) {
         }));
 
         setDados(dadosFormatados);
+
+        // If paged response, update pagination state
+        if (responseData && typeof responseData.page !== 'undefined') {
+          setPage(Number(responseData.page));
+          setSize(Number(responseData.size || size));
+          setTotalPages(Number(responseData.totalPages || 0));
+        }
         // console.log("Dados formatados:", dadosFormatados);
 
         // 2. Processar alertas SEPARADAMENTE
@@ -127,11 +143,7 @@ export function UserInformation({ tabela, campos, titles }) {
           a.produto.dataValidade
         );
 
-        // console.log("Alertas válidos:", alertasValidos);
-
-    
         const alertasOrdenados = [...alertasValidos].sort((a, b) => {
-    
           const prioridadeA = a.status === 'critico' ? 0 : 1;
           const prioridadeB = b.status === 'critico' ? 0 : 1;
 
@@ -139,13 +151,10 @@ export function UserInformation({ tabela, campos, titles }) {
             return prioridadeA - prioridadeB;
           }
 
-    
           const dataA = new Date(a.produto.dataValidade);
           const dataB = new Date(b.produto.dataValidade);
           return dataA - dataB;
         });
-
-        // console.log("Alertas ordenados:", alertasOrdenados);
 
         const alerta = alertasOrdenados[0] || null;
         console.log("Alerta principal selecionado:", alerta);
@@ -156,9 +165,22 @@ export function UserInformation({ tabela, campos, titles }) {
   }; 
   
   useEffect(() => {
-    buscarDados();
+    // Reset pagination when switching tables so we don't remain on a stale page
+    if (isPaged) {
+      setPage(0);
+      setTotalPages(0);
+      // the page useEffect will trigger buscarDados()
+    } else {
+      buscarDados();
+    }
     // eslint-disable-next-line
   }, [tabela]);
+
+  // refetch when page changes for funcionarios
+  useEffect(() => {
+    if (isPaged) buscarDados();
+    // eslint-disable-next-line
+  }, [page]);
   const confirmarExclusao = (id) => {
     Swal.fire({
       title: 'Deseja realmente excluir este Produto?',
@@ -218,6 +240,43 @@ export function UserInformation({ tabela, campos, titles }) {
 
   return (
     <div className="relative right-[3.5vh]">
+      {isPaged && (
+        <div className="flex gap-2 mb-2 items-center justify-end absolute top-[75vh] right-[-4vh]">
+          <button
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page <= 0}
+            className="flex items-center justify-center"
+            style={{ background: 'transparent', border: 'none', padding: '0.25rem', appearance: 'none', WebkitAppearance: 'none', outline: 'none' }}
+            aria-label="Página anterior"
+            title="Anterior"
+          >
+            <FiChevronLeft
+              size={55}
+              color="#3A577B"
+              style={{ lineHeight: 1, opacity: page <= 0 ? 0.3 : 1 }}
+              aria-hidden="true"
+            />
+          </button>
+
+          <span className="text-xl font-bold text-black mx-2">{page + 1}/{totalPages || 1}</span>
+
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={totalPages === 0 || page >= totalPages - 1}
+            aria-label="Próxima página"
+            title="Próxima"
+            className="flex items-center justify-center"
+            style={{ background: 'transparent', border: 'none', padding: '0.25rem', appearance: 'none', WebkitAppearance: 'none', outline: 'none' }}
+          >
+            <FiChevronRight
+              size={55}
+              color="#3A577B"
+              style={{ lineHeight: 1, opacity: (totalPages === 0 || page >= totalPages - 1) ? 0.3 : 1 }}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+      )}
       <UserInformationTable
         titles={titles}
         campos={campos}

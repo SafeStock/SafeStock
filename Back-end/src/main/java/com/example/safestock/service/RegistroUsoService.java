@@ -13,6 +13,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 @Service
 public class RegistroUsoService {
     private final RegistroUsoRepository registroUsoRepository;
@@ -76,5 +80,10 @@ public class RegistroUsoService {
                 return map;
             })
             .toList();
+    }
+
+    public Page<com.example.safestock.dto.RegistroUsoDTO> listarPaginado(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataHoraSaida").descending());
+        return registroUsoRepository.findAll(pageable).map(RegistroUsoDTO::new);
     }
 }
