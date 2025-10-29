@@ -36,6 +36,50 @@ public class FuncionarioController {
     }
 
 
+    @GetMapping("/paged")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<?> listarFuncionariosPaginado(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "5") int size) {
+        String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        org.springframework.data.domain.Page<com.example.safestock.dto.FuncionarioListar> resultado =
+                funcionarioService.listarPaginadoExcetoLogadoEDono(emailLogado, page, size);
+
+        if (resultado == null || resultado.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        java.util.Map<String, Object> body = new java.util.HashMap<>();
+        body.put("content", resultado.getContent());
+        body.put("page", resultado.getNumber());
+        body.put("size", resultado.getSize());
+        body.put("totalPages", resultado.getTotalPages());
+        body.put("totalElements", resultado.getTotalElements());
+
+        return ResponseEntity.ok(body);
+    }
+
+    // Endpoint público temporário para testes locais (não requer token)
+    @GetMapping("/public/paged")
+    public ResponseEntity<?> listarFuncionariosPaginadoPublico(@RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "5") int size) {
+        org.springframework.data.domain.Page<com.example.safestock.dto.FuncionarioListar> resultado =
+                funcionarioService.listarPaginadoExcetoLogadoEDono("", page, size);
+
+        if (resultado == null || resultado.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        java.util.Map<String, Object> body = new java.util.HashMap<>();
+        body.put("content", resultado.getContent());
+        body.put("page", resultado.getNumber());
+        body.put("size", resultado.getSize());
+        body.put("totalPages", resultado.getTotalPages());
+        body.put("totalElements", resultado.getTotalElements());
+
+        return ResponseEntity.ok(body);
+    }
+
+
     @DeleteMapping("/deletar/{id}")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<FuncionarioRemover> deletarFuncionarioPorId(@PathVariable Long id) {

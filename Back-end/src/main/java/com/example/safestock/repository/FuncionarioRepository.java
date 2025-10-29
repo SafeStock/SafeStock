@@ -13,5 +13,8 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     // Lista todos exceto o usuário logado e exceto quem tem cargo "Dono"
     List<Funcionario> findByEmailNotAndCargoNot(String email, CargoFuncionario cargo);
 
+    // Paginated version
+    org.springframework.data.domain.Page<Funcionario> findByEmailNotAndCargoNot(String email, CargoFuncionario cargo, org.springframework.data.domain.Pageable pageable);
+
 
 }

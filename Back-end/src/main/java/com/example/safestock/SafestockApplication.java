@@ -10,4 +10,4 @@ public class  SafestockApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SafestockApplication.class, args);
 	}
-}
+} 

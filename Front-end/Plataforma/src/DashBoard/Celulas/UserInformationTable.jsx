@@ -84,7 +84,7 @@ export function UserInformationTable({
   const dateFields = ["dataNascimento", "dataEntrada", "dataValidade"];
   const dadosValidos = Array.isArray(dados) ? dados.filter(item => item) : [];
 
-  // ✅ Garante que os dados mínimos existam antes de renderizar
+  
   if (!Array.isArray(titles) || !Array.isArray(campos)) {
     return <p>Erro: estrutura da tabela inválida.</p>;
   }
@@ -120,7 +120,7 @@ export function UserInformationTable({
         </table>
       </div>
 
-      <div className="h-[61vh] w-[104%] overflow-y-auto overflow-x-hidden">
+      <div className="h-[61vh] w-[104%]">
         <table className="w-[100%] text-[#3A577B] border-separate border-spacing-[2vh] table-fixed">
           <colgroup>
             {mostrarIcone && <col className="w-[4vw]" />}

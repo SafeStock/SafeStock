@@ -18,6 +18,26 @@ public class HistoricoAlertasController {
         return ResponseEntity.ok(historicoAlertasService.findAlertasRecentes());
     }
 
+    @GetMapping("/paged")
+    public ResponseEntity<?> listarPaginado(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int size) {
+        var resultado = historicoAlertasService.listarPaginado(page, size);
+        return ResponseEntity.ok(new java.util.HashMap<String, Object>() {{
+            put("content", resultado.getContent());
+            put("page", resultado.getNumber());
+            put("size", resultado.getSize());
+            put("totalPages", resultado.getTotalPages());
+            put("totalElements", resultado.getTotalElements());
+        }});
+    }
+
+    // Public test endpoint (no security) for local quick checks
+    @GetMapping("/public/paged")
+    public ResponseEntity<?> listarPaginadoPublic(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) {
+        return listarPaginado(page, size);
+    }
+
 
     public HistoricoAlertasController(HistoricoAlertasService historicoAlertasService) {
         this.historicoAlertasService = historicoAlertasService;
