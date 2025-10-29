@@ -6,8 +6,6 @@ import axios from 'axios';
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
 
-
-
 export function UserInformation({ tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
   const token = sessionStorage.getItem('authToken');
