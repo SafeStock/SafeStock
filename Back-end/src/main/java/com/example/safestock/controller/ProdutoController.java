@@ -52,6 +52,44 @@ public class ProdutoController {
         return ResponseEntity.ok(produtosEncontrados);
     }
 
+    @GetMapping("/paged")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<?> listarProdutosPaginado(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
+        org.springframework.data.domain.Page<com.example.safestock.dto.produto.ProdutoListar> resultado =
+                produtoService.listarPaginado(page, size);
+
+        if (resultado == null || resultado.isEmpty()) return ResponseEntity.status(204).build();
+
+        java.util.Map<String, Object> body = new java.util.HashMap<>();
+        body.put("content", resultado.getContent());
+        body.put("page", resultado.getNumber());
+        body.put("size", resultado.getSize());
+        body.put("totalPages", resultado.getTotalPages());
+        body.put("totalElements", resultado.getTotalElements());
+
+        return ResponseEntity.ok(body);
+    }
+
+    // public paged endpoint for local testing
+    @GetMapping("/public/paged")
+    public ResponseEntity<?> listarProdutosPaginadoPublico(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "5") int size) {
+        org.springframework.data.domain.Page<com.example.safestock.dto.produto.ProdutoListar> resultado =
+                produtoService.listarPaginado(page, size);
+
+        if (resultado == null || resultado.isEmpty()) return ResponseEntity.status(204).build();
+
+        java.util.Map<String, Object> body = new java.util.HashMap<>();
+        body.put("content", resultado.getContent());
+        body.put("page", resultado.getNumber());
+        body.put("size", resultado.getSize());
+        body.put("totalPages", resultado.getTotalPages());
+        body.put("totalElements", resultado.getTotalElements());
+
+        return ResponseEntity.ok(body);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Produto> buscarProdutoPorId(@PathVariable Long id){
         Optional<Produto> produto = produtoService.buscarProdutoPorId(id);

@@ -19,3 +19,4 @@ export function AreaTittle({ texto }) {
       <ModalNotification isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
+}

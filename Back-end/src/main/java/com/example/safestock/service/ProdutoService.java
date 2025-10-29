@@ -46,6 +46,13 @@ public class ProdutoService {
                 .toList();
     }
 
+    // Paginated listing
+    public org.springframework.data.domain.Page<ProdutoListar> listarPaginado(int page, int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        org.springframework.data.domain.Page<Produto> result = produtoRepository.findAll(pageable);
+        return result.map(ProdutoMapper::of);
+    }
+
 
     public Optional<Produto> buscarProdutoPorId(Long id ){
         return produtoRepository.findById(id);

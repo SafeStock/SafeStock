@@ -86,6 +86,14 @@ public class FuncionarioService {
                 .toList();
     }
 
+    // Novo método paginado
+    public org.springframework.data.domain.Page<FuncionarioListar> listarPaginadoExcetoLogadoEDono(String emailLogado, int page, int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        org.springframework.data.domain.Page<Funcionario> pageResult = funcionarioRepository.findByEmailNotAndCargoNot(emailLogado, CargoFuncionario.dono, pageable);
+
+        return pageResult.map(FuncionarioMapper::of);
+    }
+
 
     @Transactional
     public void deletarFuncionario(Long id) {
