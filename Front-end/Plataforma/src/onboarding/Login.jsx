@@ -51,7 +51,7 @@ export function Login() {
     }
   
     try {
-      const response = await fetch('http://localhost:8080/api/funcionarios/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/funcionarios/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,15 +76,11 @@ export function Login() {
         sessionStorage.setItem('cargo', data.cargo); 
         sessionStorage.setItem("usuarioId", data.id);
       }
-    
-      // console.log(sessionStorage.getItem('authToken'));
-
-
-      // console.log(data); // aqui você vê o que chegou da API
+  
       setColor("#2F4700");
       setStar('');
       setCarregando(true);
-      setEmail(""); // limpa campos
+      setEmail("");
       setSenha("");
       toast.success("Login realizado com sucesso!");
       irParaDashboard(data.cargo);
@@ -148,24 +144,6 @@ export function Login() {
                   Enviar
                 </button>
               </form>
-
-              {/* <div className="mt-4 text-sm text-center text-gray-600 ">
-                <p>
-                  Esqueceu sua{" "}
-                  <button className="te xt-blue-500 border-none bg-[rgba(0,0,0,0)] cursor-pointer   hover:text-[#2F4772] hover:text-[#2F4690] transition-colors duration-500 mb-[2vh] ">Senha</button>?
-                </p>
-              </div> */}
-
-              {/* <div className="text-[2.5vh] w-[100%] flex justify-center ">
-                <span
-                  className={`${mensagemErro ? "opacity-100" : "opacity-0"
-                    } transition-opacity duration-300`}
-                  style={{ color: mensagemErro ? color : "transparent" }}
-                >
-                  {mensagemErro || "mensagem de erro"}
-                </span>
-              </div> */}
-
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full w-full">

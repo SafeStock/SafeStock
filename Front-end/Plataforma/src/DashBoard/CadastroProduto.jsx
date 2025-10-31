@@ -63,7 +63,7 @@ export function CadastroProduto({ fecharModal, atualizarLista }) {
 
         (async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/produtos/cadastro', {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos/cadastro`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -78,16 +78,13 @@ export function CadastroProduto({ fecharModal, atualizarLista }) {
                     throw new Error(text || 'Erro no cadastro');
                 }
 
-                // Fecha modal imediatamente se existir
                 if (fecharModal) {
                     fecharModal();
                 }
                 
-                // Exibe toast e recarrega página para garantir atualização
                 toast.success("Produto cadastrado com sucesso!", {
                     autoClose: 2000,
                     onClose: () => {
-                        // Tenta usar callback personalizado primeiro, senão usa reload
                         if (atualizarLista) {
                             atualizarLista();
                         } else {

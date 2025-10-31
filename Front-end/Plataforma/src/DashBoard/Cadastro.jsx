@@ -88,7 +88,7 @@ export function Cadastro() {
         creche: [null]
       };
 
-      fetch('http://localhost:8080/api/funcionarios/cadastro', {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/funcionarios/cadastro`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

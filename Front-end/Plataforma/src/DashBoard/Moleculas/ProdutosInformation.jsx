@@ -6,7 +6,7 @@ export function ProdutosInformation({ abrirModal }) {
   const [produtos, setProdutos] = useState([]);
 
   const buscarProdutos = () => {
-  fetch("http://localhost:8080/api/produtos", {
+  fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const confirmarExclusao = (id) => {
       }
   }).then((result) => {
     if (result.isConfirmed) {
-      fetch(`http://localhost:8080/api/produtos/deletar/${id}`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos/deletar/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,6 @@ const confirmarExclusao = (id) => {
         .then((res) => {
           if (!res.ok) throw new Error("Erro ao deletar");
           toast.success("Produto deletado com sucesso!");
-          // Aqui você pode atualizar a lista de produtos ou recarregar a página
         })
         .catch((err) => {
           console.error(err);
