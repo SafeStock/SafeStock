@@ -9,7 +9,7 @@ export function GraficoEstoqueBar() {
   const token = sessionStorage.getItem('authToken');
 
   const buscarDados = () => {
-    fetch("http://localhost:8080/api/produtos", {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

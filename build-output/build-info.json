@@ -1,0 +1,9 @@
+{ 
+  "timestamp": "31/10/2025 13:57:35", 
+  "backend": "safestock-backend.jar", 
+  "frontend": "frontend/",
+  "backend_profile": "prod",
+  "frontend_endpoints": "environment_variables",
+  "database_strategy": "jpa_auto_create",
+  "terraform_ready": true
+} 
