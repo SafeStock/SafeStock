@@ -21,25 +21,11 @@ provider "aws" {
 # DATA SOURCES
 # ================================================================
 
-# AMI Ubuntu 22.04 LTS mais recente
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-# Zonas de disponibilidade
-data "aws_availability_zones" "available" {
-  state = "available"
+# AMI Ubuntu 22.04 LTS para us-east-1 (valor fixo para contornar restrições de permissão)
+# AMI ID: ami-0c02fb55956c7d316 (Ubuntu 22.04 LTS em us-east-1)
+locals {
+  ubuntu_ami_id = "ami-0c02fb55956c7d316"
+  availability_zones = ["us-east-1a", "us-east-1b"]
 }
 
 # ================================================================
@@ -74,7 +60,7 @@ resource "aws_internet_gateway" "sf_igw_acesso_publico" {
 resource "aws_subnet" "sf_subnet_publica_frontend" {
   vpc_id                  = aws_vpc.sf_vpc_principal.id
   cidr_block              = var.subnet_publica_frontend_cidr
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  availability_zone       = local.availability_zones[0]
   map_public_ip_on_launch = true
 
   tags = {
@@ -87,7 +73,7 @@ resource "aws_subnet" "sf_subnet_publica_frontend" {
 resource "aws_subnet" "sf_subnet_publica_lb" {
   vpc_id                  = aws_vpc.sf_vpc_principal.id
   cidr_block              = var.subnet_publica_lb_cidr
-  availability_zone       = data.aws_availability_zones.available.names[1]
+  availability_zone       = local.availability_zones[1]
   map_public_ip_on_launch = true
 
   tags = {
@@ -104,7 +90,7 @@ resource "aws_subnet" "sf_subnet_publica_lb" {
 resource "aws_subnet" "sf_subnet_privada_backend" {
   vpc_id            = aws_vpc.sf_vpc_principal.id
   cidr_block        = var.subnet_privada_backend_cidr
-  availability_zone = data.aws_availability_zones.available.names[0]
+  availability_zone = local.availability_zones[0]
 
   tags = {
     Name = "sf-subnet-privada-backend"
@@ -116,7 +102,7 @@ resource "aws_subnet" "sf_subnet_privada_backend" {
 resource "aws_subnet" "sf_subnet_privada_database" {
   vpc_id            = aws_vpc.sf_vpc_principal.id
   cidr_block        = var.subnet_privada_database_cidr
-  availability_zone = data.aws_availability_zones.available.names[1]
+  availability_zone = local.availability_zones[1]
 
   tags = {
     Name = "sf-subnet-privada-database"
@@ -125,21 +111,10 @@ resource "aws_subnet" "sf_subnet_privada_database" {
 }
 
 # ================================================================
-# ELASTIC IPS
+# ELASTIC IPS - APENAS ONDE REALMENTE PRECISAMOS
 # ================================================================
 
-# EIP para NAT Gateway
-resource "aws_eip" "sf_eip_nat_gateway" {
-  domain = "vpc"
-  
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-
-  tags = {
-    Name = "sf-eip-nat-gateway"
-  }
-}
-
-# EIP Frontend
+# EIP Frontend (acesso público direto necessário)
 resource "aws_eip" "sf_eip_frontend" {
   domain = "vpc"
   
@@ -150,44 +125,28 @@ resource "aws_eip" "sf_eip_frontend" {
   }
 }
 
-# EIP Backend 01
-resource "aws_eip" "sf_eip_backend_01" {
-  domain = "vpc"
-  
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-
-  tags = {
-    Name = "sf-eip-backend-01"
-  }
-}
-
-# EIP Backend 02
-resource "aws_eip" "sf_eip_backend_02" {
-  domain = "vpc"
-  
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-
-  tags = {
-    Name = "sf-eip-backend-02"
-  }
-}
-
-# EIP Database
-resource "aws_eip" "sf_eip_database" {
-  domain = "vpc"
-  
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-
-  tags = {
-    Name = "sf-eip-database"
-  }
-}
+# NOTA: 
+# - ALB recebe IP público automaticamente
+# - Backends ficam privados (acessados via ALB)
+# - Database fica privado (acessado pelos backends)
+# - NAT Gateway pode usar IP público automático
 
 # ================================================================
 # NAT GATEWAY
 # ================================================================
 
-# NAT Gateway para subnets privadas
+# Elastic IP para o NAT Gateway
+resource "aws_eip" "sf_eip_nat_gateway" {
+  domain = "vpc"
+  
+  tags = {
+    Name = "sf-eip-nat-gateway"
+  }
+  
+  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
+}
+
+# NAT Gateway para subnets privadas (com EIP dedicado)
 resource "aws_nat_gateway" "sf_nat_gateway_privadas" {
   allocation_id = aws_eip.sf_eip_nat_gateway.id
   subnet_id     = aws_subnet.sf_subnet_publica_frontend.id
@@ -415,18 +374,19 @@ resource "aws_security_group" "sf_sg_lb_publico" {
 }
 
 # ================================================================
-# KEY PAIR
+# KEY PAIR - COMENTADO PARA EVITAR PROBLEMAS DE PERMISSÃO
 # ================================================================
-
-# Key Pair para SSH
-resource "aws_key_pair" "sf_keypair_main" {
-  key_name   = var.key_pair_name
-  public_key = file("~/.ssh/${var.key_pair_name}.pub")
-
-  tags = {
-    Name = "sf-keypair-main"
-  }
-}
+# NOTA: Para usar SSH, você pode:
+# 1. Criar uma chave manualmente no console AWS
+# 2. Ou usar AWS Session Manager para conectar
+# 
+# resource "aws_key_pair" "sf_keypair_main" {
+#   key_name   = var.key_pair_name
+#   public_key = file("~/.ssh/${var.key_pair_name}.pub")
+#   tags = {
+#     Name = "sf-keypair-main"
+#   }
+# }
 
 # ================================================================
 # INSTÂNCIAS EC2
@@ -434,15 +394,15 @@ resource "aws_key_pair" "sf_keypair_main" {
 
 # EC2 - Frontend (Nginx + React)
 resource "aws_instance" "sf_ec2_frontend_nginx" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_frontend
-  key_name              = aws_key_pair.sf_keypair_main.key_name
+  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
   subnet_id             = aws_subnet.sf_subnet_publica_frontend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
 
   user_data = base64encode(templatefile("${path.module}/user-data/frontend-user-data.sh", {
-    repository_url = var.repository_url
-    alb_dns_name   = aws_lb.sf_alb_backend_distribuidor.dns_name
+    repository_url      = var.repository_url
+    load_balancer_ip    = aws_instance.sf_ec2_load_balancer.private_ip
   }))
 
   tags = {
@@ -453,15 +413,15 @@ resource "aws_instance" "sf_ec2_frontend_nginx" {
 
 # EC2 - Backend 01 (Spring Boot)
 resource "aws_instance" "sf_ec2_backend_spring_01" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_backend
-  key_name              = aws_key_pair.sf_keypair_main.key_name
+  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
   subnet_id             = aws_subnet.sf_subnet_privada_backend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
 
   user_data = base64encode(templatefile("${path.module}/user-data/backend-user-data.sh", {
     repository_url     = var.repository_url
-    mysql_host        = aws_eip.sf_eip_database.private_ip
+    mysql_host        = aws_instance.sf_ec2_database_mysql.private_ip
     mysql_password    = var.mysql_app_password
   }))
 
@@ -473,15 +433,15 @@ resource "aws_instance" "sf_ec2_backend_spring_01" {
 
 # EC2 - Backend 02 (Spring Boot)
 resource "aws_instance" "sf_ec2_backend_spring_02" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_backend
-  key_name              = aws_key_pair.sf_keypair_main.key_name
+  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
   subnet_id             = aws_subnet.sf_subnet_privada_backend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
 
   user_data = base64encode(templatefile("${path.module}/user-data/backend-user-data.sh", {
     repository_url     = var.repository_url
-    mysql_host        = aws_eip.sf_eip_database.private_ip
+    mysql_host        = aws_instance.sf_ec2_database_mysql.private_ip
     mysql_password    = var.mysql_app_password
   }))
 
@@ -493,9 +453,9 @@ resource "aws_instance" "sf_ec2_backend_spring_02" {
 
 # EC2 - Database (MySQL)
 resource "aws_instance" "sf_ec2_database_mysql" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_database
-  key_name              = aws_key_pair.sf_keypair_main.key_name
+  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
   subnet_id             = aws_subnet.sf_subnet_privada_database.id
   vpc_security_group_ids = [aws_security_group.sf_sg_database_mysql.id]
 
@@ -511,101 +471,38 @@ resource "aws_instance" "sf_ec2_database_mysql" {
 }
 
 # ================================================================
-# ELASTIC IP ASSOCIATIONS
+# ELASTIC IP ASSOCIATIONS - APENAS FRONTEND
 # ================================================================
 
-# Associar EIPs às instâncias
+# Associar EIP apenas ao Frontend (que precisa de acesso público direto)
 resource "aws_eip_association" "sf_eip_assoc_frontend" {
   instance_id   = aws_instance.sf_ec2_frontend_nginx.id
   allocation_id = aws_eip.sf_eip_frontend.id
 }
 
-resource "aws_eip_association" "sf_eip_assoc_backend_01" {
-  instance_id   = aws_instance.sf_ec2_backend_spring_01.id
-  allocation_id = aws_eip.sf_eip_backend_01.id
-}
-
-resource "aws_eip_association" "sf_eip_assoc_backend_02" {
-  instance_id   = aws_instance.sf_ec2_backend_spring_02.id
-  allocation_id = aws_eip.sf_eip_backend_02.id
-}
-
-resource "aws_eip_association" "sf_eip_assoc_database" {
-  instance_id   = aws_instance.sf_ec2_database_mysql.id
-  allocation_id = aws_eip.sf_eip_database.id
-}
+# NOTA: Outros recursos não precisam de EIP:
+# - ALB: Recebe IP público automaticamente
+# - Backends: Acessados via ALB (privados)
+# - Database: Acessado pelos backends (privado)
 
 # ================================================================
-# APPLICATION LOAD BALANCER
+# LOAD BALANCER EC2 (NGINX) - VERSÃO BARATA
 # ================================================================
 
-# Application Load Balancer
-resource "aws_lb" "sf_alb_backend_distribuidor" {
-  name               = "sf-alb-backend-distribuidor"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.sf_sg_lb_publico.id]
-  subnets           = [
-    aws_subnet.sf_subnet_publica_frontend.id,
-    aws_subnet.sf_subnet_publica_lb.id
-  ]
+# EC2 - Load Balancer (Nginx fazendo proxy para backends)
+resource "aws_instance" "sf_ec2_load_balancer" {
+  ami                    = local.ubuntu_ami_id
+  instance_type          = "t3.micro"  # Bem barato
+  subnet_id             = aws_subnet.sf_subnet_publica_lb.id
+  vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
 
-  enable_deletion_protection = false
-
-  tags = {
-    Name = "sf-alb-backend-distribuidor"
-  }
-}
-
-# Target Group para Backend
-resource "aws_lb_target_group" "sf_tg_backend_spring" {
-  name     = "sf-tg-backend-spring"
-  port     = 8080
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.sf_vpc_principal.id
-
-  health_check {
-    enabled             = true
-    healthy_threshold   = 2
-    interval            = 30
-    matcher             = "200"
-    path                = "/actuator/health"
-    port                = "traffic-port"
-    protocol            = "HTTP"
-    timeout             = 5
-    unhealthy_threshold = 2
-  }
+  user_data = base64encode(templatefile("${path.module}/user-data/loadbalancer-user-data.sh", {
+    backend_01_ip = aws_instance.sf_ec2_backend_spring_01.private_ip
+    backend_02_ip = aws_instance.sf_ec2_backend_spring_02.private_ip
+  }))
 
   tags = {
-    Name = "sf-tg-backend-spring"
+    Name = "sf-ec2-load-balancer"
+    Type = "LoadBalancer"
   }
-}
-
-# Listener do Load Balancer
-resource "aws_lb_listener" "sf_alb_listener" {
-  load_balancer_arn = aws_lb.sf_alb_backend_distribuidor.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.sf_tg_backend_spring.arn
-  }
-
-  tags = {
-    Name = "sf-alb-listener-http"
-  }
-}
-
-# Target Group Attachments
-resource "aws_lb_target_group_attachment" "sf_tg_attach_backend_01" {
-  target_group_arn = aws_lb_target_group.sf_tg_backend_spring.arn
-  target_id        = aws_instance.sf_ec2_backend_spring_01.id
-  port             = 8080
-}
-
-resource "aws_lb_target_group_attachment" "sf_tg_attach_backend_02" {
-  target_group_arn = aws_lb_target_group.sf_tg_backend_spring.arn
-  target_id        = aws_instance.sf_ec2_backend_spring_02.id
-  port             = 8080
 }

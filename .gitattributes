@@ -1,0 +1,35 @@
+# ================================================================
+# GITATTRIBUTES - SAFESTOCK
+# ================================================================
+
+# Força LF para scripts shell (executam em Linux)
+*.sh text eol=lf
+
+# Força LF para arquivos Terraform
+*.tf text eol=lf
+*.tfvars text eol=lf
+
+# Mantém CRLF para arquivos Windows específicos
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Arquivos que devem manter formato original
+*.jar binary
+*.zip binary
+*.gz binary
+*.tar binary
+
+# Força LF para arquivos de configuração
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Força LF para arquivos de código
+*.js text eol=lf
+*.jsx text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.java text eol=lf
+*.sql text eol=lf
+*.properties text eol=lf

@@ -7,7 +7,7 @@ echo "Timestamp: $(date)"
 
 # Variáveis do Terraform
 REPOSITORY_URL="${repository_url}"
-ALB_DNS_NAME="${alb_dns_name}"
+LOAD_BALANCER_IP="${load_balancer_ip}"
 
 # Atualizar sistema
 echo "==== Atualizando sistema ===="
@@ -48,8 +48,8 @@ else
     echo "Build não encontrado, compilando frontend..."
     cd Front-end/Plataforma
     
-    # Atualizar .env.production com DNS do ALB
-    echo "VITE_API_BASE_URL=http://$ALB_DNS_NAME" > .env.production
+    # Atualizar .env.production com IP do Load Balancer
+    echo "VITE_API_BASE_URL=http://$LOAD_BALANCER_IP" > .env.production
     
     # Instalar dependências e fazer build
     npm install
