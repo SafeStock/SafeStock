@@ -1,316 +1,94 @@
-# 🚀 SafeStock AWS Infrastructure
+# � SafeStock - Arquivos Terraform
 
-Infraestrutura completa do SafeStock na AWS usando Terraform, com arquitetura distribuída e escalável.
+Explicação breve de cada arquivo na pasta terraform.
 
-## 🏗️ Arquitetura
+## 📋 Arquivos Principais
 
-```
-🌐 Internet
-    │
-    ├── 🏢 sf-vpc-principal (10.0.0.0/16)
-    │   │
-    │   ├── 📡 Subnets Públicas
-    │   │   ├── sf-subnet-publica-frontend (10.0.1.0/24)
-    │   │   │   └── 🖥️ Frontend EC2 (Nginx + React) + EIP
-    │   │   │
-    │   │   └── sf-subnet-publica-lb (10.0.2.0/24)
-    │   │       └── ⚖️ Application Load Balancer
-    │   │
-    │   └── 🔒 Subnets Privadas
-    │       ├── sf-subnet-privada-backend (10.0.10.0/24)
-    │       │   ├── 🔧 Backend EC2 #1 (Spring Boot) + EIP
-    │       │   └── 🔧 Backend EC2 #2 (Spring Boot) + EIP
-    │       │
-    │       └── sf-subnet-privada-database (10.0.20.0/24)
-    │           └── 🗄️ MySQL EC2 + EIP
-```
+### **`main.tf`**
+- Infraestrutura completa da AWS (VPC, EC2s, Security Groups, Load Balancer)
+- Cria 5 EC2s: 1 frontend, 1 load balancer, 2 backends, 1 database
+- Define toda a rede (subnets públicas/privadas, internet gateway, etc.)
 
-## 📋 Recursos Criados
+### **`variables.tf`** 
+- Define todas as variáveis configuráveis (região, tipos de instância, senhas)
+- Permite personalizar a infraestrutura sem editar o main.tf
 
-### 🌐 Rede
-- **VPC**: sf-vpc-principal
-- **Subnets**: 2 públicas + 2 privadas
-- **Internet Gateway**: sf-igw-acesso-publico
-- **NAT Gateway**: sf-nat-gateway-privadas
-- **Route Tables**: configuração completa
+### **`outputs.tf`**
+- Mostra informações importantes após o deploy (IPs, URLs, conexões SSH)
+- Exibe as URLs do frontend e API para acessar a aplicação
 
-### 🖥️ Instâncias EC2
-- **Frontend**: 1x t3.micro (Nginx + React)
-- **Backend**: 2x t3.small (Spring Boot + Load Balance)
-- **Database**: 1x t3.small (MySQL)
-- **Elastic IPs**: 5 EIPs (1 para NAT + 4 para instâncias)
+### **`terraform.tfvars`**
+- Seus valores pessoais (região AWS, senhas do MySQL, etc.)
+- Arquivo que você edita com suas configurações específicas
 
-### ⚖️ Load Balancer
-- **ALB**: sf-alb-backend-distribuidor
-- **Target Group**: sf-tg-backend-spring
-- **Health Check**: /actuator/health
 
-### 🛡️ Security Groups
-- **Frontend**: HTTP/HTTPS + SSH
-- **Backend**: 8080 (from ALB) + SSH
-- **Database**: 3306 (from Backend) + SSH
-- **ALB**: HTTP/HTTPS público
+## 🤖 Scripts de Automação
 
-## 🚀 Deploy Rápido
+### **`user-data/`** - Scripts que configuram cada EC2 automaticamente
+- **`frontend-user-data.sh`** - Instala Nginx, clona repo, faz build do React e configura servidor
+- **`backend-user-data.sh`** - Instala Java, Maven, clona repo, compila Spring Boot e cria serviço
+- **`database-user-data.sh`** - Instala MySQL, cria banco `safestock` e usuário para a aplicação  
+- **`loadbalancer-user-data.sh`** - Instala Nginx como load balancer para distribuir entre backends
 
-### 1️⃣ Pré-requisitos
+### **`scripts/`** - Scripts auxiliares de gerenciamento
+- **`deploy.sh`** - Automação completa do deploy (init, plan, apply)
+- **`validate.sh`** - Validações e checagens antes do deploy
+- **`update-apps.sh`** - Atualizar aplicações sem recriar a infraestrutura
+
+## ⚙️ Arquivos de Estado (Não mexer!)
+
+### **`.terraform/`** - Cache e plugins do Terraform (gerado automaticamente)
+### **`.terraform.lock.hcl`** - Lock das versões dos providers AWS (gerado automaticamente)  
+### **`terraform.tfstate`** - Estado atual da infraestrutura (CRÍTICO! Backup automático)
+### **`terraform.tfstate.backup`** - Backup do estado anterior (segurança)
+### **`terraform.tfvars.save`** - Backup das suas configurações
+
+## 🚀 Como Usar
 ```bash
-# Instalar Terraform
-# Instalar AWS CLI
-# Configurar credenciais AWS
-aws configure
+terraform init && terraform validate && terraform plan && terraform apply
 ```
 
-### 2️⃣ Deploy Automático
+### **2. Aguardar inicialização (5-10 minutos)**
+Os user-data scripts vão configurar automaticamente todas as aplicações.
+
+### **3. Acessar a aplicação:**
+
+## 🌐 **URLs DE ACESSO (Após o Deploy)**
+
+### **🖥️ FRONTEND SAFESTOCK:**
+```
+http://SEU_FRONTEND_IP
+```
+*Este IP será mostrado no output `frontend_url` após o terraform apply*
+
+### **🔗 API BACKEND:**  
+```
+http://SEU_LOAD_BALANCER_IP/api
+```
+*Este IP será mostrado no output `backend_api_url` após o terraform apply*
+
+### **📊 MONITORAMENTO:**
+- **Health Check Backend**: `http://SEU_LOAD_BALANCER_IP/actuator/health`
+- **Nginx Status**: `http://SEU_FRONTEND_IP/nginx_status`
+
+## 🎯 **EXEMPLO REAL DE ACESSO**
+
+### **Após executar `terraform apply`, você verá:**
 ```bash
-cd terraform
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh
+Apply complete! Resources: 25 added, 0 changed, 0 destroyed.
+
+Outputs:
+frontend_url = "http://54.123.456.789"
+backend_api_url = "http://18.234.567.890/api"  
+load_balancer_url = "http://18.234.567.890"
 ```
 
-### 3️⃣ Opção Manual
-```bash
-# 1. Inicializar Terraform
-terraform init
+### **✅ Então acesse:**
+- **🌐 SafeStock App**: **http://54.123.456.789** ← **URL PRINCIPAL**
+- **🔗 API REST**: http://18.234.567.890/api
+- **📊 Health Check**: http://18.234.567.890/actuator/health
 
-# 2. Planejar deployment
-terraform plan
-
-# 3. Aplicar infraestrutura
-terraform apply
-
-# 4. Ver outputs
-terraform output
-```
-
-## 🔧 Configuração
-
-### 📄 terraform.tfvars
-```hcl
-# AWS Configuration
-aws_region = "us-east-1"
-
-# Project Configuration  
-project_name = "SafeStock"
-environment = "prod"
-
-# Repository Configuration (FLEXÍVEL)
-repository_url = "https://github.com/SafeStock/SafeStock.git"
-
-# Instance Types
-instance_type_frontend = "t3.micro"
-instance_type_backend = "t3.small" 
-instance_type_database = "t3.small"
-
-# Database Passwords
-mysql_root_password = "SafeStock@Root2024!"
-mysql_app_password = "safestock123"
-```
-
-### 🔄 Repositórios Flexíveis
-```hcl
-# Para mudança futura para multirepo
-repositories = {
-  frontend_repo  = "https://github.com/SafeStock/SafeStock.git"
-  backend_repo   = "https://github.com/SafeStock/safestock-backend.git"
-  backend_branch = "main"
-}
-```
-
-## 🔄 Atualizações da Aplicação
-
-### 🛠️ Script Automático
-```bash
-cd terraform
-chmod +x scripts/update-apps.sh
-./scripts/update-apps.sh
-```
-
-### 🎯 Atualizações Manuais
-```bash
-# Frontend
-ssh ubuntu@FRONTEND_IP
-sudo /opt/update-frontend.sh
-
-# Backend  
-ssh ubuntu@BACKEND_IP
-sudo /opt/update-backend.sh
-
-# Database Backup
-ssh ubuntu@DATABASE_IP
-sudo /opt/mysql-backup.sh
-```
-
-## 📊 Monitoramento
-
-### 🔍 Status dos Serviços
-```bash
-# Via script
-./scripts/update-apps.sh  # Opção 4
-
-# Manual
-ssh ubuntu@IP "sudo systemctl status SERVICE_NAME"
-```
-
-### 📋 Logs
-```bash
-# Frontend (Nginx)
-ssh ubuntu@FRONTEND_IP "sudo journalctl -u nginx -f"
-
-# Backend (Spring Boot)
-ssh ubuntu@BACKEND_IP "sudo journalctl -u safestock-backend -f"
-
-# Database (MySQL)  
-ssh ubuntu@DATABASE_IP "sudo journalctl -u mysql -f"
-```
-
-### 🎯 Health Checks
-```bash
-# Backend Health
-curl http://ALB_DNS/actuator/health
-
-# Frontend 
-curl http://FRONTEND_IP
-
-# MySQL Connection
-ssh ubuntu@DATABASE_IP "mysql -u safestock -p -e 'SELECT 1'"
-```
-
-## 🔐 Acesso SSH
-
-### 🗝️ Chave SSH
-A chave SSH `sf-keypair-main` é criada automaticamente em `~/.ssh/`
-
-### 📡 Conexões
-```bash
-# Frontend
-ssh -i ~/.ssh/sf-keypair-main ubuntu@FRONTEND_IP
-
-# Backend 01
-ssh -i ~/.ssh/sf-keypair-main ubuntu@BACKEND_01_IP
-
-# Backend 02  
-ssh -i ~/.ssh/sf-keypair-main ubuntu@BACKEND_02_IP
-
-# Database
-ssh -i ~/.ssh/sf-keypair-main ubuntu@DATABASE_IP
-```
-
-## 🗄️ Banco de Dados
-
-### 🔧 Configuração Automática
-- **Banco**: `safestock`
-- **Usuário**: `safestock` 
-- **JPA**: Criação automática de tabelas
-- **Dados**: Inserção via `data.sql`
-
-### 💾 Backups Automáticos
-- **Frequência**: Diário às 2h
-- **Retenção**: 7 dias
-- **Local**: `/opt/mysql-backups/`
-
-### 🔗 String de Conexão
-```properties
-spring.datasource.url=jdbc:mysql://DATABASE_PRIVATE_IP:3306/safestock
-spring.datasource.username=safestock
-spring.datasource.password=safestock123
-```
-
-## 🌐 URLs da Aplicação
-
-Após o deploy, você terá:
-
-- **🖥️ Frontend**: `http://FRONTEND_EIP`
-- **🔗 API (Load Balancer)**: `http://ALB_DNS/api` 
-- **📊 Backend Health**: `http://ALB_DNS/actuator/health`
-
-## 📱 Profiles Spring Boot
-
-### 🛠️ Desenvolvimento (Local)
-```bash
-# Usa H2 + application.properties
-java -jar safestock.jar
-```
-
-### 🚀 Produção (AWS) 
-```bash
-# Usa MySQL + application-prod.properties
-java -jar -Dspring.profiles.active=prod safestock.jar
-```
-
-## 🔧 Troubleshooting
-
-### ❌ Problemas Comuns
-
-**1. Backend não conecta no MySQL**
-```bash
-# Verificar se MySQL está rodando
-ssh ubuntu@DATABASE_IP "sudo systemctl status mysql"
-
-# Testar conectividade
-ssh ubuntu@BACKEND_IP "telnet DATABASE_PRIVATE_IP 3306"
-```
-
-**2. Load Balancer retorna 502**
-```bash  
-# Verificar health do backend
-curl http://BACKEND_IP:8080/actuator/health
-
-# Ver logs do Spring Boot
-ssh ubuntu@BACKEND_IP "sudo journalctl -u safestock-backend -f"
-```
-
-**3. Frontend não carrega**
-```bash
-# Verificar Nginx
-ssh ubuntu@FRONTEND_IP "sudo systemctl status nginx"
-
-# Ver logs do Nginx
-ssh ubuntu@FRONTEND_IP "sudo tail -f /var/log/nginx/error.log"
-```
-
-## 💰 Custos Estimados (us-east-1)
-
-- **4x EC2**: ~$50-80/mês
-- **5x Elastic IP**: ~$25/mês  
-- **1x ALB**: ~$20/mês
-- **1x NAT Gateway**: ~$45/mês
-- **Total**: ~$140-170/mês
-
-## 🔄 Destruir Infraestrutura
-
-```bash
-# Via script
-./scripts/deploy.sh  # Opção 4
-
-# Manual
-terraform destroy
-```
-
-## 📚 Estrutura de Arquivos
-
-```
-terraform/
-├── main.tf                    # Infraestrutura principal
-├── variables.tf              # Variáveis configuráveis  
-├── outputs.tf               # Outputs importantes
-├── terraform.tfvars         # Valores das variáveis
-├── user-data/              # Scripts de inicialização
-│   ├── frontend-user-data.sh
-│   ├── backend-user-data.sh
-│   └── database-user-data.sh
-└── scripts/               # Scripts de automação
-    ├── deploy.sh         # Deploy da infraestrutura
-    └── update-apps.sh   # Atualização das aplicações
-```
-
-## 🆘 Suporte
-
-- **📖 Documentação**: Este README
-- **🐛 Issues**: GitHub Issues
-- **💬 Discussões**: GitHub Discussions
-- **📧 Contato**: Equipe SafeStock
-
----
-
-**🏗️ Desenvolvido com Terraform + AWS pela equipe SafeStock**
+### **⏱️ Cronograma:**
+1. **Deploy Terraform**: 5-8 minutos ⏳
+2. **Configuração automática EC2s**: 5-10 minutos ⚙️ 
+3. **✅ Aplicação disponível**: ~15 minutos total

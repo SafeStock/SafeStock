@@ -10,10 +10,17 @@ terraform/terraform.tfvars
 !terraform/terraform.tfvars.example
 terraform/tfplan
 terraform/.terraform.tfstate.lock.info
+# Provider binários (muito grandes - 690MB+)
+terraform/**/terraform-provider-*
+terraform/**/.terraform/
 
-# Build outputs (JAR files são muito grandes)
+# Build outputs (JAR files são muito grandes - 84MB cada)
 build-output/safestock-backend.jar
 build-output/frontend/
+# JARs Maven (compilados automaticamente no EC2)  
+Back-end/target/safestock-*.jar
+**/*.jar
+!**/src/main/resources/**/*.jar
 
 # Environment files (podem conter credenciais)
 .env
