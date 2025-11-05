@@ -8,22 +8,28 @@
 # Força LF para arquivos Terraform
 *.tf text eol=lf
 *.tfvars text eol=lf
+*.hcl text eol=lf
 
 # Mantém CRLF para arquivos Windows específicos
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.ps1 text eol=crlf
 
 # Arquivos que devem manter formato original
 *.jar binary
 *.zip binary
 *.gz binary
 *.tar binary
+*.pem binary
+*.key binary
 
 # Força LF para arquivos de configuração
 *.yml text eol=lf
 *.yaml text eol=lf
 *.json text eol=lf
 *.md text eol=lf
+.env* text eol=lf
+*.pub text eol=lf
 
 # Força LF para arquivos de código
 *.js text eol=lf
