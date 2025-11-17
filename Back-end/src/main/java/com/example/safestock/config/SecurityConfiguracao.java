@@ -112,7 +112,7 @@ public class SecurityConfiguracao {
         return new BCryptPasswordEncoder();
     }
 
-    private static final String CLIENT_URL = "http://localhost:5173";
+    private static final String CLIENT_URL = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5173");
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

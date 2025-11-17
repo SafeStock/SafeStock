@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "build:prod": "vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -18,7 +20,7 @@
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
     "date-fns": "^2.30.0",
-    "dayjs": "file:dayjs-1.11.10.tgz",
+    "dayjs": "^1.11.10",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.6.5",

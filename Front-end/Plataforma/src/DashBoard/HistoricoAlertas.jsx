@@ -1,6 +1,7 @@
 import { AreaWorkGeral } from "./Celulas/AreaWorkGeral";
 import { useState, useEffect } from "react";
 import { AnimacaoPadrao } from "./Moleculas/AnimacaoLoading";
+import { WS_BASE_URL } from '../config/api';
 
 export function HistoricoAlertas() {
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ export function HistoricoAlertas() {
 
   useEffect(() => {
     // Conecta ao WebSocket do backend (Spring Boot)
-    const socket = new WebSocket("ws://localhost:8080/ws/alertas");
+    const socket = new WebSocket(`${WS_BASE_URL}/ws/alertas`);
 
     socket.onopen = () => {
       console.log("✅ Conectado ao WebSocket de alertas");

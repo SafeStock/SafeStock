@@ -1,3 +1,5 @@
+import exportIcon from '../../assets/ButtonExport.svg';
+
 export function ExportInformationDiv({ titulo = "Undefined", onExport = () => {} }) {
     return (
         <div>
@@ -14,7 +16,7 @@ export function ExportInformationDiv({ titulo = "Undefined", onExport = () => {}
                     role="button"
                     title="Exportar"
                 >
-                    <img src="/src/assets/ButtonExport.svg" alt="Exportar" className="w-[3.1vh] h-[3.1vh]" />
+                    <img src={exportIcon} alt="Exportar" className="w-[3.1vh] h-[3.1vh]" />
                 </div>
             </div>
         </div>

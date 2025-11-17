@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor @Getter @Setter
 public class Relatorio {
     @Id
-    private Integer idRelatorio;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idRelatorio;
     private LocalDateTime dataHoraEmissao;
 
     @ManyToOne

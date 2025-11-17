@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import 'react-loading-skeleton/dist/skeleton.css';
 import {  AnimacaoPadrao } from "./Moleculas/AnimacaoLoading";
 import { useLocation } from "react-router-dom";
+import { API_BASE_URL } from '../config/api';
 
 export function TelaFuncionarios() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -36,7 +37,7 @@ export function TelaFuncionarios() {
     }
     try {
       await axios.put(
-        `http://localhost:8080/api/funcionarios/atualizar/${id}`,
+        `${API_BASE_URL}/api/funcionarios/atualizar/${id}`,
         dadosAtualizados,
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
@@ -56,7 +57,7 @@ export function TelaFuncionarios() {
     }
     try {
       await axios.post(
-        `http://localhost:8080/api/funcionarios/cadastro`,
+        `${API_BASE_URL}/api/funcionarios/cadastro`,
         dados,
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );

@@ -5,6 +5,7 @@ import 'dayjs/locale/pt-br';
 import axios from 'axios';
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
+import { API_BASE_URL } from '../../config/api';
 
 
 export function AreaNotification( { tabela, campos  } ) {
@@ -75,7 +76,7 @@ export function AreaNotification( { tabela, campos  } ) {
           return;
         }
     
-        axios.get(`http://localhost:8080/api/${tabela}`, {
+        axios.get(`${API_BASE_URL}/api/${tabela}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

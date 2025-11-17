@@ -50,6 +50,27 @@ terraform destroy -auto-approve
 terraform apply -auto-approve
 ```
 
+### Passo 3: Configurar Variáveis de Ambiente AWS
+```bash
+cd scripts
+chmod +x configure-env.sh
+./configure-env.sh
+```
+
+**O que este script faz:**
+- ✅ Pega o IP público da EC2 automaticamente do Terraform
+- ✅ Atualiza `.env.aws` com o IP
+- ✅ Atualiza `Front-end/Plataforma/.env.production` com a API URL
+- ✅ Prepara tudo para o próximo deploy
+
+### Passo 4: Commit e Push das Configurações
+```bash
+cd ..
+git add .env.aws Front-end/Plataforma/.env.production
+git commit -m "Configure AWS environment variables"
+git push origin main
+```
+
 ### Passo 3: Aguardar (15-20 minutos)
 - Frontend: ~5-8 minutos (build do React)
 - Backend: ~3-5 minutos (build Maven)

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useSetAba } from "../../Hooks/setAba";
 import { Modal } from "../Atomos/Modal";
 import { CadastroUso } from "../CadastroUso";
+import { API_BASE_URL } from '../../config/api';
 
 
 export function DivElementKPIDonoLittleLeft({ ImgUrl, Titulo, endpoint }) {
@@ -100,7 +101,7 @@ export function DivElementKPIDonoBigLeft({
 
       <div className="w-full h-full flex flex-col" style={{ display: displayAlerta }}>
         <MiniHistoricoAlerta
-          endpoint='http://localhost:8080/api/historicoAlertas'
+          endpoint={`${API_BASE_URL}/api/historicoAlertas`}
         />
       </div>
     </div>

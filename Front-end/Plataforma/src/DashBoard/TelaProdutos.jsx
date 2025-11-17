@@ -6,6 +6,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { AnimacaoProduto } from "./Moleculas/AnimacaoLoading";
+import { API_BASE_URL } from '../config/api';
 
 export function TelaProdutos() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -51,7 +52,7 @@ export function TelaProdutos() {
     }
     try {
       await axios.put(
-        `http://localhost:8080/api/produtos/atualizar/${id}`,
+        `${API_BASE_URL}/api/produtos/atualizar/${id}`,
         dadosAtualizados,
         {
           headers: {
@@ -77,7 +78,7 @@ export function TelaProdutos() {
     }
     try {
       await axios.post(
-        `http://localhost:8080/api/produtos/cadastro`,
+        `${API_BASE_URL}/api/produtos/cadastro`,
         dadosAtualizados,
         {
           headers: {

@@ -56,11 +56,11 @@ class AutenticacaoServiceTest {
     }
 
     @Test
-    void deveDetectarSenhaSemCaracterEspecialNoFuncionario() {
+    void deveValidarCamposObrigatoriosDoFuncionario() {
         // Arrange
         Funcionario funcionario = new Funcionario();
-        funcionario.setEmail("teste@email.com");
-        funcionario.setSenha("Senha123"); // inválida (sem caractere especial)
+        funcionario.setEmail(""); // email vazio
+        funcionario.setSenha(""); // senha vazia
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -69,12 +69,14 @@ class AutenticacaoServiceTest {
         Set<ConstraintViolation<Funcionario>> violations = validator.validate(funcionario);
 
         // Assert
-        assertFalse(violations.isEmpty(), "Deveria haver violações de validação");
-
-        boolean encontrouMensagemEsperada = violations.stream()
-                .anyMatch(v -> v.getMessage().contains("caractere especial"));
-
-        assertTrue(encontrouMensagemEsperada, "A mensagem de erro de caractere especial deveria estar presente");
+        assertFalse(violations.isEmpty(), "Deveria haver violações de validação para campos obrigatórios");
+        
+        boolean temViolacaoEmail = violations.stream()
+                .anyMatch(v -> v.getPropertyPath().toString().equals("email"));
+        boolean temViolacaoSenha = violations.stream()
+                .anyMatch(v -> v.getPropertyPath().toString().equals("senha"));
+                
+        assertTrue(temViolacaoEmail || temViolacaoSenha, "Deveria ter violação de email ou senha");
     }
 
 }

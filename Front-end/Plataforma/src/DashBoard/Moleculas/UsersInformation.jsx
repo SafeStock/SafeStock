@@ -6,6 +6,7 @@ import axios from 'axios';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import "react-toastify/dist/ReactToastify.css";
 import Swal from 'sweetalert2';
+import { API_BASE_URL } from '../../config/api';
 
 export function UserInformation({ tabela, campos, titles }) {
   const [dados, setDados] = useState([]);
@@ -79,8 +80,8 @@ export function UserInformation({ tabela, campos, titles }) {
 
     // If requesting funcionarios or produtos, ask for paged endpoint
     const url = isPaged
-      ? `http://localhost:8080/api/${tabela}/paged?page=${page}&size=${size}`
-      : `http://localhost:8080/api/${tabela}`;
+      ? `${API_BASE_URL}/api/${tabela}/paged?page=${page}&size=${size}`
+      : `${API_BASE_URL}/api/${tabela}`;
 
     axios.get(url, {
       headers: {
@@ -182,7 +183,7 @@ export function UserInformation({ tabela, campos, titles }) {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:8080/api/${tabela}/deletar/${id}`, {
+        axios.delete(`${API_BASE_URL}/api/${tabela}/deletar/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -209,7 +210,7 @@ export function UserInformation({ tabela, campos, titles }) {
 
     try {
       await axios.put(
-        `http://localhost:8080/api/${tabela}/atualizar/${id}`,
+        `${API_BASE_URL}/api/${tabela}/atualizar/${id}`,
         dadosAtualizados,
         {
           headers: {

@@ -14,23 +14,26 @@ terraform/.terraform.tfstate.lock.info
 terraform/**/terraform-provider-*
 terraform/**/.terraform/
 
-# Build outputs (JAR files são muito grandes - 84MB cada)
-build-output/safestock-backend.jar
-build-output/frontend/
-# JARs Maven (compilados automaticamente no EC2)  
+# Build outputs
+build-output/
+dist/
+# JARs Maven 
 Back-end/target/safestock-*.jar
 **/*.jar
 !**/src/main/resources/**/*.jar
 
-# Environment files (podem conter credenciais)
+# Environment files 
 .env
 .env.local
+.env.dev
+.env.test
 .env.development.local
 .env.test.local
 .env.production.local
 
 # Node.js
 node_modules/
+/node_modules/
 dist
 dist-ssr
 *.local
@@ -39,6 +42,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+# Arquivos de build na raiz (duplicados)
+/package.json
+/package-lock.json
+/postcss.config.js
+/tailwind.config.js
 
 # Java
 target/
@@ -46,9 +54,19 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Arquivos temporários do Maven/Gradle
+Back-end/exporting
+Back-end/naming
+Back-end/resolve
+Back-end/resolving
+Back-end/writing
+
 # Logs
 logs
 *.log
+database-console.log
+database-raw.log
+terraform/*.log
 
 # Editor directories and files
 .vscode/*

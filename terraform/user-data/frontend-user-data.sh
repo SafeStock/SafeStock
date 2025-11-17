@@ -23,13 +23,13 @@ yum install -y \
     git \
     unzip
 
-# Instalar Node.js 18 (NVM - funciona no Amazon Linux 2)
+# Instalar Node.js 16 (compatível com Amazon Linux 2 GLIBC 2.26)
 echo "==== Instalando Node.js via NVM ===="
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm install 18
-nvm use 18
+nvm install 16
+nvm use 16
 
 # Verificar instalação
 node --version
@@ -226,7 +226,7 @@ cat > /opt/update-frontend.sh << 'UPDATEEOF'
 #!/bin/bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm use 18
+nvm use 16
 
 cd /tmp
 rm -rf temp-update

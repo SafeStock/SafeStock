@@ -34,8 +34,8 @@ public class AlertaService {
     }
 
     //@Scheduled(cron = "0 0 8 * * MON") - uma vez na semana toda segunda
-    // Executa de 5 em 5 segundos para ver o fluxo
-    @Scheduled(cron = "0/5 * * * * *")
+    // Executa de 5 em 5 segundos para ver o fluxo - aguarda 5s antes da primeira execução
+    @Scheduled(initialDelay = 5000, fixedRate = 5000)
     public void verificarVencimentos() {
         List<Produto> produtos = produtoRepository.findAll();
         LocalDate hoje = LocalDate.now();

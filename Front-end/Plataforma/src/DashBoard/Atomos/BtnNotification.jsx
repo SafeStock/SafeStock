@@ -1,3 +1,5 @@
+import ringIcon from '../../assets/Ring.svg';
+
 export function BtnNotification({ onClick }) {
   return (
     <div
@@ -5,7 +7,7 @@ export function BtnNotification({ onClick }) {
       onClick={onClick}
     >
       <img
-        src="/src/assets/Ring.svg"
+        src={ringIcon}
         className="absolute left-0 w-[2.1vw] h-[4.2vh]"
       />
     </div>
