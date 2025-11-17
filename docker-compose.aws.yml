@@ -1,0 +1,22 @@
+# Docker Compose para AWS - SafeStock
+# Este arquivo sobrescreve configurações específicas para deploy na AWS
+
+services:
+  front:
+    build:
+      args:
+        BUILD_MODE: prod  # Usa .env.production (IP da EC2)
+
+  back-antigo-primary:
+    environment:
+      - FRONTEND_URL=http://${AWS_EC2_IP:-localhost}:5173
+
+  back-antigo-secondary:
+    environment:
+      - FRONTEND_URL=http://${AWS_EC2_IP:-localhost}:5173
+
+# Para usar em desenvolvimento local:
+# docker compose --profile antigo up -d
+
+# Para usar na AWS:
+# docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d

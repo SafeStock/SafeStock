@@ -11,6 +11,7 @@ import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ReactDOM from 'react-dom';
 import ExcelJS from "exceljs";
+import { API_BASE_URL } from '../../config/api';
 registerLocale("pt-BR", ptBR);
 
 export function AreaWorkExportar() {
@@ -25,11 +26,10 @@ export function AreaWorkExportar() {
 
 
 
-  const API_BASE = "http://localhost:8080/api";
   const endpoints = {
-    produtos: { table: "produtos", label: "Produtos", fetchUrl: `${API_BASE}/produtos` },
-    registros: { table: "registro_uso", label: "Registros de Uso", fetchUrl: `${API_BASE}/registroUso` },
-    alertas: { table: "alertas", label: "Alertas", fetchUrl: `${API_BASE}/historicoAlertas` },
+    produtos: { table: "produtos", label: "Produtos", fetchUrl: `${API_BASE_URL}/api/produtos` },
+    registros: { table: "registro_uso", label: "Registros de Uso", fetchUrl: `${API_BASE_URL}/api/registroUso` },
+    alertas: { table: "alertas", label: "Alertas", fetchUrl: `${API_BASE_URL}/api/historicoAlertas` },
   };
 
   async function tryBackendExport(tableName, outName, checkOnly = false) {
@@ -46,9 +46,9 @@ export function AreaWorkExportar() {
         },
       ];
 
-      console.log("Fazendo requisição para:", `${API_BASE}/export/excel`, "com payload:", payload);
+      console.log("Fazendo requisição para:", `${API_BASE_URL}/api/export/excel`, "com payload:", payload);
 
-      const res = await axios.post(`${API_BASE}/export/excel`, payload, {
+      const res = await axios.post(`${API_BASE_URL}/api/export/excel`, payload, {
         responseType: "arraybuffer",
         headers,
       });

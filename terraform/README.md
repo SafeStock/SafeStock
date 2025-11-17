@@ -57,19 +57,19 @@ Os user-data scripts vão configurar automaticamente todas as aplicações.
 
 ### **🖥️ FRONTEND SAFESTOCK:**
 ```
-http://SEU_FRONTEND_IP
+http://52.201.128.168
 ```
-*Este IP será mostrado no output `frontend_url` após o terraform apply*
+*Este IP é mostrado no output `frontend_url` após o terraform apply*
 
 ### **🔗 API BACKEND:**  
 ```
-http://SEU_LOAD_BALANCER_IP/api
+http://107.20.11.120/api
 ```
-*Este IP será mostrado no output `backend_api_url` após o terraform apply*
+*Este IP é mostrado no output `backend_api_url` após o terraform apply*
 
 ### **📊 MONITORAMENTO:**
-- **Health Check Backend**: `http://SEU_LOAD_BALANCER_IP/actuator/health`
-- **Nginx Status**: `http://SEU_FRONTEND_IP/nginx_status`
+- **Health Check Load Balancer**: `http://107.20.11.120/health`
+- **API Backend**: `http://107.20.11.120/api`
 
 ## 🎯 **EXEMPLO REAL DE ACESSO**
 
@@ -78,15 +78,15 @@ http://SEU_LOAD_BALANCER_IP/api
 Apply complete! Resources: 25 added, 0 changed, 0 destroyed.
 
 Outputs:
-frontend_url = "http://54.123.456.789"
-backend_api_url = "http://18.234.567.890/api"  
-load_balancer_url = "http://18.234.567.890"
+frontend_url = "http://52.201.128.168"
+backend_api_url = "http://107.20.11.120/api"  
+load_balancer_url = "http://107.20.11.120"
 ```
 
 ### **✅ Então acesse:**
-- **🌐 SafeStock App**: **http://54.123.456.789** ← **URL PRINCIPAL**
-- **🔗 API REST**: http://18.234.567.890/api
-- **📊 Health Check**: http://18.234.567.890/actuator/health
+- **🌐 SafeStock App**: **http://52.201.128.168** ← **URL PRINCIPAL DO FRONTEND**
+- **🔗 API REST**: http://107.20.11.120/api
+- **📊 Health Check**: http://107.20.11.120/health
 
 ### **⏱️ Cronograma:**
 1. **Deploy Terraform**: 5-8 minutos ⏳

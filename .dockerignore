@@ -1,0 +1,18 @@
+# Build output and VCS metadata
+.git
+.gitignore
+.gitattributes
+Back-end/target/
+
+# IDE / tooling folders
+.idea
+.vscode
+
+# Front-end e assets que não entram no build do backend legado
+Front-end/
+build-output/
+imagens/
+scripts/
+terraform/
+DataBase/
+node_modules

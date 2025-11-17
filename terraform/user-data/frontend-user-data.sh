@@ -11,102 +11,175 @@ LOAD_BALANCER_IP="${load_balancer_ip}"
 
 # Atualizar sistema
 echo "==== Atualizando sistema ===="
-apt-get update -y
-apt-get upgrade -y
+yum update -y
+yum upgrade -y  # Amazon Linux 2
 
 # Instalar dependências
 echo "==== Instalando dependências ===="
-apt-get install -y \
+amazon-linux-extras install -y nginx1
+yum install -y \
     curl \
     wget \
     git \
-    nginx \
-    unzip \
-    software-properties-common
+    unzip
 
-# Instalar Node.js 18 (para build do frontend se necessário)
-echo "==== Instalando Node.js ===="
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-apt-get install -y nodejs
+# Instalar Node.js 16 (compatível com Amazon Linux 2 GLIBC 2.26)
+echo "==== Instalando Node.js via NVM ===="
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install 16
+nvm use 16
 
-# Criar diretório da aplicação
-echo "==== Preparando diretório da aplicação ===="
-mkdir -p /opt/safestock
-cd /opt
+# Verificar instalação
+node --version
+npm --version
+
+# Tornar node disponível globalmente
+ln -sf "$NVM_DIR/versions/node/$(nvm current)/bin/node" /usr/bin/node
+ln -sf "$NVM_DIR/versions/node/$(nvm current)/bin/npm" /usr/bin/npm
+
+# Configurar diretório do frontend
+echo "==== Configurando diretório do frontend ===="
+mkdir -p /usr/share/nginx/html/safestock
+cd /usr/share/nginx/html/safestock
 
 # Clonar repositório
-echo "==== Clonando repositório SafeStock ===="
-git clone $REPOSITORY_URL safestock
-cd safestock
+echo "==== Clonando repositório ===="
+git clone $REPOSITORY_URL temp-repo || {
+    echo "Erro ao clonar repositório"
+    exit 1
+}
 
-# Copiar arquivos do frontend para nginx
-echo "==== Configurando frontend ===="
-if [ -d "build-output/frontend" ]; then
-    echo "Usando build pré-compilado"
-    cp -r build-output/frontend/* /var/www/html/
+# Verificar estrutura do repositório
+echo "==== Verificando estrutura do repositório ===="
+ls -la temp-repo/
+ls -la temp-repo/SafeStock/ || true
+
+# Copiar arquivos do frontend (corrigindo caminho)
+if [ -d "temp-repo/SafeStock/Front-end/Plataforma" ]; then
+    echo "Estrutura padrão encontrada"
+    cp -r temp-repo/SafeStock/Front-end/Plataforma/* .
+elif [ -d "temp-repo/Front-end/Plataforma" ]; then
+    echo "Estrutura alternativa encontrada"
+    cp -r temp-repo/Front-end/Plataforma/* .
 else
-    echo "Build não encontrado, compilando frontend..."
-    cd Front-end/Plataforma
-    
-    # Atualizar .env.production com IP do Load Balancer
-    echo "VITE_API_BASE_URL=http://$LOAD_BALANCER_IP" > .env.production
-    
-    # Instalar dependências e fazer build
-    npm install
-    npm run build
-    
-    # Copiar arquivos compilados
-    cp -r dist/* /var/www/html/
-    cd /opt/safestock
+    echo "ERRO: Estrutura do repositório não encontrada!"
+    echo "Conteúdo disponível:"
+    find temp-repo -type d -name "Plataforma"
+    exit 1
 fi
+
+rm -rf temp-repo
+
+# Instalar dependências do projeto
+echo "==== Instalando dependências do projeto ===="
+export NODE_OPTIONS="--max-old-space-size=2048"
+npm install || {
+    echo "Erro ao instalar dependências"
+    echo "Tentando com --legacy-peer-deps"
+    npm install --legacy-peer-deps
+}
+
+# Build do projeto React
+echo "==== Fazendo build do projeto ===="
+npm run build || {
+    echo "Erro no build"
+    echo "Verificando package.json:"
+    cat package.json | grep -A 5 '"scripts"'
+    exit 1
+}
+
+# Verificar se o build foi criado
+if [ -d "dist" ]; then
+    echo "Build encontrado em dist/"
+    ls -la dist/
+    # Mover build para diretório do Nginx
+    rm -rf /usr/share/nginx/html/safestock/*
+    cp -r dist/* /usr/share/nginx/html/safestock/
+elif [ -d "build" ]; then
+    echo "Build encontrado em build/"
+    ls -la build/
+    # Mover build para diretório do Nginx
+    rm -rf /usr/share/nginx/html/safestock/*
+    cp -r build/* /usr/share/nginx/html/safestock/
+else
+    echo "ERRO: Diretório de build não encontrado!"
+    exit 1
+fi
+
+cd /usr/share/nginx/html/safestock
 
 # Configurar Nginx
 echo "==== Configurando Nginx ===="
-cat > /etc/nginx/sites-available/safestock << 'EOF'
+cat > /etc/nginx/conf.d/safestock.conf << 'EOF'
 server {
     listen 80;
     server_name _;
-    root /var/www/html;
+    root /usr/share/nginx/html/safestock;
     index index.html;
 
     # Logs
-    access_log /var/log/nginx/safestock.access.log;
-    error_log /var/log/nginx/safestock.error.log;
+    access_log /var/log/nginx/safestock-access.log;
+    error_log /var/log/nginx/safestock-error.log;
 
-    # Gzip compression
-    gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-
-    # Frontend - serve arquivos estáticos
+    # Configuração para SPA (Single Page Application)
     location / {
         try_files $uri $uri/ /index.html;
-        expires 1d;
-        add_header Cache-Control "public, immutable";
     }
 
-    # Cache para assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+    # Cache para assets estáticos
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # Security headers
+    # Proxy para API (Load Balancer)
+    location /api/ {
+        proxy_pass http://LOAD_BALANCER_IP/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # Health check
+    location /health {
+        access_log off;
+        return 200 "Frontend OK";
+        add_header Content-Type text/plain;
+    }
+
+    # Segurança
     add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "no-referrer-when-downgrade" always;
-    
-    # Remover header do servidor
+    add_header X-XSS-Protection "1; mode=block" always;
     server_tokens off;
 }
 EOF
 
-# Ativar site
-ln -sf /etc/nginx/sites-available/safestock /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
+# Substituir IP do Load Balancer
+echo "==== Substituindo variáveis ===="
+echo "Load Balancer IP: $LOAD_BALANCER_IP"
+sed -i "s|LOAD_BALANCER_IP|$LOAD_BALANCER_IP|g" /etc/nginx/conf.d/safestock.conf
+
+# Verificar substituição
+echo "Verificando configuração do Nginx:"
+grep -n "proxy_pass" /etc/nginx/conf.d/safestock.conf || echo "Nenhum proxy_pass encontrado"
+
+# Remover configuração default
+rm -f /etc/nginx/conf.d/default.conf
 
 # Testar configuração do Nginx
-nginx -t
+echo "==== Testando configuração do Nginx ===="
+nginx -t || {
+    echo "ERRO na configuração do Nginx!"
+    cat /etc/nginx/conf.d/safestock.conf
+    exit 1
+}
 
 # Criar serviço systemd para gerenciar a aplicação
 echo "==== Configurando serviço systemd ===="
@@ -116,67 +189,93 @@ Description=SafeStock Frontend Service
 After=network.target
 
 [Service]
-Type=forking
-PIDFile=/run/nginx.pid
-ExecStartPre=/usr/sbin/nginx -t
-ExecStart=/usr/sbin/nginx
-ExecReload=/bin/bash -c '/bin/kill -s HUP $(/bin/cat /run/nginx.pid)'
-ExecStop=/bin/bash -c '/bin/kill -s QUIT $(/bin/cat /run/nginx.pid)'
-KillMode=mixed
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Habilitar e iniciar serviços
+# Substituir IP do Load Balancer
+sed -i "s|LOAD_BALANCER_IP|$LOAD_BALANCER_IP|g" /etc/nginx/conf.d/safestock.conf
+
+# Iniciar serviços
 echo "==== Iniciando serviços ===="
 systemctl daemon-reload
 systemctl enable nginx
 systemctl enable safestock-frontend
-systemctl start nginx
+systemctl restart nginx
 systemctl start safestock-frontend
 
-# Configurar firewall básico
-echo "==== Configurando firewall ===="
-ufw --force enable
-ufw allow ssh
-ufw allow 'Nginx Full'
+# Aguardar Nginx iniciar
+sleep 3
+
+# Verificar se Nginx está rodando
+if systemctl is-active --quiet nginx; then
+    echo "✓ Nginx está rodando"
+else
+    echo "✗ ERRO: Nginx não está rodando!"
+    systemctl status nginx --no-pager
+    exit 1
+fi
 
 # Criar script de update para futuras atualizações
 echo "==== Criando script de update ===="
-cat > /opt/update-frontend.sh << 'EOF'
+cat > /opt/update-frontend.sh << 'UPDATEEOF'
 #!/bin/bash
-echo "Atualizando Frontend SafeStock..."
-cd /opt/safestock
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm use 16
 
-# Backup do frontend atual
-cp -r /var/www/html /var/www/html.backup.$(date +%Y%m%d_%H%M%S)
-
-# Atualizar repositório
-git pull origin main
-
-# Atualizar frontend
-if [ -d "build-output/frontend" ]; then
-    cp -r build-output/frontend/* /var/www/html/
-else
-    cd Front-end/Plataforma
-    npm install
-    npm run build
-    cp -r dist/* /var/www/html/
-fi
-
-# Recarregar nginx
-systemctl reload nginx
+cd /tmp
+rm -rf temp-update
+git clone REPOSITORY_URL temp-update
+cd temp-update/SafeStock/Front-end/Plataforma || cd temp-update/Front-end/Plataforma
+npm install
+npm run build
+rm -rf /usr/share/nginx/html/safestock/*
+cp -r dist/* /usr/share/nginx/html/safestock/ || cp -r build/* /usr/share/nginx/html/safestock/
+systemctl restart nginx
 echo "Frontend atualizado com sucesso!"
-EOF
+UPDATEEOF
 
+# Substituir URL do repositório no script
+sed -i "s|REPOSITORY_URL|$REPOSITORY_URL|g" /opt/update-frontend.sh
 chmod +x /opt/update-frontend.sh
 
-# Status final
+# Verificar status dos serviços
 echo "==== Status dos serviços ===="
 systemctl status nginx --no-pager
 systemctl status safestock-frontend --no-pager
 
+# Verificar conteúdo do frontend
+echo "==== Verificando conteúdo frontend ===="
+ls -lh /usr/share/nginx/html/safestock/ | head -20
+echo "..."
+echo "Total de arquivos: $(find /usr/share/nginx/html/safestock -type f | wc -l)"
+
+# Teste de conectividade
+echo "==== Testando conectividade ===="
+curl -s -o /dev/null -w "HTTP Status: %%{http_code}\n" http://localhost/
+curl -s -o /dev/null -w "Health check: %%{http_code}\n" http://localhost/health
+
+# Informações finais
 echo "==== Frontend EC2 configurado com sucesso! ===="
-echo "URL: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
-echo "Para atualizar: sudo /opt/update-frontend.sh"
+PUBLIC_IP=$(curl -s ifconfig.me)
+echo "URL: http://$PUBLIC_IP"
+echo "Diretório: /usr/share/nginx/html/safestock"
+echo "Configuração Nginx: /etc/nginx/conf.d/safestock.conf"
+echo "Logs Nginx:"
+echo "  - Access: /var/log/nginx/safestock-access.log"
+echo "  - Error: /var/log/nginx/safestock-error.log"
+echo "  - User Data: /var/log/user-data.log"
+echo "Load Balancer: $LOAD_BALANCER_IP"
+echo "Script de update: /opt/update-frontend.sh"
+echo ""
+echo "COMANDOS ÚTEIS:"
+echo "  - Ver logs user-data: tail -f /var/log/user-data.log"
+echo "  - Ver logs nginx: tail -f /var/log/nginx/safestock-error.log"
+echo "  - Testar nginx: nginx -t"
+echo "  - Reiniciar nginx: systemctl restart nginx"
+echo "  - Atualizar frontend: /opt/update-frontend.sh"

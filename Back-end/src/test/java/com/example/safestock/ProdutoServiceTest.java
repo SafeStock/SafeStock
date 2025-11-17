@@ -2,6 +2,7 @@ package com.example.safestock;
 
 import com.example.safestock.model.Produto;
 import com.example.safestock.model.enums.CategoriaProduto;
+import com.example.safestock.repository.HistoricoAlertasRepository;
 import com.example.safestock.repository.ProdutoRepository;
 import com.example.safestock.service.ProdutoService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,9 @@ public class ProdutoServiceTest {
 
     @Mock
     private ProdutoRepository produtoRepository;
+
+    @Mock
+    private HistoricoAlertasRepository historicoAlertasRepository;
 
     @InjectMocks
     private ProdutoService produtoService;
@@ -81,10 +85,16 @@ public class ProdutoServiceTest {
     @Test
     void deveDeletarProduto() {
         Long id = 1L;
+        Produto produto = criarProdutoValido();
+        
+        when(produtoRepository.findById(id)).thenReturn(Optional.of(produto));
+        doNothing().when(historicoAlertasRepository).deleteByProduto(produto);
         doNothing().when(produtoRepository).deleteById(id);
 
         produtoService.deletarProdutos(id);
 
+        verify(produtoRepository).findById(id);
+        verify(historicoAlertasRepository).deleteByProduto(produto);
         verify(produtoRepository).deleteById(id);
     }
 

@@ -17,8 +17,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5173");
         registry.addHandler(alertaHandler, "/ws/alertas")
-                // 🔹 permite que o front React (porta 5173) acesse o WebSocket
-                .setAllowedOrigins("http://localhost:5173");
+                // 🔹 permite que o front React acesse o WebSocket
+                .setAllowedOrigins(frontendUrl);
     }
 }

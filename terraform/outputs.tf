@@ -22,9 +22,19 @@ output "frontend_public_ip" {
   value       = aws_eip.sf_eip_frontend.public_ip
 }
 
+output "frontend_public_dns" {
+  description = "DNS público do servidor Frontend (Nginx) - USE ESTE ao invés do IP"
+  value       = aws_instance.sf_ec2_frontend_nginx.public_dns
+}
+
 output "load_balancer_public_ip" {
   description = "IP público do Load Balancer (Nginx)"
   value       = aws_instance.sf_ec2_load_balancer.public_ip
+}
+
+output "load_balancer_public_dns" {
+  description = "DNS público do Load Balancer (Nginx) - USE ESTE ao invés do IP"
+  value       = aws_instance.sf_ec2_load_balancer.public_dns
 }
 
 output "backend_01_private_ip" {
@@ -61,12 +71,22 @@ output "load_balancer_url" {
 # ================================================================
 
 output "frontend_url" {
-  description = "URL do Frontend (Nginx)"
+  description = "URL do Frontend (Nginx) - RECOMENDADO: Use o DNS ao invés do IP"
+  value       = "http://${aws_instance.sf_ec2_frontend_nginx.public_dns}"
+}
+
+output "frontend_url_by_ip" {
+  description = "URL do Frontend usando IP (pode mudar se instância for parada/iniciada)"
   value       = "http://${aws_eip.sf_eip_frontend.public_ip}"
 }
 
 output "backend_api_url" {
-  description = "URL da API Backend (através do Load Balancer Nginx)"
+  description = "URL da API Backend (através do Load Balancer Nginx) - RECOMENDADO: Use o DNS"
+  value       = "http://${aws_instance.sf_ec2_load_balancer.public_dns}/api"
+}
+
+output "backend_api_url_by_ip" {
+  description = "URL da API usando IP (pode mudar se instância for parada/iniciada)"
   value       = "http://${aws_instance.sf_ec2_load_balancer.public_ip}/api"
 }
 
@@ -76,7 +96,7 @@ output "backend_api_url" {
 
 output "ssh_frontend" {
   description = "Comando SSH para conectar no Frontend"
-  value       = "ssh -i ~/.ssh/${var.key_pair_name}.pem ubuntu@${aws_eip.sf_eip_frontend.public_ip}"
+  value       = "ssh -i ssh-keys/sf-keypair-${var.environment}.pem ec2-user@${aws_eip.sf_eip_frontend.public_ip}"
 }
 
 output "ssh_backend_01" {
@@ -148,14 +168,36 @@ output "subnets" {
 output "deployment_summary" {
   description = "Resumo do deployment"
   value = {
-    region           = var.aws_region
-    project          = var.project_name
-    environment      = var.environment
-    vpc_cidr         = var.vpc_cidr
-    frontend_url     = "http://${aws_eip.sf_eip_frontend.public_ip}"
-    api_url          = "http://${aws_instance.sf_ec2_load_balancer.public_ip}/api"
-    mysql_host       = aws_instance.sf_ec2_database_mysql.private_ip
-    total_instances  = 4
-    repository_url   = var.repository_url
+    region          = var.aws_region
+    project         = var.project_name
+    environment     = var.environment
+    vpc_cidr        = var.vpc_cidr
+    frontend_dns    = aws_instance.sf_ec2_frontend_nginx.public_dns
+    frontend_ip     = aws_eip.sf_eip_frontend.public_ip
+    api_dns         = aws_instance.sf_ec2_load_balancer.public_dns
+    api_ip          = aws_instance.sf_ec2_load_balancer.public_ip
+    mysql_host      = aws_instance.sf_ec2_database_mysql.private_ip
+    total_instances = 4
+    repository_url  = var.repository_url
   }
+}
+
+# ================================================
+# OUTPUTS DO DOMÍNIO (OPCIONAIS)
+# ================================================
+
+# Name servers para configurar no registrador (apenas se domínio for fornecido)
+output "name_servers" {
+  description = "Name servers para configurar no registrador do domínio"
+  value       = var.domain_name != "" ? aws_route53_zone.sf_main_domain[0].name_servers : []
+}
+
+# URLs do domínio configurado (apenas se domínio for fornecido)
+output "domain_urls" {
+  description = "URLs do domínio personalizado"
+  value = var.domain_name != "" ? {
+    frontend = "http://${var.domain_name}"
+    api      = "http://api.${var.domain_name}"
+    www      = "http://www.${var.domain_name}"
+  } : {}
 }

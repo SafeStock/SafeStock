@@ -9,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { CadastroUso } from "./CadastroUso";
 import { toast } from "react-toastify";
 import {  AnimacaoPadrao } from "./Moleculas/AnimacaoLoading";
+import { API_BASE_URL } from '../config/api';
 
 export function HistoricoUso() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -50,7 +51,7 @@ export function HistoricoUso() {
   const cadastrarRegistro = async (dados) => {
     try {
       await axios.post(
-        "http://localhost:8080/api/registroUso/cadastro", console.log("Dados do cadastro:", dados),
+        `${API_BASE_URL}/api/registroUso/cadastro`, console.log("Dados do cadastro:", dados),
         { ...dados, quantidade: Number(dados.quantidade), funcionario: { id: Number(dados.responsavelId) } },
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );

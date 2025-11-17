@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2';
+import productIcon from '../../assets/ProductIcon.svg';
+import modifyIcon from '../../assets/ModifyUser.svg';
+import removeIcon from '../../assets/RemoveUser.svg';
 
 export function ProdutosInformation({ abrirModal }) {
   const [produtos, setProdutos] = useState([]);
@@ -72,7 +75,7 @@ const confirmarExclusao = (id) => {
           className="h-[12vh] w-[83vw] flex flex-row justify-start items-center shadow-[0_0_10px_rgba(0,0,0,0.5)] bg-white rounded-[20px] my-2"
         >
           <img
-            src="/src/assets/ProductIcon.svg"
+            src={productIcon}
             className="h-[6vh] w-[3vw] ml-[5vh]"
             alt="Produto"
           />
@@ -91,13 +94,13 @@ const confirmarExclusao = (id) => {
               onClick={abrirModal}
               className="h-[4.9vh] w-[2.5vw] flex justify-center items-center"
             >
-              <img src="/src/assets/ModifyUser.svg" className="h-[4.8vh] w-[2.4vw]" />
+              <img src={modifyIcon} className="h-[4.8vh] w-[2.4vw]" />
             </button>
             <button
               onClick={() => confirmarExclusao(produto.id)}
               className="h-[4.9vh] w-[2.5vw] flex justify-center items-center"
             >
-              <img src="/src/assets/RemoveUser.svg" className="h-[4.6vh] w-[2.3vw]" />
+              <img src={removeIcon} className="h-[4.6vh] w-[2.3vw]" />
             </button>
           </div>
         </div>

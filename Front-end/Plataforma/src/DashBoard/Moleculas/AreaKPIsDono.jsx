@@ -6,12 +6,17 @@ import { DivElementKPIDonoBigRight } from "../Atomos/DivElementKPIDono"
 import { useEffect, useState } from "react";
 import { CadastroUso } from "../CadastroUso"
 import { getToken } from '../Moleculas/getToken';
+import { API_BASE_URL } from '../../config/api';
+import stonksIcon from '../../assets/Stonks.svg';
+import boxIcon from '../../assets/BoxKPI.svg';
+import getOutBoxIcon from '../../assets/GetOutBox.svg';
+import calendarIcon from '../../assets/CalendarExpired.svg';
 
 const endpoints = [
-  "http://localhost:8080/api/produtos/kpi/totalproximoslimite",
-  "http://localhost:8080/api/produtos/kpi/totalprodutos",
-  "http://localhost:8080/api/produtos/kpi/totalretiradoestoque",
-  "http://localhost:8080/api/produtos/kpi/totalproximosvalidade"
+  `${API_BASE_URL}/api/produtos/kpi/totalproximoslimite`,
+  `${API_BASE_URL}/api/produtos/kpi/totalprodutos`,
+  `${API_BASE_URL}/api/produtos/kpi/totalretiradoestoque`,
+  `${API_BASE_URL}/api/produtos/kpi/totalproximosvalidade`
 ];
 
 const headers = {
@@ -80,28 +85,28 @@ export function AreaKPIsDonoLateralEsquerda() {
     <div className="h-[95%] w-[55%] flex flex-col justify-start items-center ml-[5vw]">
       <div className="h-[25.5%] w-full flex flex-row justify-center items-start ">
         <DivElementKPIDonoLittleLeft
-          ImgUrl={"/src/assets/Stonks.svg"}
+          ImgUrl={stonksIcon}
           Qtd={qtd1}
           Titulo="Produtos próximo ao limite de uso"
           endpoint={endpoints[0]}
         />
         <DivisionDivElementKPIDono />
         <DivElementKPIDonoLittleLeft
-          ImgUrl={"/src/assets/BoxKPI.svg"}
+          ImgUrl={boxIcon}
           Qtd={qtd2}
           Titulo="Produtos presentes no estoque"
           endpoint={endpoints[1]}
         />
         <DivisionDivElementKPIDono />
         <DivElementKPIDonoLittleLeft
-          ImgUrl={"/src/assets/GetOutBox.svg"}
+          ImgUrl={getOutBoxIcon}
           Qtd={qtd3}
           Titulo="Produtos retirados do estoque"
           endpoint={endpoints[2]}
         />
         <DivisionDivElementKPIDono />
         <DivElementKPIDonoLittleLeft
-          ImgUrl={"/src/assets/CalendarExpired.svg"}
+          ImgUrl={calendarIcon}
           Qtd={qtd4}
           Titulo="Produto próximo da validade"
           endpoint={endpoints[3]}
@@ -136,7 +141,7 @@ export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela, Navigat
         NameUse={NameUse}
         buttonNameUse={buttonNameUse}
         tabela={tabela}
-        customEndpoint='http://localhost:8080/api/registroUso'
+        customEndpoint={`${API_BASE_URL}/api/registroUso`}
         NavigateOn={NavigateOn}
       />
     </div>

@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { StatusBadge } from "../Atomos/BolinhaStatus";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import userIcon from '../../assets/UserIconAdded.svg';
+import modifyIcon from '../../assets/ModifyUser.svg';
+import removeIcon from '../../assets/RemoveUser.svg';
 
 export function UserInformationTable({
   titles = [],             
@@ -145,7 +148,7 @@ export function UserInformationTable({
                         <span className="h-[4vh] w-[3vw]" />
                       ) : (
                         <img
-                          src="/src/assets/UserIconAdded.svg"
+                          src={userIcon}
                           className="h-[4vh] w-[3vw]"
                           alt="Ícone de usuário"
                         />
@@ -227,7 +230,7 @@ export function UserInformationTable({
                               aria-label={`Editar item ${item.id}`}
                             >
                               <img
-                                src="/src/assets/ModifyUser.svg"
+                                src={modifyIcon}
                                 className="h-[2.5vh] w-[1.5vw]"
                                 alt="Editar"
                               />
@@ -241,7 +244,7 @@ export function UserInformationTable({
                               aria-label={`Deletar item ${item.id}`}
                             >
                               <img
-                                src="/src/assets/RemoveUser.svg"
+                                src={removeIcon}
                                 className="h-[2.5vh] w-[1.5vw]"
                                 alt="Deletar"
                               />

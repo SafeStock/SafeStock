@@ -21,10 +21,10 @@ provider "aws" {
 # DATA SOURCES
 # ================================================================
 
-# AMI Ubuntu 22.04 LTS para us-east-1 (valor fixo para contornar restrições de permissão)
+# AMI Ubuntu 22.04 LTS para us-east-1 
 # AMI ID: ami-0c02fb55956c7d316 (Ubuntu 22.04 LTS em us-east-1)
 locals {
-  ubuntu_ami_id = "ami-0c02fb55956c7d316"
+  ubuntu_ami_id      = "ami-0c02fb55956c7d316"
   availability_zones = ["us-east-1a", "us-east-1b"]
 }
 
@@ -117,7 +117,7 @@ resource "aws_subnet" "sf_subnet_privada_database" {
 # EIP Frontend (acesso público direto necessário)
 resource "aws_eip" "sf_eip_frontend" {
   domain = "vpc"
-  
+
   depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
 
   tags = {
@@ -138,11 +138,11 @@ resource "aws_eip" "sf_eip_frontend" {
 # Elastic IP para o NAT Gateway
 resource "aws_eip" "sf_eip_nat_gateway" {
   domain = "vpc"
-  
+
   tags = {
     Name = "sf-eip-nat-gateway"
   }
-  
+
   depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
 }
 
@@ -373,12 +373,6 @@ resource "aws_security_group" "sf_sg_lb_publico" {
   }
 }
 
-# ================================================================
-# KEY PAIR - COMENTADO PARA EVITAR PROBLEMAS DE PERMISSÃO
-# ================================================================
-# NOTA: Para usar SSH, você pode:
-# 1. Criar uma chave manualmente no console AWS
-# 2. Ou usar AWS Session Manager para conectar
 # 
 # resource "aws_key_pair" "sf_keypair_main" {
 #   key_name   = var.key_pair_name
@@ -396,14 +390,14 @@ resource "aws_security_group" "sf_sg_lb_publico" {
 resource "aws_instance" "sf_ec2_frontend_nginx" {
   ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_frontend
-  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
-  subnet_id             = aws_subnet.sf_subnet_publica_frontend.id
+  key_name               = aws_key_pair.main.key_name
+  subnet_id              = aws_subnet.sf_subnet_publica_frontend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
 
-  user_data = base64encode(templatefile("${path.module}/user-data/frontend-user-data.sh", {
-    repository_url      = var.repository_url
-    load_balancer_ip    = aws_instance.sf_ec2_load_balancer.private_ip
-  }))
+  user_data = templatefile("${path.module}/user-data/frontend-user-data.sh", {
+    repository_url   = var.repository_url
+    load_balancer_ip = aws_instance.sf_ec2_load_balancer.private_ip
+  })
 
   tags = {
     Name = "sf-ec2-frontend-nginx"
@@ -415,15 +409,16 @@ resource "aws_instance" "sf_ec2_frontend_nginx" {
 resource "aws_instance" "sf_ec2_backend_spring_01" {
   ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_backend
-  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
-  subnet_id             = aws_subnet.sf_subnet_privada_backend.id
+  key_name               = aws_key_pair.main.key_name
+  subnet_id              = aws_subnet.sf_subnet_privada_backend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
 
-  user_data = base64encode(templatefile("${path.module}/user-data/backend-user-data.sh", {
+  user_data = templatefile("${path.module}/user-data/backend-user-data.sh", {
     repository_url     = var.repository_url
-    mysql_host        = aws_instance.sf_ec2_database_mysql.private_ip
-    mysql_password    = var.mysql_app_password
-  }))
+    database_endpoint  = aws_instance.sf_ec2_database_mysql.private_ip
+    mysql_app_password = var.mysql_app_password
+    instance_index     = "01"
+  })
 
   tags = {
     Name = "sf-ec2-backend-spring-01"
@@ -435,15 +430,16 @@ resource "aws_instance" "sf_ec2_backend_spring_01" {
 resource "aws_instance" "sf_ec2_backend_spring_02" {
   ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_backend
-  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
-  subnet_id             = aws_subnet.sf_subnet_privada_backend.id
+  key_name               = aws_key_pair.main.key_name
+  subnet_id              = aws_subnet.sf_subnet_privada_backend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
 
-  user_data = base64encode(templatefile("${path.module}/user-data/backend-user-data.sh", {
+  user_data = templatefile("${path.module}/user-data/backend-user-data.sh", {
     repository_url     = var.repository_url
-    mysql_host        = aws_instance.sf_ec2_database_mysql.private_ip
-    mysql_password    = var.mysql_app_password
-  }))
+    database_endpoint  = aws_instance.sf_ec2_database_mysql.private_ip
+    mysql_app_password = var.mysql_app_password
+    instance_index     = "02"
+  })
 
   tags = {
     Name = "sf-ec2-backend-spring-02"
@@ -455,14 +451,14 @@ resource "aws_instance" "sf_ec2_backend_spring_02" {
 resource "aws_instance" "sf_ec2_database_mysql" {
   ami                    = local.ubuntu_ami_id
   instance_type          = var.instance_type_database
-  # key_name              = aws_key_pair.sf_keypair_main.key_name  # Removido temporariamente
-  subnet_id             = aws_subnet.sf_subnet_privada_database.id
+  key_name               = aws_key_pair.main.key_name
+  subnet_id              = aws_subnet.sf_subnet_privada_database.id
   vpc_security_group_ids = [aws_security_group.sf_sg_database_mysql.id]
 
-  user_data = base64encode(templatefile("${path.module}/user-data/database-user-data.sh", {
+  user_data = templatefile("${path.module}/user-data/database-user-data.sh", {
     mysql_root_password = var.mysql_root_password
     mysql_app_password  = var.mysql_app_password
-  }))
+  })
 
   tags = {
     Name = "sf-ec2-database-mysql"
@@ -471,7 +467,7 @@ resource "aws_instance" "sf_ec2_database_mysql" {
 }
 
 # ================================================================
-# ELASTIC IP ASSOCIATIONS - APENAS FRONTEND
+# ELASTIC IP ASSOCIATIONS
 # ================================================================
 
 # Associar EIP apenas ao Frontend (que precisa de acesso público direto)
@@ -480,29 +476,70 @@ resource "aws_eip_association" "sf_eip_assoc_frontend" {
   allocation_id = aws_eip.sf_eip_frontend.id
 }
 
-# NOTA: Outros recursos não precisam de EIP:
-# - ALB: Recebe IP público automaticamente
-# - Backends: Acessados via ALB (privados)
-# - Database: Acessado pelos backends (privado)
 
 # ================================================================
-# LOAD BALANCER EC2 (NGINX) - VERSÃO BARATA
+# LOAD BALANCER EC2 (NGINX) 
 # ================================================================
 
 # EC2 - Load Balancer (Nginx fazendo proxy para backends)
 resource "aws_instance" "sf_ec2_load_balancer" {
   ami                    = local.ubuntu_ami_id
-  instance_type          = "t3.micro"  # Bem barato
-  subnet_id             = aws_subnet.sf_subnet_publica_lb.id
+  instance_type          = "t3.micro" # Bem barato
+  subnet_id              = aws_subnet.sf_subnet_publica_lb.id
   vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
 
-  user_data = base64encode(templatefile("${path.module}/user-data/loadbalancer-user-data.sh", {
+  user_data = templatefile("${path.module}/user-data/loadbalancer-user-data.sh", {
     backend_01_ip = aws_instance.sf_ec2_backend_spring_01.private_ip
     backend_02_ip = aws_instance.sf_ec2_backend_spring_02.private_ip
-  }))
+  })
 
   tags = {
     Name = "sf-ec2-load-balancer"
     Type = "LoadBalancer"
   }
+}
+
+# ================================================
+# DNS E DOMÍNIO - ROUTE 53 (OPCIONAL)
+# ================================================
+
+# Hosted Zone para o domínio 
+resource "aws_route53_zone" "sf_main_domain" {
+  count = var.domain_name != "" ? 1 : 0
+  name  = var.domain_name
+
+  tags = merge(var.common_tags, {
+    Name = "sf-hosted-zone-main"
+    Type = "DNS"
+  })
+}
+
+# Registro A para o frontend 
+resource "aws_route53_record" "sf_frontend" {
+  count   = var.domain_name != "" ? 1 : 0
+  zone_id = aws_route53_zone.sf_main_domain[0].zone_id
+  name    = var.domain_name
+  type    = "A"
+  ttl     = 300
+  records = [aws_eip.sf_eip_frontend.public_ip]
+}
+
+# Registro A para a API 
+resource "aws_route53_record" "sf_api" {
+  count   = var.domain_name != "" ? 1 : 0
+  zone_id = aws_route53_zone.sf_main_domain[0].zone_id
+  name    = "api.${var.domain_name}"
+  type    = "A"
+  ttl     = 300
+  records = [aws_instance.sf_ec2_load_balancer.public_ip]
+}
+
+# Registro CNAME para www (opcional)
+resource "aws_route53_record" "sf_www" {
+  count   = var.domain_name != "" ? 1 : 0
+  zone_id = aws_route53_zone.sf_main_domain[0].zone_id
+  name    = "www.${var.domain_name}"
+  type    = "CNAME"
+  ttl     = 300
+  records = [var.domain_name]
 }

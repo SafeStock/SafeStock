@@ -10,12 +10,13 @@ BACKEND_02_IP="${backend_02_ip}"
 
 # Atualizar sistema
 echo "==== Atualizando sistema ===="
-apt-get update -y
-apt-get upgrade -y
+yum update -y
+yum upgrade -y  # Amazon Linux 2
 
 # Instalar Nginx
 echo "==== Instalando Nginx ===="
-apt-get install -y nginx curl
+amazon-linux-extras install -y nginx1
+yum install -y curl
 
 # Configurar Nginx como Load Balancer
 echo "==== Configurando Nginx Load Balancer ===="
@@ -61,11 +62,6 @@ nginx -t
 # Iniciar Nginx
 systemctl enable nginx
 systemctl restart nginx
-
-# Configurar firewall
-ufw --force enable
-ufw allow ssh
-ufw allow 80
 
 echo "==== Load Balancer configurado com sucesso! ===="
 echo "Distribuindo carga entre:"

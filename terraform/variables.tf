@@ -93,7 +93,7 @@ variable "mysql_app_password" {
 variable "allowed_ssh_cidr" {
   description = "CIDR blocks permitidos para SSH"
   type        = list(string)
-  default     = ["0.0.0.0/0"]  # ⚠️ Para produção, restringir ao seu IP
+  default     = ["0.0.0.0/0"] # ⚠️ Para produção, restringir ao seu IP
 }
 
 variable "allowed_http_cidr" {
@@ -145,7 +145,17 @@ variable "repositories" {
   default = {
     # Monorepo atual
     frontend_repo  = "https://github.com/SafeStock/SafeStock.git"
-    backend_repo   = "https://github.com/SafeStock/SafeStock.git"  
+    backend_repo   = "https://github.com/SafeStock/SafeStock.git"
     backend_branch = "main"
   }
+}
+
+# ================================================
+# DOMÍNIO E DNS
+# ================================================
+
+variable "domain_name" {
+  description = "Nome do domínio para a aplicação SafeStock (opcional)"
+  type        = string
+  default     = "" # Deixe vazio para usar apenas IPs
 }
