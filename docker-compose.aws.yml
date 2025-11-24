@@ -7,16 +7,13 @@ services:
       args:
         BUILD_MODE: prod  # Usa .env.production (IP da EC2)
 
-  back-antigo-primary:
+  back-antigo:
     environment:
-      - FRONTEND_URL=http://${AWS_EC2_IP:-localhost}:5173
+      - FRONTEND_URL=http://${AWS_EC2_IP:-localhost}
 
-  back-antigo-secondary:
+  back-refatorado:
     environment:
-      - FRONTEND_URL=http://${AWS_EC2_IP:-localhost}:5173
-
-# Para usar em desenvolvimento local:
-# docker compose --profile antigo up -d
+      - FRONTEND_URL=http://${AWS_EC2_IP:-localhost}
 
 # Para usar na AWS:
 # docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d

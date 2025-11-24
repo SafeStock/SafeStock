@@ -21,11 +21,28 @@ provider "aws" {
 # DATA SOURCES
 # ================================================================
 
-# AMI Ubuntu 22.04 LTS para us-east-1 
-# AMI ID: ami-0c02fb55956c7d316 (Ubuntu 22.04 LTS em us-east-1)
+# AMI Amazon Linux 2 para us-east-1 (compatível com yum)
+# AMI ID: ami-0abcdef1234567890 (Amazon Linux 2)
 locals {
-  ubuntu_ami_id      = "ami-0c02fb55956c7d316"
-  availability_zones = ["us-east-1a", "us-east-1b"]
+  amazon_linux_ami_id = "ami-0abcdef1234567890"  # Será resolvido via data source
+  availability_zones   = ["us-east-1a", "us-east-1b"]
+}
+
+# Data source para pegar a AMI mais recente do Amazon Linux 2
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 }
 
 # ================================================================
@@ -383,86 +400,56 @@ resource "aws_security_group" "sf_sg_lb_publico" {
 # }
 
 # ================================================================
-# INSTÂNCIAS EC2
+# INSTÂNCIAS EC2 - ARQUITETURA SIMPLES COM CONTAINERS
 # ================================================================
 
-# EC2 - Frontend (Nginx + React)
-resource "aws_instance" "sf_ec2_frontend_nginx" {
-  ami                    = local.ubuntu_ami_id
-  instance_type          = var.instance_type_frontend
+# EC2 - Frontend + Load Balancer (Nginx + React)
+resource "aws_instance" "sf_ec2_frontend_proxy" {
+  ami                    = data.aws_ami.amazon_linux.id
+  instance_type          = "t3.medium" # Precisa de 4GB RAM para build do React seguro
   key_name               = aws_key_pair.main.key_name
   subnet_id              = aws_subnet.sf_subnet_publica_frontend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
 
   user_data = templatefile("${path.module}/user-data/frontend-user-data.sh", {
-    repository_url   = var.repository_url
-    load_balancer_ip = aws_instance.sf_ec2_load_balancer.private_ip
+    repository_url = var.repository_url
+    backend_ip     = aws_instance.sf_ec2_backend_containers.private_ip
   })
 
+  user_data_replace_on_change = true
+
   tags = {
-    Name = "sf-ec2-frontend-nginx"
-    Type = "Frontend"
+    Name = "sf-ec2-frontend-proxy"
+    Type = "Frontend-LoadBalancer"
   }
 }
 
-# EC2 - Backend 01 (Spring Boot)
-resource "aws_instance" "sf_ec2_backend_spring_01" {
-  ami                    = local.ubuntu_ami_id
-  instance_type          = var.instance_type_backend
+# EC2 - Backend com todos os containers (2x Spring Boot + MySQL + RabbitMQ)
+resource "aws_instance" "sf_ec2_backend_containers" {
+  ami                    = data.aws_ami.amazon_linux.id
+  instance_type          = "t3.small" # Precisa de mais RAM para múltiplos containers
   key_name               = aws_key_pair.main.key_name
   subnet_id              = aws_subnet.sf_subnet_privada_backend.id
   vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
 
   user_data = templatefile("${path.module}/user-data/backend-user-data.sh", {
-    repository_url     = var.repository_url
-    database_endpoint  = aws_instance.sf_ec2_database_mysql.private_ip
-    mysql_app_password = var.mysql_app_password
-    instance_index     = "01"
-  })
-
-  tags = {
-    Name = "sf-ec2-backend-spring-01"
-    Type = "Backend"
-  }
-}
-
-# EC2 - Backend 02 (Spring Boot)
-resource "aws_instance" "sf_ec2_backend_spring_02" {
-  ami                    = local.ubuntu_ami_id
-  instance_type          = var.instance_type_backend
-  key_name               = aws_key_pair.main.key_name
-  subnet_id              = aws_subnet.sf_subnet_privada_backend.id
-  vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
-
-  user_data = templatefile("${path.module}/user-data/backend-user-data.sh", {
-    repository_url     = var.repository_url
-    database_endpoint  = aws_instance.sf_ec2_database_mysql.private_ip
-    mysql_app_password = var.mysql_app_password
-    instance_index     = "02"
-  })
-
-  tags = {
-    Name = "sf-ec2-backend-spring-02"
-    Type = "Backend"
-  }
-}
-
-# EC2 - Database (MySQL)
-resource "aws_instance" "sf_ec2_database_mysql" {
-  ami                    = local.ubuntu_ami_id
-  instance_type          = var.instance_type_database
-  key_name               = aws_key_pair.main.key_name
-  subnet_id              = aws_subnet.sf_subnet_privada_database.id
-  vpc_security_group_ids = [aws_security_group.sf_sg_database_mysql.id]
-
-  user_data = templatefile("${path.module}/user-data/database-user-data.sh", {
+    repository_url      = var.repository_url
     mysql_root_password = var.mysql_root_password
     mysql_app_password  = var.mysql_app_password
   })
 
+  user_data_replace_on_change = true
+
+  # Volume maior para containers e dados persistentes
+  root_block_device {
+    volume_size = 20 # 20GB
+    volume_type = "gp3"
+    encrypted   = true
+  }
+
   tags = {
-    Name = "sf-ec2-database-mysql"
-    Type = "Database"
+    Name = "sf-ec2-backend-containers"
+    Type = "Backend-Database-Queue"
   }
 }
 
@@ -470,33 +457,10 @@ resource "aws_instance" "sf_ec2_database_mysql" {
 # ELASTIC IP ASSOCIATIONS
 # ================================================================
 
-# Associar EIP apenas ao Frontend (que precisa de acesso público direto)
+# Associar EIP apenas ao Frontend (que já faz proxy/load balancer)
 resource "aws_eip_association" "sf_eip_assoc_frontend" {
-  instance_id   = aws_instance.sf_ec2_frontend_nginx.id
+  instance_id   = aws_instance.sf_ec2_frontend_proxy.id
   allocation_id = aws_eip.sf_eip_frontend.id
-}
-
-
-# ================================================================
-# LOAD BALANCER EC2 (NGINX) 
-# ================================================================
-
-# EC2 - Load Balancer (Nginx fazendo proxy para backends)
-resource "aws_instance" "sf_ec2_load_balancer" {
-  ami                    = local.ubuntu_ami_id
-  instance_type          = "t3.micro" # Bem barato
-  subnet_id              = aws_subnet.sf_subnet_publica_lb.id
-  vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
-
-  user_data = templatefile("${path.module}/user-data/loadbalancer-user-data.sh", {
-    backend_01_ip = aws_instance.sf_ec2_backend_spring_01.private_ip
-    backend_02_ip = aws_instance.sf_ec2_backend_spring_02.private_ip
-  })
-
-  tags = {
-    Name = "sf-ec2-load-balancer"
-    Type = "LoadBalancer"
-  }
 }
 
 # ================================================
@@ -524,14 +488,14 @@ resource "aws_route53_record" "sf_frontend" {
   records = [aws_eip.sf_eip_frontend.public_ip]
 }
 
-# Registro A para a API 
+# Registro A para a API (mesmo IP do frontend, nginx faz proxy)
 resource "aws_route53_record" "sf_api" {
   count   = var.domain_name != "" ? 1 : 0
   zone_id = aws_route53_zone.sf_main_domain[0].zone_id
   name    = "api.${var.domain_name}"
   type    = "A"
   ttl     = 300
-  records = [aws_instance.sf_ec2_load_balancer.public_ip]
+  records = [aws_eip.sf_eip_frontend.public_ip]
 }
 
 # Registro CNAME para www (opcional)

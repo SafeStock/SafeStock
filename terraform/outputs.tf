@@ -18,76 +18,42 @@ output "vpc_cidr" {
 # ================================================================
 
 output "frontend_public_ip" {
-  description = "IP público do servidor Frontend (Nginx)"
+  description = "IP público do servidor Frontend + Proxy (Nginx)"
   value       = aws_eip.sf_eip_frontend.public_ip
 }
 
 output "frontend_public_dns" {
-  description = "DNS público do servidor Frontend (Nginx) - USE ESTE ao invés do IP"
-  value       = aws_instance.sf_ec2_frontend_nginx.public_dns
+  description = "DNS público do servidor Frontend + Proxy (Nginx)"
+  value       = aws_instance.sf_ec2_frontend_proxy.public_dns
 }
 
-output "load_balancer_public_ip" {
-  description = "IP público do Load Balancer (Nginx)"
-  value       = aws_instance.sf_ec2_load_balancer.public_ip
-}
-
-output "load_balancer_public_dns" {
-  description = "DNS público do Load Balancer (Nginx) - USE ESTE ao invés do IP"
-  value       = aws_instance.sf_ec2_load_balancer.public_dns
-}
-
-output "backend_01_private_ip" {
-  description = "IP privado do Backend Server 01 (Spring Boot) - acessado via Load Balancer Nginx"
-  value       = aws_instance.sf_ec2_backend_spring_01.private_ip
-}
-
-output "backend_02_private_ip" {
-  description = "IP privado do Backend Server 02 (Spring Boot) - acessado via Load Balancer Nginx"
-  value       = aws_instance.sf_ec2_backend_spring_02.private_ip
-}
-
-output "database_private_ip" {
-  description = "IP privado do servidor MySQL - acessado pelos backends"
-  value       = aws_instance.sf_ec2_database_mysql.private_ip
-}
-
-# ================================================================
-# LOAD BALANCER (Nginx)
-# ================================================================
-
-output "load_balancer_dns_name" {
-  description = "IP público do Load Balancer (Nginx)"
-  value       = aws_instance.sf_ec2_load_balancer.public_ip
-}
-
-output "load_balancer_url" {
-  description = "URL completa do Load Balancer Nginx"
-  value       = "http://${aws_instance.sf_ec2_load_balancer.public_ip}"
+output "backend_containers_private_ip" {
+  description = "IP privado do servidor com containers (2x Spring Boot + MySQL + RabbitMQ)"
+  value       = aws_instance.sf_ec2_backend_containers.private_ip
 }
 
 # ================================================================
 # APPLICATION URLs
 # ================================================================
 
-output "frontend_url" {
-  description = "URL do Frontend (Nginx) - RECOMENDADO: Use o DNS ao invés do IP"
-  value       = "http://${aws_instance.sf_ec2_frontend_nginx.public_dns}"
-}
-
-output "frontend_url_by_ip" {
-  description = "URL do Frontend usando IP (pode mudar se instância for parada/iniciada)"
+output "application_url" {
+  description = "URL da aplicação SafeStock"
   value       = "http://${aws_eip.sf_eip_frontend.public_ip}"
 }
 
-output "backend_api_url" {
-  description = "URL da API Backend (através do Load Balancer Nginx) - RECOMENDADO: Use o DNS"
-  value       = "http://${aws_instance.sf_ec2_load_balancer.public_dns}/api"
+output "api_url" {
+  description = "URL da API (proxy com load balancer integrado)"
+  value       = "http://${aws_eip.sf_eip_frontend.public_ip}/api"
 }
 
-output "backend_api_url_by_ip" {
-  description = "URL da API usando IP (pode mudar se instância for parada/iniciada)"
-  value       = "http://${aws_instance.sf_ec2_load_balancer.public_ip}/api"
+output "frontend_url" {
+  description = "URL do Frontend (Nginx + Proxy)"
+  value       = "http://${aws_instance.sf_ec2_frontend_proxy.public_dns}"
+}
+
+output "frontend_url_by_ip" {
+  description = "URL do Frontend usando IP fixo"
+  value       = "http://${aws_eip.sf_eip_frontend.public_ip}"
 }
 
 # ================================================================
@@ -95,23 +61,18 @@ output "backend_api_url_by_ip" {
 # ================================================================
 
 output "ssh_frontend" {
-  description = "Comando SSH para conectar no Frontend"
-  value       = "ssh -i ssh-keys/sf-keypair-${var.environment}.pem ec2-user@${aws_eip.sf_eip_frontend.public_ip}"
+  description = "Comando SSH para conectar no Frontend + Proxy"
+  value       = "ssh -i ssh-keys/sf-keypair-${var.environment}.pem ubuntu@${aws_eip.sf_eip_frontend.public_ip}"
 }
 
-output "ssh_backend_01" {
-  description = "Backend 01 está em subnet privada - usar AWS Session Manager ou bastion host"
-  value       = "aws ssm start-session --target ${aws_instance.sf_ec2_backend_spring_01.id}"
+output "ssh_backend_containers" {
+  description = "Backend containers está em subnet privada - usar Session Manager ou bastion"
+  value       = "aws ssm start-session --target ${aws_instance.sf_ec2_backend_containers.id}"
 }
 
-output "ssh_backend_02" {
-  description = "Backend 02 está em subnet privada - usar AWS Session Manager ou bastion host"
-  value       = "aws ssm start-session --target ${aws_instance.sf_ec2_backend_spring_02.id}"
-}
-
-output "ssh_database" {
-  description = "Database está em subnet privada - usar AWS Session Manager ou bastion host"
-  value       = "aws ssm start-session --target ${aws_instance.sf_ec2_database_mysql.id}"
+output "rabbitmq_management_tunnel" {
+  description = "Comando para acessar RabbitMQ Management via SSH tunnel"
+  value       = "ssh -i ssh-keys/sf-keypair-${var.environment}.pem -L 15672:${aws_instance.sf_ec2_backend_containers.private_ip}:15672 ubuntu@${aws_eip.sf_eip_frontend.public_ip}"
 }
 
 # ================================================================
@@ -119,13 +80,13 @@ output "ssh_database" {
 # ================================================================
 
 output "mysql_host" {
-  description = "Host do MySQL (para configuração da aplicação)"
-  value       = aws_instance.sf_ec2_database_mysql.private_ip
+  description = "Host do MySQL (container no backend server)"
+  value       = aws_instance.sf_ec2_backend_containers.private_ip
 }
 
 output "mysql_connection_string" {
-  description = "String de conexão MySQL"
-  value       = "jdbc:mysql://${aws_instance.sf_ec2_database_mysql.private_ip}:3306/safestock"
+  description = "String de conexão MySQL (container)"
+  value       = "jdbc:mysql://${aws_instance.sf_ec2_backend_containers.private_ip}:3306/safestockDB"
   sensitive   = false
 }
 
@@ -166,19 +127,20 @@ output "subnets" {
 # ================================================================
 
 output "deployment_summary" {
-  description = "Resumo do deployment"
+  description = "Resumo do deployment - Arquitetura Simples com Containers"
   value = {
-    region          = var.aws_region
-    project         = var.project_name
-    environment     = var.environment
-    vpc_cidr        = var.vpc_cidr
-    frontend_dns    = aws_instance.sf_ec2_frontend_nginx.public_dns
-    frontend_ip     = aws_eip.sf_eip_frontend.public_ip
-    api_dns         = aws_instance.sf_ec2_load_balancer.public_dns
-    api_ip          = aws_instance.sf_ec2_load_balancer.public_ip
-    mysql_host      = aws_instance.sf_ec2_database_mysql.private_ip
-    total_instances = 4
-    repository_url  = var.repository_url
+    region              = var.aws_region
+    project             = var.project_name
+    environment         = var.environment
+    vpc_cidr            = var.vpc_cidr
+    architecture        = "Frontend+Proxy + Backend Containers"
+    frontend_dns        = aws_instance.sf_ec2_frontend_proxy.public_dns
+    frontend_ip         = aws_eip.sf_eip_frontend.public_ip
+    backend_containers  = aws_instance.sf_ec2_backend_containers.private_ip
+    containers          = "2x Spring Boot + MySQL + RabbitMQ"
+    total_instances     = 2
+    cost_optimized      = "Sim - apenas 2 EC2s (t3.micro + t3.small)"
+    repository_url      = var.repository_url
   }
 }
 
