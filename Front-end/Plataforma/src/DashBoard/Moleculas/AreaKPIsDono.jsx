@@ -35,7 +35,7 @@ export function AreaKPIsDonoLateralEsquerda() {
   const fetchKpis = async () => {
     try {
       const promises = endpoints.map(endpoint =>
-        fetch(endpoint, { headers }) // <- passando headers
+        fetch(endpoint, { headers }) 
       );
 
       const responses = await Promise.all(promises);
