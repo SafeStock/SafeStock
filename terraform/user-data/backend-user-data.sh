@@ -1,15 +1,14 @@
 #!/bin/bash
-# BACKEND EC2 (Spring Boot)
+# BACKEND EC2 COM CONTAINERS (2x Spring Boot + MySQL + RabbitMQ)
 # Logging
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-echo "==== Backend EC2 User Data - SafeStock ===="
+echo "==== Backend Containers EC2 User Data - SafeStock ===="
 echo "Timestamp: $(date)"
 
 # Variáveis do Terraform
 REPOSITORY_URL="${repository_url}"
-DATABASE_ENDPOINT="${database_endpoint}"
+MYSQL_ROOT_PASSWORD="${mysql_root_password}"
 MYSQL_APP_PASSWORD="${mysql_app_password}"
-INSTANCE_INDEX="${instance_index}"
 
 # Validar variáveis obrigatórias
 echo "==== Validando variáveis ===="
@@ -22,11 +21,11 @@ else
     echo "✓ REPOSITORY_URL: $REPOSITORY_URL"
 fi
 
-if [ -z "$DATABASE_ENDPOINT" ]; then
-    echo "✗ ERRO: DATABASE_ENDPOINT não foi fornecido"
+if [ -z "$MYSQL_ROOT_PASSWORD" ]; then
+    echo "✗ ERRO: MYSQL_ROOT_PASSWORD não foi fornecida"
     ERRORS=$((ERRORS + 1))
 else
-    echo "✓ DATABASE_ENDPOINT: $DATABASE_ENDPOINT"
+    echo "✓ MYSQL_ROOT_PASSWORD: ***"
 fi
 
 if [ -z "$MYSQL_APP_PASSWORD" ]; then
@@ -34,13 +33,6 @@ if [ -z "$MYSQL_APP_PASSWORD" ]; then
     ERRORS=$((ERRORS + 1))
 else
     echo "✓ MYSQL_APP_PASSWORD: ***"
-fi
-
-if [ -z "$INSTANCE_INDEX" ]; then
-    echo "⚠ WARNING: INSTANCE_INDEX não fornecido, usando 0"
-    INSTANCE_INDEX=0
-else
-    echo "✓ INSTANCE_INDEX: $INSTANCE_INDEX"
 fi
 
 if [ $ERRORS -gt 0 ]; then
@@ -53,192 +45,148 @@ echo "✓ Todas as variáveis validadas"
 # Atualizar sistema
 echo "==== Atualizando sistema ===="
 yum update -y
-yum upgrade -y  # Amazon Linux 2
 
-# Instalar dependências
-echo "==== Instalando dependências ===="
-yum install -y \
-    curl \
-    wget \
-    git \
-    java-11-amazon-corretto-headless \
-    mysql \
-    unzip
+# Instalar Docker
+echo "==== Instalando Docker ===="
+yum install -y docker git curl wget htop
+amazon-linux-extras install -y docker
 
-# Verificar instalação do Java
-java -version
+# Instalar Docker Compose v2 (plugin)
+echo "==== Instalando Docker Compose v2 ===="
+mkdir -p /usr/local/lib/docker/cli-plugins
+curl -L "https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
+chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-# Configurar diretório da aplicação
-echo "==== Configurando diretório da aplicação ===="
-mkdir -p /opt/safestock
-cd /opt/safestock
-
-# Clonar repositório
-echo "==== Clonando repositório ===="
-git clone $REPOSITORY_URL temp-repo || {
-    echo "✗ ERRO: Falha ao clonar repositório"
+# Verificar instalação
+docker compose version || {
+    echo "✗ ERRO: Falha ao instalar Docker Compose"
     exit 1
 }
 
-# Verificar e copiar arquivos do backend
-echo "==== Verificando estrutura do repositório ===="
-if [ -d "temp-repo/SafeStock/Back-end" ]; then
-    echo "✓ Estrutura padrão encontrada"
-    cp -r temp-repo/SafeStock/Back-end/* .
-elif [ -d "temp-repo/Back-end" ]; then
-    echo "✓ Estrutura alternativa encontrada"
-    cp -r temp-repo/Back-end/* .
-else
-    echo "✗ ERRO: Estrutura do repositório não encontrada!"
-    echo "Buscando diretório Back-end:"
-    find temp-repo -type d -name "Back-end"
+# Iniciar Docker
+systemctl start docker
+systemctl enable docker
+usermod -aG docker ec2-user
+
+# Clonar repositório
+echo "==== Clonando repositório ===="
+cd /home/ec2-user
+git clone $REPOSITORY_URL || {
+    echo "✗ ERRO: Falha ao clonar repositório"
     exit 1
-fi
+}
+chown -R ec2-user:ec2-user SafeStock
 
-rm -rf temp-repo
-echo "✓ Repositório clonado e arquivos copiados"
+# Navegar para o diretório do projeto
+cd /home/ec2-user/SafeStock
 
-# Aguardar MySQL estar disponível
-echo "==== Aguardando MySQL em $DATABASE_ENDPOINT ===="
-MAX_RETRIES=60
-RETRY_COUNT=0
+# Criar arquivo .env com configurações de teste/desenvolvimento
+echo "==== Criando arquivo .env para ambiente de teste ===="
+cat > .env << EOF
+# Configurações para ambiente de TESTE/DESENVOLVIMENTO
+# Para produção, altere estas variáveis manualmente
 
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    if mysql -h "$DATABASE_ENDPOINT" -u safestock -p"$MYSQL_APP_PASSWORD" -e "SELECT 1;" > /dev/null 2>&1; then
-        echo "✓ MySQL disponível após $RETRY_COUNT tentativas"
-        break
-    fi
-    RETRY_COUNT=$((RETRY_COUNT + 1))
-    echo "Aguardando MySQL... tentativa $RETRY_COUNT de $MAX_RETRIES"
-    sleep 10
-done
+# MySQL - Senhas padrão para desenvolvimento
+MYSQL_ROOT_PASSWORD=admin123
+MYSQL_PASSWORD=admin123
+MYSQL_DATABASE=safestockDB
+MYSQL_USER=safestock_app
 
-if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    echo "ERRO: MySQL não ficou disponível após $MAX_RETRIES tentativas"
-    exit 1
-fi
+# RabbitMQ - Padrão para desenvolvimento
+RABBITMQ_DEFAULT_USER=admin
+RABBITMQ_DEFAULT_PASS=admin123
 
-# Configurar application.properties
-echo "==== Configurando application.properties ===="
-cat > src/main/resources/application.properties << EOF
-# Database Configuration
-spring.datasource.url=jdbc:mysql://$DATABASE_ENDPOINT:3306/safestock?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=safestock
-spring.datasource.password=$MYSQL_APP_PASSWORD
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-# JPA/Hibernate
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-spring.jpa.properties.hibernate.format_sql=true
-
-# Server
-server.port=8080
-server.address=0.0.0.0
-
-# Logging
-logging.level.root=INFO
-logging.level.com.example=DEBUG
-logging.file.name=/var/log/safestock/application.log
-
-# Application
-spring.application.name=safestock-backend
-instance.index=$INSTANCE_INDEX
+# Configurações gerais
+TZ=America/Sao_Paulo
+ENVIRONMENT=development
 EOF
 
-# Criar diretório de logs
-mkdir -p /var/log/safestock
-chmod 755 /var/log/safestock
+echo "✓ Arquivo .env criado para ambiente de desenvolvimento"
+echo "⚠️  ATENÇÃO: Usando senhas padrão (admin123) para ambiente de teste"
 
-# Build da aplicação com Maven
-echo "==== Fazendo build da aplicação ===="
-if [ -f "mvnw" ]; then
-    chmod +x mvnw
-    ./mvnw clean package -DskipTests || {
-        echo "Erro no build com Maven Wrapper"
-        exit 1
-    }
-else
-    echo "ERRO: Maven Wrapper não encontrado"
-    exit 1
-fi
+# Criar docker-compose override para corrigir profiles
+echo "==== Criando override para profiles ===="
+cat > docker-compose.override.yml << 'EOF'
+services:
+  mysql:
+    profiles: ["antigo", "novo"]
+  rabbitmq:
+    profiles: ["antigo", "novo"]
+EOF
 
-# Verificar se o JAR foi gerado
-JAR_FILE=$(find target -name "*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar" ! -name "*original*" | head -n 1)
+# Definir variáveis de ambiente para AWS
+export AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+echo "AWS_EC2_IP detectado: $AWS_EC2_IP"
 
-if [ -z "$JAR_FILE" ]; then
-    echo "✗ ERRO: JAR não foi gerado"
-    echo "Conteúdo do diretório target:"
-    ls -lh target/ || echo "Diretório target não existe"
-    exit 1
-fi
+# Iniciar todos os containers usando o profile antigo com configurações AWS
+echo "==== Iniciando containers com variáveis do Terraform ===="
+docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d --build
 
-echo "✓ JAR gerado: $JAR_FILE"
+# Aguardar containers subirem
+echo "==== Aguardando containers iniciarem ===="
+sleep 60
 
-# Criar serviço systemd
-echo "==== Configurando serviço systemd ===="
-cat > /etc/systemd/system/safestock-backend.service << EOF
+# Verificar status dos containers
+echo "==== Status dos containers ===="
+docker compose -f docker-compose.yml -f docker-compose.aws.yml ps
+
+# Verificar logs dos containers
+echo "==== Logs dos containers ===="
+docker compose -f docker-compose.yml -f docker-compose.aws.yml logs --tail=50
+
+# Testar endpoints
+echo "==== Testando endpoints da API ===="
+curl -f http://localhost:8081/health || echo "Backend 1 não respondeu"
+curl -f http://localhost:8082/health || echo "Backend 2 não respondeu"
+
+# Criar script de update
+echo "==== Criando script de update ===="
+cat > /home/ec2-user/update-containers.sh << 'EOF'
+#!/bin/bash
+cd /home/ec2-user/SafeStock
+git pull
+export AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo down
+docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d --build
+EOF
+
+chmod +x /home/ec2-user/update-containers.sh
+chown ec2-user:ec2-user /home/ec2-user/update-containers.sh
+
+# Criar serviço systemd para auto-restart dos containers
+echo "==== Configurando auto-restart dos containers ===="
+cat > /etc/systemd/system/safestock-containers.service << 'EOF'
 [Unit]
-Description=SafeStock Backend Service (Instance $INSTANCE_INDEX)
-After=network.target
+Description=SafeStock Containers
+Requires=docker.service
+After=docker.service
 
 [Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/safestock
-ExecStart=/usr/bin/java -jar /opt/safestock/$JAR_FILE
-Restart=always
-RestartSec=10
-StandardOutput=journal
-StandardError=journal
-
-# Java Options
-Environment="JAVA_OPTS=-Xmx512m -Xms256m"
+Type=oneshot
+RemainAfterExit=yes
+User=ec2-user
+WorkingDirectory=/home/ec2-user/SafeStock
+Environment="AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
+ExecStart=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d
+ExecStop=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo down
+TimeoutStartSec=0
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Iniciar serviço
-echo "==== Iniciando serviço ===="
 systemctl daemon-reload
-systemctl enable safestock-backend
-systemctl start safestock-backend
-
-# Aguardar aplicação iniciar
-echo "==== Aguardando aplicação iniciar ===="
-sleep 30
-
-# Verificar status
-echo "==== Status do serviço ===="
-systemctl status safestock-backend --no-pager
-
-# Testar endpoint
-echo "==== Testando endpoint ===="
-curl -f http://localhost:8080/health || echo "Warning: Health check falhou (pode ser que o endpoint não exista)"
-
-# Criar script de update
-echo "==== Criando script de update ===="
-cat > /opt/update-backend.sh << 'EOF'
-#!/bin/bash
-cd /opt/safestock
-git pull
-if [ -f "mvnw" ]; then
-    ./mvnw clean package -DskipTests
-fi
-systemctl restart safestock-backend
-EOF
-
-chmod +x /opt/update-backend.sh
+systemctl enable safestock-containers
 
 # Informações finais
-echo "==== Backend EC2 configurado com sucesso! ===="
-echo "Instance Index: $INSTANCE_INDEX"
-echo "Database: $DATABASE_ENDPOINT"
-echo "Application Port: 8080"
-echo "JAR: $JAR_FILE"
-echo "Logs:"
-echo "  - Application: /var/log/safestock/application.log"
-echo "  - Service: journalctl -u safestock-backend -f"
-echo "Script de update: /opt/update-backend.sh"
+echo "==== Backend Containers EC2 configurado com sucesso! ===="
+echo "Containers rodando:"
+echo "  - MySQL: porta 3306"
+echo "  - RabbitMQ: porta 5672 (management: 15672)"
+echo "  - Backend 1: porta 8081"
+echo "  - Backend 2: porta 8082"
+echo "Comandos úteis:"
+echo "  - Ver containers: docker compose -f docker-compose.yml -f docker-compose.aws.yml ps"
+echo "  - Ver logs: docker compose -f docker-compose.yml -f docker-compose.aws.yml logs -f"
+echo "  - Restart: docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo restart"
+echo "  - Update: /home/ec2-user/update-containers.sh"

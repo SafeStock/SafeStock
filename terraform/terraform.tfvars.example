@@ -1,0 +1,57 @@
+# EXEMPLO DE CONFIGURAÇÃO - COPIE PARA terraform.tfvars E AJUSTE
+# ================================================================
+
+# Configurações Gerais
+aws_region   = "us-east-1"
+project_name = "SafeStock"
+environment  = "prod"
+
+# ================================================================
+# CONFIGURAÇÕES DE INSTÂNCIAS
+# ================================================================
+
+instance_type_frontend = "t3.micro"  # Free tier
+instance_type_backend  = "t3.small"  # Mais RAM para containers
+instance_type_database = "t3.small"
+
+# ================================================================
+# CONFIGURAÇÕES DE SEGURANÇA
+# ================================================================
+
+# ⚠️ IMPORTANTE: Para produção, substitua por seu IP específico
+# allowed_ssh_cidr = ["SEU.IP.AQUI.0/24"]
+allowed_ssh_cidr = ["0.0.0.0/0"]  # TEMPORÁRIO - MUDAR EM PROD
+
+allowed_http_cidr = ["0.0.0.0/0"]
+
+# ================================================================
+# CONFIGURAÇÕES DO BANCO
+# ================================================================
+
+mysql_root_password = "SafeStock@2024!Root"
+mysql_app_password  = "SafeStock@2024!App"
+
+# ================================================================
+# REPOSITÓRIO
+# ================================================================
+
+repository_url = "https://github.com/SafeStock/SafeStock.git"
+
+# ================================================================
+# DOMÍNIO (OPCIONAL)
+# ================================================================
+
+# domain_name = "safestock.com"  # Descomente se tiver domínio
+domain_name = ""  # Deixe vazio para usar apenas IPs
+
+# ================================================================
+# TAGS PADRÃO
+# ================================================================
+
+common_tags = {
+  Project     = "SafeStock"
+  Environment = "Production"
+  ManagedBy   = "Terraform"
+  Owner       = "SafeStock-Team"
+  CostCenter  = "Engineering"
+}

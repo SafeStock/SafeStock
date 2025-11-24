@@ -1,197 +1,249 @@
 #!/bin/bash
-# FRONT EC2(Nginx + React)
-# Logging
+# SAFESTOCK - FRONTEND + CONTAINERS (Docker Compose)
+# Logging completo
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-echo "==== Frontend EC2 User Data - SafeStock ===="
+echo "==== SafeStock Frontend + Containers User Data ===="
 echo "Timestamp: $(date)"
+echo "==== INÍCIO DA INSTALAÇÃO AUTOMATIZADA ===="
 
 # Variáveis do Terraform
 REPOSITORY_URL="${repository_url}"
-LOAD_BALANCER_IP="${load_balancer_ip}"
+BACKEND_IP="${backend_ip}"
+PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 
 # Atualizar sistema
 echo "==== Atualizando sistema ===="
 yum update -y
-yum upgrade -y  # Amazon Linux 2
 
-# Instalar dependências
-echo "==== Instalando dependências ===="
+# Instalar Docker e Nginx
+echo "==== Instalando Docker e Nginx ===="
+yum install -y docker git
+amazon-linux-extras install -y docker
 amazon-linux-extras install -y nginx1
-yum install -y \
-    curl \
-    wget \
-    git \
-    unzip
 
-# Instalar Node.js 16 (compatível com Amazon Linux 2 GLIBC 2.26)
-echo "==== Instalando Node.js via NVM ===="
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm install 16
-nvm use 16
+# Instalar Docker Compose v2 (plugin)
+echo "==== Instalando Docker Compose v2 ===="
+mkdir -p /usr/local/lib/docker/cli-plugins
+curl -L "https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
+chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 # Verificar instalação
-node --version
-npm --version
+docker compose version || {
+    echo "✗ ERRO: Falha ao instalar Docker Compose"
+    exit 1
+}
 
-# Tornar node disponível globalmente
-ln -sf "$NVM_DIR/versions/node/$(nvm current)/bin/node" /usr/bin/node
-ln -sf "$NVM_DIR/versions/node/$(nvm current)/bin/npm" /usr/bin/npm
-
-# Configurar diretório do frontend
-echo "==== Configurando diretório do frontend ===="
-mkdir -p /usr/share/nginx/html/safestock
-cd /usr/share/nginx/html/safestock
+# Iniciar Docker
+systemctl start docker
+systemctl enable docker
+usermod -aG docker ec2-user
 
 # Clonar repositório
 echo "==== Clonando repositório ===="
-git clone $REPOSITORY_URL temp-repo || {
+cd /home/ec2-user
+git clone $REPOSITORY_URL SafeStock || {
     echo "Erro ao clonar repositório"
     exit 1
 }
+chown -R ec2-user:ec2-user SafeStock
 
-# Verificar estrutura do repositório
-echo "==== Verificando estrutura do repositório ===="
-ls -la temp-repo/
-ls -la temp-repo/SafeStock/ || true
+# Buildar frontend - estratégia otimizada
+echo "==== Configurando build otimizado ===="
+cd /home/ec2-user/SafeStock/Front-end/Plataforma
 
-# Copiar arquivos do frontend (corrigindo caminho)
-if [ -d "temp-repo/SafeStock/Front-end/Plataforma" ]; then
-    echo "Estrutura padrão encontrada"
-    cp -r temp-repo/SafeStock/Front-end/Plataforma/* .
-elif [ -d "temp-repo/Front-end/Plataforma" ]; then
-    echo "Estrutura alternativa encontrada"
-    cp -r temp-repo/Front-end/Plataforma/* .
-else
-    echo "ERRO: Estrutura do repositório não encontrada!"
-    echo "Conteúdo disponível:"
-    find temp-repo -type d -name "Plataforma"
-    exit 1
+# Criar arquivo de swap adicional para build
+echo "Criando swap adicional..."
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+echo "Memória disponível:"
+free -h
+
+# Usar .env.production existente (já configurado para usar /api)
+echo "✓ Usando .env.production configurado para proxy /api"
+
+# Build direto no host (mais eficiente em memória)
+echo "==== Build direto no host ===="
+# Instalar Node.js se necessário
+if ! command -v node &> /dev/null; then
+    curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+    sudo yum install -y nodejs
 fi
 
-rm -rf temp-repo
+# Instalar dependências
+npm ci --prefer-offline --no-audit --silent
 
-# Instalar dependências do projeto
-echo "==== Instalando dependências do projeto ===="
-export NODE_OPTIONS="--max-old-space-size=2048"
-npm install || {
-    echo "Erro ao instalar dependências"
-    echo "Tentando com --legacy-peer-deps"
-    npm install --legacy-peer-deps
+# Build com configurações otimizadas de memória
+export NODE_OPTIONS="--max-old-space-size=1536"
+npm run build:prod || {
+    echo "Build falhou, tentando com menos memória..."
+    export NODE_OPTIONS="--max-old-space-size=1024"
+    npm run build:prod
 }
 
-# Build do projeto React
-echo "==== Fazendo build do projeto ===="
-npm run build || {
-    echo "Erro no build"
-    echo "Verificando package.json:"
-    cat package.json | grep -A 5 '"scripts"'
-    exit 1
-}
+# Criar imagem Docker apenas para servir arquivos estáticos
+echo "==== Criando imagem Docker otimizada ===="
+cat > Dockerfile.static << 'EOF'
+FROM nginx:1.27-alpine
+COPY dist/ /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+EOF
 
-# Verificar se o build foi criado
-if [ -d "dist" ]; then
-    echo "Build encontrado em dist/"
-    ls -la dist/
-    # Mover build para diretório do Nginx
-    rm -rf /usr/share/nginx/html/safestock/*
-    cp -r dist/* /usr/share/nginx/html/safestock/
-elif [ -d "build" ]; then
-    echo "Build encontrado em build/"
-    ls -la build/
-    # Mover build para diretório do Nginx
-    rm -rf /usr/share/nginx/html/safestock/*
-    cp -r build/* /usr/share/nginx/html/safestock/
-else
-    echo "ERRO: Diretório de build não encontrado!"
-    exit 1
-fi
+# Configurar .env.aws com IP correto
+echo "==== Configurando .env.aws ===="
+cat > /home/ec2-user/SafeStock/.env.aws << EOF
+# Configurações AWS - SafeStock
+AWS_EC2_IP=$PUBLIC_IP
+EOF
 
-cd /usr/share/nginx/html/safestock
+# Iniciar containers usando Docker Compose
+echo "==== Iniciando SafeStock com Docker Compose ===="
+cd /home/ec2-user/SafeStock
+chown -R ec2-user:ec2-user /home/ec2-user/SafeStock
 
-# Configurar Nginx
-echo "==== Configurando Nginx ===="
-cat > /etc/nginx/conf.d/safestock.conf << 'EOF'
+# Executar Docker Compose como ec2-user
+sudo -u ec2-user docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d --build
+
+# Aguardar containers subirem
+echo "==== Aguardando containers iniciarem ===="
+sleep 60
+
+# Configurar Nginx como proxy reverso
+echo "==== Configurando Nginx como Proxy Reverso ===="
+mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
+cat > /etc/nginx/sites-available/safestock << 'EOF'
 server {
-    listen 80;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    
     server_name _;
-    root /usr/share/nginx/html/safestock;
-    index index.html;
-
+    
     # Logs
     access_log /var/log/nginx/safestock-access.log;
     error_log /var/log/nginx/safestock-error.log;
-
-    # Configuração para SPA (Single Page Application)
+    
+    # Frontend (React via container)
     location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Cache para assets estáticos
-    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # Proxy para API (Load Balancer)
-    location /api/ {
-        proxy_pass http://LOAD_BALANCER_IP/;
+        proxy_pass http://localhost:5173;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_connect_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_read_timeout 60s;
+        proxy_cache_bypass $http_upgrade;
     }
-
-    # Health check
+    
+    # Load Balancer para API (distribui entre 8081 e 8082)
+    location /api/ {
+        # Remove /api/ do path e balanceia entre os 2 backends
+        rewrite ^/api/(.*) /$1 break;
+        
+        # Upstream alternativo simples (nginx faz round-robin)
+        proxy_pass http://backend_servers;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # CORS headers
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+        add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With' always;
+        
+        # Handle preflight requests
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+    }
+    
+    # Health check endpoint
     location /health {
         access_log off;
-        return 200 "Frontend OK";
+        return 200 "Frontend + Load Balancer OK\n";
         add_header Content-Type text/plain;
     }
-
+    
     # Segurança
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
     server_tokens off;
 }
+
+# Upstream para load balancing dos backends
+upstream backend_servers {
+    server BACKEND_IP:8081 max_fails=3 fail_timeout=30s;
+    server BACKEND_IP:8082 max_fails=3 fail_timeout=30s;
+}
 EOF
 
-# Substituir IP do Load Balancer
+# Substituir IP do Backend
 echo "==== Substituindo variáveis ===="
-echo "Load Balancer IP: $LOAD_BALANCER_IP"
-sed -i "s|LOAD_BALANCER_IP|$LOAD_BALANCER_IP|g" /etc/nginx/conf.d/safestock.conf
+echo "Backend IP: $BACKEND_IP"
+if [ -z "$BACKEND_IP" ]; then
+    echo "ERRO: BACKEND_IP está vazio!"
+    exit 1
+fi
+sed -i "s|BACKEND_IP|$BACKEND_IP|g" /etc/nginx/sites-available/safestock || {
+    echo "ERRO no comando sed!"
+    exit 1
+}
+
+# Ativar site e remover default
+rm -f /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/safestock /etc/nginx/sites-enabled/
 
 # Verificar substituição
 echo "Verificando configuração do Nginx:"
-grep -n "proxy_pass" /etc/nginx/conf.d/safestock.conf || echo "Nenhum proxy_pass encontrado"
+grep -n "server.*:808[12]" /etc/nginx/sites-available/safestock || echo "Configuração será verificada após criação do arquivo"
 
-# Remover configuração default
-rm -f /etc/nginx/conf.d/default.conf
+# Configurar nginx.conf para incluir sites-enabled
+echo "==== Configurando nginx.conf para incluir sites-enabled ===="
+if ! grep -q "sites-enabled" /etc/nginx/nginx.conf; then
+    # Adicionar include sites-enabled/* na seção http
+    sed -i '/http {/a\    include /etc/nginx/sites-enabled/*;' /etc/nginx/nginx.conf
+    echo "✓ Adicionada linha include sites-enabled/* no nginx.conf"
+else
+    echo "✓ nginx.conf já inclui sites-enabled"
+fi
 
 # Testar configuração do Nginx
 echo "==== Testando configuração do Nginx ===="
 nginx -t || {
     echo "ERRO na configuração do Nginx!"
-    cat /etc/nginx/conf.d/safestock.conf
+    cat /etc/nginx/sites-available/safestock
     exit 1
 }
 
-# Criar serviço systemd para gerenciar a aplicação
+# Criar serviço systemd REAL para gerenciar a aplicação
 echo "==== Configurando serviço systemd ===="
 cat > /etc/systemd/system/safestock-frontend.service << 'EOF'
 [Unit]
 Description=SafeStock Frontend Service
-After=network.target
+After=docker.service network.target
+Requires=docker.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/true
+User=ec2-user
+WorkingDirectory=/home/ec2-user/SafeStock
+ExecStart=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d
+ExecStop=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws down
+TimeoutStartSec=300
 
 [Install]
 WantedBy=multi-user.target
@@ -220,62 +272,56 @@ else
     exit 1
 fi
 
-# Criar script de update para futuras atualizações
+# Criar script de update
 echo "==== Criando script de update ===="
-cat > /opt/update-frontend.sh << 'UPDATEEOF'
+cat > /home/ec2-user/update-frontend.sh << 'EOF'
 #!/bin/bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm use 16
-
-cd /tmp
-rm -rf temp-update
-git clone REPOSITORY_URL temp-update
-cd temp-update/SafeStock/Front-end/Plataforma || cd temp-update/Front-end/Plataforma
-npm install
-npm run build
-rm -rf /usr/share/nginx/html/safestock/*
-cp -r dist/* /usr/share/nginx/html/safestock/ || cp -r build/* /usr/share/nginx/html/safestock/
+cd /home/ec2-user/SafeStock
+git pull origin main
+docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws down
+docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d --build
 systemctl restart nginx
-echo "Frontend atualizado com sucesso!"
-UPDATEEOF
+echo "SafeStock atualizado com sucesso!"
+EOF
 
-# Substituir URL do repositório no script
-sed -i "s|REPOSITORY_URL|$REPOSITORY_URL|g" /opt/update-frontend.sh
-chmod +x /opt/update-frontend.sh
+chmod +x /home/ec2-user/update-frontend.sh
+chown ec2-user:ec2-user /home/ec2-user/update-frontend.sh
 
 # Verificar status dos serviços
 echo "==== Status dos serviços ===="
 systemctl status nginx --no-pager
 systemctl status safestock-frontend --no-pager
 
-# Verificar conteúdo do frontend
-echo "==== Verificando conteúdo frontend ===="
-ls -lh /usr/share/nginx/html/safestock/ | head -20
-echo "..."
-echo "Total de arquivos: $(find /usr/share/nginx/html/safestock -type f | wc -l)"
+# Aguardar containers subirem
+echo "==== Aguardando frontend container ===="
+sleep 30
 
 # Teste de conectividade
 echo "==== Testando conectividade ===="
-curl -s -o /dev/null -w "HTTP Status: %%{http_code}\n" http://localhost/
+curl -s -o /dev/null -w "Frontend container: %%{http_code}\n" http://localhost:5173/
+curl -s -o /dev/null -w "Nginx proxy: %%{http_code}\n" http://localhost/
 curl -s -o /dev/null -w "Health check: %%{http_code}\n" http://localhost/health
 
 # Informações finais
-echo "==== Frontend EC2 configurado com sucesso! ===="
-PUBLIC_IP=$(curl -s ifconfig.me)
-echo "URL: http://$PUBLIC_IP"
-echo "Diretório: /usr/share/nginx/html/safestock"
-echo "Configuração Nginx: /etc/nginx/conf.d/safestock.conf"
-echo "Logs Nginx:"
-echo "  - Access: /var/log/nginx/safestock-access.log"
-echo "  - Error: /var/log/nginx/safestock-error.log"
-echo "  - User Data: /var/log/user-data.log"
-echo "Load Balancer: $LOAD_BALANCER_IP"
-echo "Script de update: /opt/update-frontend.sh"
+echo "==== Frontend + Proxy EC2 configurado com sucesso! ===="
+PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "IP_NAO_DETECTADO")
+echo "URL da aplicação: http://$PUBLIC_IP"
+echo "URL da API: http://$PUBLIC_IP/api"
+echo "Backend IP: $BACKEND_IP"
+echo ""
+echo "SERVIÇOS RODANDO:"
+echo "  - Frontend container: porta 5173"
+echo "  - Nginx proxy: porta 80"
+echo "  - Load balancer para: $BACKEND_IP:8081 e $BACKEND_IP:8082"
+echo ""
+echo "ARQUIVOS IMPORTANTES:"
+echo "  - Configuração Nginx: /etc/nginx/sites-available/safestock"
+echo "  - Script de update: /home/ec2-user/update-frontend.sh"
 echo ""
 echo "COMANDOS ÚTEIS:"
 echo "  - Ver logs user-data: tail -f /var/log/user-data.log"
 echo "  - Ver logs nginx: tail -f /var/log/nginx/safestock-error.log"
+echo "  - Ver logs container: docker logs sf-frontend"
 echo "  - Testar nginx: nginx -t"
 echo "  - Reiniciar nginx: systemctl restart nginx"
-echo "  - Atualizar frontend: /opt/update-frontend.sh"
+echo "  - Atualizar: /home/ec2-user/update-frontend.sh"
