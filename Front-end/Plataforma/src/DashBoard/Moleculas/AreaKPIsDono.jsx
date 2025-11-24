@@ -13,10 +13,10 @@ import getOutBoxIcon from '../../assets/GetOutBox.svg';
 import calendarIcon from '../../assets/CalendarExpired.svg';
 
 const endpoints = [
-  `${API_BASE_URL}/api/produtos/kpi/totalproximoslimite`,
-  `${API_BASE_URL}/api/produtos/kpi/totalprodutos`,
-  `${API_BASE_URL}/api/produtos/kpi/totalretiradoestoque`,
-  `${API_BASE_URL}/api/produtos/kpi/totalproximosvalidade`
+  `${API_BASE_URL}/produtos/kpi/totalproximoslimite`,
+  `${API_BASE_URL}/produtos/kpi/totalprodutos`,
+  `${API_BASE_URL}/produtos/kpi/totalretiradoestoque`,
+  `${API_BASE_URL}/produtos/kpi/totalproximosvalidade`
 ];
 
 const headers = {
@@ -141,7 +141,7 @@ export function AreaKPIsLateralDireita({ NameUse, buttonNameUse, tabela, Navigat
         NameUse={NameUse}
         buttonNameUse={buttonNameUse}
         tabela={tabela}
-        customEndpoint={`${API_BASE_URL}/api/registroUso`}
+        customEndpoint={`${API_BASE_URL}/registroUso`}
         NavigateOn={NavigateOn}
       />
     </div>

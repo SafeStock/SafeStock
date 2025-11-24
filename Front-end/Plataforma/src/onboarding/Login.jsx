@@ -51,7 +51,7 @@ export function Login() {
     }
   
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/funcionarios/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/funcionarios/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ export function ProdutosInformation({ abrirModal }) {
   const [produtos, setProdutos] = useState([]);
 
   const buscarProdutos = () => {
-  fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos`, {
+  fetch(`${import.meta.env.VITE_API_BASE_URL}/produtos`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const confirmarExclusao = (id) => {
       }
   }).then((result) => {
     if (result.isConfirmed) {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos/deletar/${id}`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/produtos/deletar/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

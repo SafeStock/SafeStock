@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { RotasApp } from "./Hooks/RotasApp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ServerIdentifier from "./components/ServerIdentifier";
 
 class AppErrorBoundary extends React.Component {
   state = { hasError: false, error: null };
@@ -32,6 +33,7 @@ function App() {
   return (
     <AppErrorBoundary>
       <Router>
+        <ServerIdentifier />
         <RotasApp />
         <ToastContainer 
           position="top-right" 

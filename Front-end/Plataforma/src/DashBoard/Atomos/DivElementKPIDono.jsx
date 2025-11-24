@@ -101,7 +101,7 @@ export function DivElementKPIDonoBigLeft({
 
       <div className="w-full h-full flex flex-col" style={{ display: displayAlerta }}>
         <MiniHistoricoAlerta
-          endpoint={`${API_BASE_URL}/api/historicoAlertas`}
+          endpoint={`${API_BASE_URL}/historicoAlertas`}
         />
       </div>
     </div>

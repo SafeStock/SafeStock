@@ -1,0 +1,30 @@
+╔════════════════════════════════════════════════════════════════════╗
+║                    🚀 SafeStock - URLs de Acesso                   ║
+╔════════════════════════════════════════════════════════════════════╗
+
+📌 IMPORTANTE: Você está em um Dev Container/Codespaces!
+
+🌐 Para acessar a aplicação:
+
+1. Vá até a aba "PORTS" no VS Code (ao lado de TERMINAL)
+2. Procure pela porta 5173 ou 80
+3. Clique no ícone de globo 🌐 para abrir no navegador
+   
+   OU
+
+4. Clique com botão direito na porta → "Open in Browser"
+
+📋 Portas disponíveis:
+  • 5173 ou 80    → Frontend (Load Balancer)
+  • 8081          → Backend 1 (direto)
+  • 8082          → Backend 2 (direto)
+  • 3306          → MySQL
+  • 5672          → RabbitMQ
+  • 15672         → RabbitMQ Management UI
+
+⚡ Comandos úteis:
+  docker compose ps              → Ver status dos containers
+  docker compose logs -f sf-lb   → Ver logs do load balancer
+  docker compose restart sf-lb   → Reiniciar load balancer
+
+╚════════════════════════════════════════════════════════════════════╝

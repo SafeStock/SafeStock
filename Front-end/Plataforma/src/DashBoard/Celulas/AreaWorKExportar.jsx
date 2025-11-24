@@ -27,9 +27,9 @@ export function AreaWorkExportar() {
 
 
   const endpoints = {
-    produtos: { table: "produtos", label: "Produtos", fetchUrl: `${API_BASE_URL}/api/produtos` },
-    registros: { table: "registro_uso", label: "Registros de Uso", fetchUrl: `${API_BASE_URL}/api/registroUso` },
-    alertas: { table: "alertas", label: "Alertas", fetchUrl: `${API_BASE_URL}/api/historicoAlertas` },
+    produtos: { table: "produtos", label: "Produtos", fetchUrl: `${API_BASE_URL}/produtos` },
+    registros: { table: "registro_uso", label: "Registros de Uso", fetchUrl: `${API_BASE_URL}/registroUso` },
+    alertas: { table: "alertas", label: "Alertas", fetchUrl: `${API_BASE_URL}/historicoAlertas` },
   };
 
   async function tryBackendExport(tableName, outName, checkOnly = false) {
@@ -46,9 +46,9 @@ export function AreaWorkExportar() {
         },
       ];
 
-      console.log("Fazendo requisição para:", `${API_BASE_URL}/api/export/excel`, "com payload:", payload);
+      console.log("Fazendo requisição para:", `${API_BASE_URL}/export/excel`, "com payload:", payload);
 
-      const res = await axios.post(`${API_BASE_URL}/api/export/excel`, payload, {
+      const res = await axios.post(`${API_BASE_URL}/export/excel`, payload, {
         responseType: "arraybuffer",
         headers,
       });

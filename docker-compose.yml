@@ -41,12 +41,12 @@ services:
       timeout: 5s
       retries: 12
 
-  back-antigo-primary:
+  backend-1:
     profiles: ["antigo"]
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sf-backend-legacy-a
+    container_name: sf-backend-1
     restart: always
     depends_on:
       mysql:
@@ -62,6 +62,7 @@ services:
       SPRING_RABBITMQ_USERNAME: admin
       SPRING_RABBITMQ_PASSWORD: admin123
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
+      FRONTEND_URL: "*"
     ports:
       - "8081:8080"
     networks:
@@ -69,12 +70,12 @@ services:
         aliases:
           - api-back-1
 
-  back-antigo-secondary:
+  backend-2:
     profiles: ["antigo"]
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sf-backend-legacy-b
+    container_name: sf-backend-2
     restart: always
     depends_on:
       mysql:
@@ -90,6 +91,7 @@ services:
       SPRING_RABBITMQ_USERNAME: admin
       SPRING_RABBITMQ_PASSWORD: admin123
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
+      FRONTEND_URL: "*"
     ports:
       - "8082:8080"
     networks:
@@ -97,12 +99,12 @@ services:
         aliases:
           - api-back-2
 
-  back-novo-primary:
+  backend-novo-1:
     profiles: ["novo"]
     build:
       context: ../Back-SafeStock/Project-SafeStock-BackEnd
       dockerfile: Dockerfile
-    container_name: sf-backend-hex-a
+    container_name: sf-backend-novo-1
     restart: always
     depends_on:
       mysql:
@@ -128,12 +130,12 @@ services:
         aliases:
           - api-back-1
 
-  back-novo-secondary:
+  backend-novo-2:
     profiles: ["novo"]
     build:
       context: ../Back-SafeStock/Project-SafeStock-BackEnd
       dockerfile: Dockerfile
-    container_name: sf-backend-hex-b
+    container_name: sf-backend-novo-2
     restart: always
     depends_on:
       mysql:
@@ -159,19 +161,56 @@ services:
         aliases:
           - api-back-2
 
-  front:
+  # Load Balancer - Ponto de entrada único
+  loadbalancer:
+    profiles: ["antigo", "novo"]
+    build:
+      context: .
+      dockerfile: Dockerfile.loadbalancer
+    container_name: sf-lb
+    restart: always
+    ports:
+      - "80:80"      # Porta principal HTTP
+      - "5173:80"    # Mantém compatibilidade com porta antiga
+    depends_on:
+      - frontend-1
+      - frontend-2
+    networks:
+      - safestock-network
+
+  # Frontend 1 - Servidor A
+  frontend-1:
     profiles: ["antigo", "novo"]
     build:
       context: ./Front-end/Plataforma
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.frontend
       args:
-        BUILD_MODE: dev  # Usa .env.development (localhost:8081)
-    container_name: sf-frontend
+        BUILD_MODE: dev
+    container_name: sf-frontend-1
     restart: always
-    ports:
-      - "5173:80"
+    environment:
+      - SERVER_ID=Frontend-A
     networks:
-      - safestock-network
+      safestock-network:
+        aliases:
+          - sf-frontend-1
+
+  # Frontend 2 - Servidor B
+  frontend-2:
+    profiles: ["antigo", "novo"]
+    build:
+      context: ./Front-end/Plataforma
+      dockerfile: Dockerfile.frontend
+      args:
+        BUILD_MODE: dev
+    container_name: sf-frontend-2
+    restart: always
+    environment:
+      - SERVER_ID=Frontend-B
+    networks:
+      safestock-network:
+        aliases:
+          - sf-frontend-2
 
 volumes:
   mysql_data:
