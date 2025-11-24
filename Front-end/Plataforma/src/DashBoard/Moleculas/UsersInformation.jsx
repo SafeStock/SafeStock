@@ -80,8 +80,8 @@ export function UserInformation({ tabela, campos, titles }) {
 
     // If requesting funcionarios or produtos, ask for paged endpoint
     const url = isPaged
-      ? `${API_BASE_URL}/api/${tabela}/paged?page=${page}&size=${size}`
-      : `${API_BASE_URL}/api/${tabela}`;
+      ? `${API_BASE_URL}/${tabela}/paged?page=${page}&size=${size}`
+      : `${API_BASE_URL}/${tabela}`;
 
     axios.get(url, {
       headers: {
@@ -183,7 +183,7 @@ export function UserInformation({ tabela, campos, titles }) {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`${API_BASE_URL}/api/${tabela}/deletar/${id}`, {
+        axios.delete(`${API_BASE_URL}/${tabela}/deletar/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -210,7 +210,7 @@ export function UserInformation({ tabela, campos, titles }) {
 
     try {
       await axios.put(
-        `${API_BASE_URL}/api/${tabela}/atualizar/${id}`,
+        `${API_BASE_URL}/${tabela}/atualizar/${id}`,
         dadosAtualizados,
         {
           headers: {

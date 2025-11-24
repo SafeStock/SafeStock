@@ -63,7 +63,7 @@ export function CadastroProduto({ fecharModal, atualizarLista }) {
 
         (async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos/cadastro`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/produtos/cadastro`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

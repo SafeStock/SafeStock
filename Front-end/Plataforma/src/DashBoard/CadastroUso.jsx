@@ -9,7 +9,7 @@ export function CadastroUso({ fecharModal, atualizarLista }) {
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
 
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos`, {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/produtos`, {
       headers: { Authorization: "Bearer " + token },
     })
       .then(res => res.json())
@@ -74,7 +74,7 @@ export function CadastroUso({ fecharModal, atualizarLista }) {
     };
 
 
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/produtos/atualizar/${produtoSelecionado.id}`, {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/produtos/atualizar/${produtoSelecionado.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export function CadastroUso({ fecharModal, atualizarLista }) {
         if (!res.ok) throw new Error("Erro ao atualizar estoque");
 
         // Registra o uso
-        return fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registroUso/cadastro`, {
+        return fetch(`${import.meta.env.VITE_API_BASE_URL}/registroUso/cadastro`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

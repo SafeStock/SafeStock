@@ -76,7 +76,7 @@ export function AreaNotification( { tabela, campos  } ) {
           return;
         }
     
-        axios.get(`${API_BASE_URL}/api/${tabela}`, {
+        axios.get(`${API_BASE_URL}/${tabela}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

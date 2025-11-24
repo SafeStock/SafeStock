@@ -37,7 +37,7 @@ export function TelaFuncionarios() {
     }
     try {
       await axios.put(
-        `${API_BASE_URL}/api/funcionarios/atualizar/${id}`,
+        `${API_BASE_URL}/funcionarios/atualizar/${id}`,
         dadosAtualizados,
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
@@ -57,7 +57,7 @@ export function TelaFuncionarios() {
     }
     try {
       await axios.post(
-        `${API_BASE_URL}/api/funcionarios/cadastro`,
+        `${API_BASE_URL}/funcionarios/cadastro`,
         dados,
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );

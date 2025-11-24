@@ -51,7 +51,7 @@ export function HistoricoUso() {
   const cadastrarRegistro = async (dados) => {
     try {
       await axios.post(
-        `${API_BASE_URL}/api/registroUso/cadastro`, console.log("Dados do cadastro:", dados),
+        `${API_BASE_URL}/registroUso/cadastro`, console.log("Dados do cadastro:", dados),
         { ...dados, quantidade: Number(dados.quantidade), funcionario: { id: Number(dados.responsavelId) } },
         { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );

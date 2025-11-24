@@ -52,7 +52,7 @@ export function TelaProdutos() {
     }
     try {
       await axios.put(
-        `${API_BASE_URL}/api/produtos/atualizar/${id}`,
+        `${API_BASE_URL}/produtos/atualizar/${id}`,
         dadosAtualizados,
         {
           headers: {
@@ -78,7 +78,7 @@ export function TelaProdutos() {
     }
     try {
       await axios.post(
-        `${API_BASE_URL}/api/produtos/cadastro`,
+        `${API_BASE_URL}/produtos/cadastro`,
         dadosAtualizados,
         {
           headers: {

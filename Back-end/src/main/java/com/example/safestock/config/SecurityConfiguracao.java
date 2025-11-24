@@ -118,7 +118,13 @@ public class SecurityConfiguracao {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
         configuracao.applyPermitDefaultValues();
-        configuracao.setAllowedOrigins(Arrays.asList(CLIENT_URL));
+        
+        // Se FRONTEND_URL for "*", aceita todas as origens
+        if ("*".equals(CLIENT_URL)) {
+            configuracao.addAllowedOriginPattern("*");
+        } else {
+            configuracao.setAllowedOrigins(Arrays.asList(CLIENT_URL));
+        }
         configuracao.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
