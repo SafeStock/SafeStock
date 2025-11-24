@@ -1,0 +1,25 @@
+services:
+  front-dev:
+    build:
+      context: ./Front-end/Plataforma
+      dockerfile: Dockerfile.dev
+    container_name: sf-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Front-end/Plataforma/src:/app/src
+      - ./Front-end/Plataforma/public:/app/public
+      - ./Front-end/Plataforma/index.html:/app/index.html
+      - ./Front-end/Plataforma/vite.config.js:/app/vite.config.js
+      - ./Front-end/Plataforma/package.json:/app/package.json
+      - ./Front-end/Plataforma/tailwind.config.js:/app/tailwind.config.js
+      - ./Front-end/Plataforma/eslint.config.js:/app/eslint.config.js
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - safestock-network
+    command: npm run dev -- --host 0.0.0.0
+
+networks:
+  safestock-network:
+    external: true
