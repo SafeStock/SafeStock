@@ -1,0 +1,65 @@
+# Docker Compose para DESENVOLVIMENTO - SafeStock
+# Este arquivo permite hot reload do frontend mantendo backend no Docker
+
+services:
+  # Frontend em modo DEV com hot reload
+  front-dev:
+    profiles: ["dev"]
+    build:
+      context: ./Front-end/Plataforma
+      dockerfile: Dockerfile.dev
+    container_name: sf-frontend-dev
+    restart: always
+    ports:
+      - "5173:5173"  # Vite dev server
+    volumes:
+      # Monta o código fonte para hot reload
+      - ./Front-end/Plataforma/src:/app/src
+      - ./Front-end/Plataforma/public:/app/public
+      - ./Front-end/Plataforma/index.html:/app/index.html
+      - ./Front-end/Plataforma/vite.config.js:/app/vite.config.js
+      - ./Front-end/Plataforma/tailwind.config.js:/app/tailwind.config.js
+      - ./Front-end/Plataforma/.env.development:/app/.env.development
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8081
+    networks:
+      - safestock-network
+    depends_on:
+      - back-antigo
+    stdin_open: true
+    tty: true
+
+  # Backend continua igual (apenas para dev)
+  back-antigo:
+    profiles: ["dev"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sf-backend-dev
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/safestockDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&useUnicode=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: safestock_app
+      SPRING_DATASOURCE_PASSWORD: admin123
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: admin
+      SPRING_RABBITMQ_PASSWORD: admin123
+      SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
+    ports:
+      - "8081:8080"
+    networks:
+      - safestock-network
+
+networks:
+  safestock-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

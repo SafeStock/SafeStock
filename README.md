@@ -164,9 +164,9 @@ RabbitMQ 3               :5672   npm run dev
 
 docker logs sf-frontend            # Frontend
 
-docker logs sf-backend-legacy-a    # Backend primário- **Ver logs dos containers:**
+docker logs sf-backend-antigo      # Backend antigo
 
-docker logs sf-backend-legacy-b    # Backend secundário  ```bash
+docker logs sf-backend-refatorado  # Backend refatorado
 
 docker logs sf-mysql               # Banco de dados  docker-compose logs
 
@@ -182,9 +182,9 @@ docker logs sf-rabbitmq            # Message broker  docker-compose logs mysql  
 
 docker compose build front                    # Rebuild frontend  docker exec -it safestock-mysql mysql -u safestock_user -p
 
-docker compose build back-antigo-primary      # Rebuild backend  ```
+docker compose build back-antigo             # Rebuild backend antigo
 
-docker compose restart back-antigo-primary    # Reiniciar serviço
+docker compose restart back-antigo           # Reiniciar backend antigo
 
 ```
 
@@ -215,7 +215,7 @@ lsof -ti:8081 | xargs kill -9
 ```
 
 ### **Frontend não conecta backend**
-1. Verificar backend: `docker logs sf-backend-legacy-a`
+1. Verificar backend: `docker logs sf-backend-antigo`
 2. Verificar MySQL: `docker ps | grep sf-mysql`
 3. Testar API: `curl http://localhost:8081/api/funcionarios/login`
 

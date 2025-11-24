@@ -29,7 +29,7 @@ subnet_privada_backend_cidr  = "10.0.10.0/24"
 subnet_privada_database_cidr = "10.0.20.0/24"
 
 # EC2 Configuration
-instance_type_frontend = "t3.micro"
+instance_type_frontend = "t3.medium"
 instance_type_backend  = "t3.small"
 instance_type_database = "t3.small"
 
