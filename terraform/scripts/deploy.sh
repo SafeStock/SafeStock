@@ -140,6 +140,15 @@ case $choice in
         log_info "Executando terraform plan..."
         terraform plan -out=tfplan
         
+        # Pre-deploy IP update ANTES do apply
+        echo ""
+        log_info "Preparando IPs antes do apply..."
+        if [ -f "scripts/pre-deploy-update.ps1" ]; then
+            powershell.exe -ExecutionPolicy Bypass -File scripts/pre-deploy-update.ps1
+        else
+            log_warn "Script pre-deploy-update.ps1 não encontrado!"
+        fi
+        
         # Confirmar apply
         echo ""
         log_warn "Revisão do plano concluída. Deseja aplicar as mudanças?"
@@ -150,6 +159,15 @@ case $choice in
             log_info "Executando terraform apply..."
             terraform apply tfplan
             
+            # Confirmação final dos IPs após apply
+            echo ""
+            log_info "Confirmando IPs após apply..."
+            if [ -f "scripts/pre-deploy-update.ps1" ]; then
+                powershell.exe -ExecutionPolicy Bypass -File scripts/pre-deploy-update.ps1
+            else
+                log_warn "Script pre-deploy-update.ps1 não encontrado!"
+            fi
+            
             # Mostrar outputs importantes
             echo ""
             log_info "============ DEPLOYMENT CONCLUÍDO ============"
@@ -157,7 +175,7 @@ case $choice in
             
             log_info "URLs importantes:"
             echo "Frontend: $(terraform output -raw frontend_url 2>/dev/null || echo 'N/A')"
-            echo "API: $(terraform output -raw backend_api_url 2>/dev/null || echo 'N/A')"
+            echo "API: $(terraform output -raw api_url 2>/dev/null || echo 'N/A')"
             
         else
             log_info "Deploy cancelado pelo usuário."
