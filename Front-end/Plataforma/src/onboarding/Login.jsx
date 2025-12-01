@@ -7,6 +7,7 @@ import Animation from "../lotties/Animation - 1745693504754.json";
 import Lottie from "lottie-react";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { API_BASE_URL } from '../config/api';
 
 
 export function Login() {
@@ -51,7 +52,7 @@ export function Login() {
     }
   
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/funcionarios/login`, {
+      const response = await fetch(`${API_BASE_URL}/funcionarios/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
