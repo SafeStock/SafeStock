@@ -2,6 +2,8 @@
 
 Projeto de PI Extensão
 
+## URL do Front no git hub: echo -e "\n=== URL DO FRONTEND ===\nhttps://${CODESPACE_NAME}-5173.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\n" 
+
 > Projeto de extensão acadêmica - Gestão inteligente de estoque para creches
 
 ## Rodar o projeto localmente

@@ -12,6 +12,13 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    open: '/login'
+    open: '/login',
+    proxy: {
+      '/api': {
+        target: 'http://sf-backend-1:8080',
+        changeOrigin: true,
+        secure: false
+      }
+    }
   }
 })
