@@ -104,7 +104,7 @@ services:
   backend-novo-1:
     profiles: ["novo"]
     build:
-      context: ../Back-SafeStock/Project-SafeStock-BackEnd
+      context: ../Back-SafeStock
       dockerfile: Dockerfile
     container_name: sf-backend-novo-1
     restart: always
@@ -130,12 +130,12 @@ services:
     networks:
       safestock-network:
         aliases:
-          - api-back-antigo
+          - api-back-1
 
   backend-novo-2:
     profiles: ["novo"]
     build:
-      context: ../Back-SafeStock/Project-SafeStock-BackEnd
+      context: ../Back-SafeStock
       dockerfile: Dockerfile
     container_name: sf-backend-novo-2
     restart: always
@@ -161,7 +161,7 @@ services:
     networks:
       safestock-network:
         aliases:
-          - api-back-refatorado
+          - api-back-2
 
   # Load Balancer - Ponto de entrada único
   loadbalancer:
