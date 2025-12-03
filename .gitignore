@@ -71,9 +71,6 @@ Backend-Refatorado/.idea/
 Backend-Refatorado/target/
 Backend-Refatorado/**/*.jar
 Backend-Refatorado/**/node_modules/
-Backend-Refatorado/**/.mvn/
-Backend-Refatorado/**/mvnw
-Backend-Refatorado/**/mvnw.cmd
 Backend-Refatorado/**/.classpath
 Backend-Refatorado/**/.project
 Backend-Refatorado/**/.settings/
