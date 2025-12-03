@@ -100,7 +100,7 @@ export function HistoricoUso() {
         NewText={`Histórico de Uso`}
         titles={["Produto", "Quantidade", "Responsável", "Data Saída"]}
         tabela="registroUso"
-        campos={["produto", "quantidade", "funcionarioNome", "dataHoraSaida"]}
+        campos={["produto", "quantidade", "responsavel", "dataHoraSaida"]}
         displayButton={display}
         abrirModal={abrirModalEdicao}
 

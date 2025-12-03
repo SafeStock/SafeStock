@@ -45,39 +45,39 @@ export function NavBar() {
 
       <BtnRedirecNavBar
         imagemUrl={funcionariosIcon}
-        onClick={() => handleRedirect('telafuncionarios')}
+        onClick={() => handleRedirect(`${dashboard}/telafuncionarios`)}
         title="Funcionários"
         display={display1}
-        ativado={location.pathname === "/telafuncionarios"}
+        ativado={location.pathname === `${dashboard}/telafuncionarios`}
       />
 
       <BtnRedirecNavBar
         imagemUrl={produtosIcon}
-        onClick={() => handleRedirect('telaprodutos')}
+        onClick={() => handleRedirect(`${dashboard}/telaprodutos`)}
         title="Produtos"
-        ativado={location.pathname === "/telaprodutos"}
+        ativado={location.pathname === `${dashboard}/telaprodutos`}
       />
 
       <BtnRedirecNavBar
         imagemUrl={historicoUsoIcon}
-        onClick={() => handleRedirect('historicouso')}
+        onClick={() => handleRedirect(`${dashboard}/historicouso`)}
         title="Histórico de Uso"
-        ativado={location.pathname === "/historicouso"}
+        ativado={location.pathname === `${dashboard}/historicouso`}
       />
 
       <BtnRedirecNavBar
         imagemUrl={historicoAlertasIcon}
-        onClick={() => handleRedirect('historicoalertas')}
+        onClick={() => handleRedirect(`${dashboard}/historicoalertas`)}
         title="Histórico de Alertas"
-        ativado={location.pathname === "/historicoalertas"}
+        ativado={location.pathname === `${dashboard}/historicoalertas`}
       />
 
       <BtnRedirecNavBar
         display={display1}
         imagemUrl={exportIcon}
-        onClick={() => handleRedirect('/exportarrelatorio ')}
+        onClick={() => handleRedirect(`${dashboard}/exportarrelatorio`)}
         title="Exportar Relatório"
-        ativado={location.pathname === "/exportarrelatorio"}
+        ativado={location.pathname === `${dashboard}/exportarrelatorio`}
       />
 
       <BtnRedirecNavBar imagemUrl={logoutIcon} onClick={() => { sessionStorage.clear(); handleRedirect('/login'); }} title="Sair" />

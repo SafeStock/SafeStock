@@ -154,7 +154,7 @@ export function DivElementKPIDonoBigRight({
         produto: item.produto || "-",
         quantidade: item.quantidade ? `${item.quantidade}` : "-",
         dataHoraSaida: formatarDataEspecifica(item.dataHoraSaida),
-        funcionarioNome: item.funcionarioNome || "-"
+        responsavel: item.responsavel || "-"
       }));
   };
 
@@ -170,7 +170,7 @@ export function DivElementKPIDonoBigRight({
       <div className="w-full" style={{ height: customHeight }}>
         <ListaDinamica
           endpoint={customEndpoint}
-          campos={customCampos || ["produto", "quantidade", "funcionarioNome", "dataHoraSaida"]}
+          campos={customCampos || ["produto", "quantidade", "responsavel", "dataHoraSaida"]}
           token={token}
           formataDados={formatarDadosUso}
           hideTitle
@@ -179,7 +179,7 @@ export function DivElementKPIDonoBigRight({
           nomesCampos={{
             produto: "Produto",
             quantidade: "Quantidade",
-            funcionarioNome: "Responsável",
+            responsavel: "Responsável",
             dataHoraSaida: "Saída"
           }}
         />

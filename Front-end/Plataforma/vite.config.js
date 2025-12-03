@@ -10,16 +10,21 @@ export default defineConfig({
       plugins: [tailwindcss(), autoprefixer()]
     }
   },
-  resolve: {
-    dedupe: ['react', 'react-dom', 'react-router-dom']
-  },
   server: {
     host: '0.0.0.0',
     port: 5173,
     open: '/login',
-    hmr: {
-      clientPort: 5173
-    },
+    hmr: process.env.CODESPACE_NAME 
+      ? {
+          // Configuração para GitHub Codespaces
+          protocol: 'wss',
+          host: `${process.env.CODESPACE_NAME}-80.app.github.dev`,
+          clientPort: 443
+        }
+      : {
+          // Configuração para ambiente local
+          clientPort: 5173
+        },
     proxy: {
       '/api': {
         target: 'http://sf-backend-1:8080',

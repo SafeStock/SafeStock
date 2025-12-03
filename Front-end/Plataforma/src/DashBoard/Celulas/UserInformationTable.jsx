@@ -92,9 +92,6 @@ export function UserInformationTable({
     return <p>Erro: estrutura da tabela inválida.</p>;
   }
 
-  if (dadosValidos.length === 0) {
-    return <p>Nenhum dado disponível.</p>;
-  }
 
   return (
     <div className="relative top-[1vh]">

@@ -13,6 +13,7 @@ export function UserInformation({ tabela, campos, titles }) {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const token = sessionStorage.getItem('authToken');
   const isPaged = tabela === "funcionarios" || tabela === "produtos" || tabela === "historicoAlertas" || tabela === "registroUso";
 
@@ -77,6 +78,12 @@ export function UserInformation({ tabela, campos, titles }) {
       console.warn("Token inválido ou não informado");
       return;
     }
+
+    if (isLoading) {
+      return; // Previne múltiplas requisições simultâneas
+    }
+
+    setIsLoading(true);
 
     // If requesting funcionarios or produtos, ask for paged endpoint
     const url = isPaged
@@ -149,6 +156,9 @@ export function UserInformation({ tabela, campos, titles }) {
       })
       .catch((error) => { 
         console.error(`Erro ao buscar ${tabela}:`, error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }; 
   
@@ -231,17 +241,17 @@ export function UserInformation({ tabela, campos, titles }) {
       {isPaged && (
         <div className="flex gap-2 mb-2 items-center justify-end absolute top-[75vh] right-[-4vh]">
           <button
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            disabled={page <= 0}
+            onClick={() => !isLoading && setPage((p) => Math.max(0, p - 1))}
+            disabled={page <= 0 || isLoading}
             className="flex items-center justify-center"
-            style={{ background: 'transparent', border: 'none', padding: '0.25rem', appearance: 'none', WebkitAppearance: 'none', outline: 'none' }}
+            style={{ background: 'transparent', border: 'none', padding: '0.25rem', appearance: 'none', WebkitAppearance: 'none', outline: 'none', cursor: (page <= 0 || isLoading) ? 'not-allowed' : 'pointer' }}
             aria-label="Página anterior"
             title="Anterior"
           >
             <FiChevronLeft
               size={55}
               color="#3A577B"
-              style={{ lineHeight: 1, opacity: page <= 0 ? 0.3 : 1 }}
+              style={{ lineHeight: 1, opacity: (page <= 0 || isLoading) ? 0.3 : 1 }}
               aria-hidden="true"
             />
           </button>
@@ -249,17 +259,17 @@ export function UserInformation({ tabela, campos, titles }) {
           <span className="text-xl font-bold text-black mx-2">{page + 1}/{totalPages || 1}</span>
 
           <button
-            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-            disabled={totalPages === 0 || page >= totalPages - 1}
+            onClick={() => !isLoading && setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={totalPages === 0 || page >= totalPages - 1 || isLoading}
             aria-label="Próxima página"
             title="Próxima"
             className="flex items-center justify-center"
-            style={{ background: 'transparent', border: 'none', padding: '0.25rem', appearance: 'none', WebkitAppearance: 'none', outline: 'none' }}
+            style={{ background: 'transparent', border: 'none', padding: '0.25rem', appearance: 'none', WebkitAppearance: 'none', outline: 'none', cursor: (totalPages === 0 || page >= totalPages - 1 || isLoading) ? 'not-allowed' : 'pointer' }}
           >
             <FiChevronRight
               size={55}
               color="#3A577B"
-              style={{ lineHeight: 1, opacity: (totalPages === 0 || page >= totalPages - 1) ? 0.3 : 1 }}
+              style={{ lineHeight: 1, opacity: (totalPages === 0 || page >= totalPages - 1 || isLoading) ? 0.3 : 1 }}
               aria-hidden="true"
             />
           </button>
