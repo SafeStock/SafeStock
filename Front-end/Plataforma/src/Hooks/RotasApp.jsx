@@ -7,7 +7,7 @@ import { DashPrincipalDono } from '../DashBoard/DashPrincipalDono';
 import { HistoricoAlertas } from '../DashBoard/HistoricoAlertas';
 import { HistoricoUso } from '../DashBoard/HistoricoUso';
 import { DashLimpeza } from '../DashBoard/DashLimpeza';
-import { PrivateRoute } from '../components/PrivateRoute';
+import { PrivateRoute } from './PrivateRoute';
 import { DonoLayout } from "../DashBoard/Celulas/DonoLayout";
 import { AdminLayout } from "../DashBoard/Celulas/AdminLayout";
 import { LimpezaLayout } from "../DashBoard/Celulas/LimpezaLayout";
@@ -24,38 +24,23 @@ export function RotasApp() {
     <Routes>
       <Route path="/login" element={<Login />} />
 
-      <Route element={<PrivateRoute allowedRoles={["dono"]} />}>
-        <Route path="/" element={<DonoLayout />}>
+      <Route element={<PrivateRoute allowedRoles={["dono", "administracao"]} />}>
+        <Route path="/dashboard" element={<DonoLayout />}>
           <Route index element={<DashPrincipalDono />} />
           <Route path="telafuncionarios" element={<TelaFuncionarios />} />
           <Route path="cadastro" element={<Cadastro />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
-          <Route path="exportarrelatorio" element={<ExportarRelatorio />} />
-        </Route>
-      </Route>
-
-
-      <Route element={<PrivateRoute allowedRoles={["administracao"]} />}>
-        <Route path="/" element={<AdminLayout />}>
-          <Route index element={<DashPrincipalDono />} />
-          <Route path="dashboard" element={<DashPrincipalDono />} />
-          <Route path="cadastro" element={<Cadastro />} />
-          <Route path="telafuncionarios" element={<TelaFuncionarios />} />
-          <Route path="historicoalertas" element={<HistoricoAlertas />} />
-          <Route path="historicouso" element={<HistoricoUso />} />
-          <Route path="telaprodutos" element={<TelaProdutos />} />
           <Route path="exportarrelatorio" element={<ExportarRelatorio />} />
         </Route>
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={["limpeza"]} />}>
-        <Route path="/" element={<LimpezaLayout />}>
+        <Route path="/dashboardlimpeza" element={<LimpezaLayout />}>
           <Route index element={<DashLimpeza />} />
           <Route path="cadastrouso" element={<CadastroUso />} />
           <Route path="cadastroproduto" element={<CadastroProduto />} />
-          <Route path="dashboardlimpeza" element={<DashLimpeza />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
           <Route path="historicouso" element={<HistoricoUso />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />

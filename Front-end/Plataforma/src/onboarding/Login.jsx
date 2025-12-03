@@ -7,6 +7,7 @@ import Animation from "../lotties/Animation - 1745693504754.json";
 import Lottie from "lottie-react";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { API_BASE_URL } from '../config/api';
 
 
 export function Login() {
@@ -18,15 +19,13 @@ export function Login() {
   const [color, setColor] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  const irParaDashboard = () => {
-  setTimeout(() => {
-    if  (sessionStorage.getItem('cargo') === 'limpeza') {
-      navigate('/dashboardlimpeza');
+  const irParaDashboard = (cargo) => {
+    if (cargo === 'limpeza') {
+      navigate('/dashboardlimpeza', { replace: true });
     } else {
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     }
-  }, 2200);
-};
+  };
 
 
   const validarEmail = (email) => {
@@ -51,7 +50,11 @@ export function Login() {
     }
   
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/funcionarios/login`, {
+      // Remove qualquer token anterior antes do login
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('authToken');
+      
+      const response = await fetch(`${API_BASE_URL}/funcionarios/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,15 +70,16 @@ export function Login() {
       }
 
       const data = await response.json();
-      console.log(data);
+      console.log('Dados do login:', data);
 
-      // 💾 
-      if (data.token) {
-        sessionStorage.setItem('authToken', data.token);
-        sessionStorage.setItem('usuario', data.nome);
-        sessionStorage.setItem('cargo', data.cargo); 
-        sessionStorage.setItem("usuarioId", data.id);
-      }
+      // 💾 Salva PRIMEIRO no sessionStorage
+      sessionStorage.setItem('authToken', data.token);
+      sessionStorage.setItem('usuario', data.nome);
+      sessionStorage.setItem('cargo', data.cargo); 
+      sessionStorage.setItem("usuarioId", data.id);
+      
+      console.log('Token salvo:', sessionStorage.getItem('authToken'));
+      console.log('Cargo salvo:', sessionStorage.getItem('cargo'));
   
       setColor("#2F4700");
       setStar('');
@@ -83,7 +87,12 @@ export function Login() {
       setEmail("");
       setSenha("");
       toast.success("Login realizado com sucesso!");
-      irParaDashboard(data.cargo);
+      
+      // Aguarda animação antes de redirecionar
+      setTimeout(() => {
+        console.log('Redirecionando para:', data.cargo === 'limpeza' ? '/dashboardlimpeza' : '/dashboard');
+        irParaDashboard(data.cargo);
+      }, 2000);
     
     } catch (error) {
       console.error(error);

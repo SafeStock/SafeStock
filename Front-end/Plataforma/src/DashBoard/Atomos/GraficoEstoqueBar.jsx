@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import { API_BASE_URL } from '../../config/api';
 
 export function GraficoEstoqueBar() {
   const [dadosGrafico, setDadosGrafico] = useState([]);
@@ -9,7 +10,7 @@ export function GraficoEstoqueBar() {
   const token = sessionStorage.getItem('authToken');
 
   const buscarDados = () => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/produtos`, {
+    fetch(`${API_BASE_URL}/produtos`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

@@ -61,6 +61,23 @@ Back-end/resolve
 Back-end/resolving
 Back-end/writing
 
+# Backend Refatorado - Ignora arquivos de build e Git do repo original
+Backend-Refatorado/.git/
+Backend-Refatorado/.gitignore
+Backend-Refatorado/.gitattributes
+Backend-Refatorado/.dockerignore
+Backend-Refatorado/docker-compose.yml
+Backend-Refatorado/.idea/
+Backend-Refatorado/target/
+Backend-Refatorado/**/*.jar
+Backend-Refatorado/**/node_modules/
+Backend-Refatorado/**/.mvn/
+Backend-Refatorado/**/mvnw
+Backend-Refatorado/**/mvnw.cmd
+Backend-Refatorado/**/.classpath
+Backend-Refatorado/**/.project
+Backend-Refatorado/**/.settings/
+
 # Logs
 logs
 *.log
@@ -71,7 +88,11 @@ terraform/*.log
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+.idea/
 .idea
+*.iml
+*.ipr
+*.iws
 .DS_Store
 *.suo
 *.ntvs*

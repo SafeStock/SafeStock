@@ -1,6 +1,5 @@
 services:
   mysql:
-    profiles: ["antigo", "novo"]
     image: mysql:8.0
     container_name: sf-mysql
     restart: always
@@ -25,7 +24,6 @@ services:
       start_period: 20s
 
   rabbitmq:
-    profiles: ["antigo", "novo"]
     image: rabbitmq:3-management
     container_name: sf-rabbitmq
     restart: always
@@ -44,9 +42,8 @@ services:
       retries: 12
 
   backend-1:
-    profiles: ["antigo"]
     build:
-      context: .
+      context: ./Backend-Refatorado
       dockerfile: Dockerfile
     container_name: sf-backend-1
     restart: always
@@ -59,23 +56,30 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/safestockDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&useUnicode=true&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: safestock_app
       SPRING_DATASOURCE_PASSWORD: admin123
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      SPRING_H2_CONSOLE_ENABLED: "false"
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: admin
       SPRING_RABBITMQ_PASSWORD: admin123
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
-      FRONTEND_URL: "*"
     ports:
       - "8081:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/produtos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       safestock-network:
         aliases:
           - api-back-1
 
   backend-2:
-    profiles: ["antigo"]
     build:
-      context: .
+      context: ./Backend-Refatorado
       dockerfile: Dockerfile
     container_name: sf-backend-2
     restart: always
@@ -88,84 +92,29 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/safestockDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&useUnicode=true&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: safestock_app
       SPRING_DATASOURCE_PASSWORD: admin123
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      SPRING_H2_CONSOLE_ENABLED: "false"
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: admin
       SPRING_RABBITMQ_PASSWORD: admin123
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
-      FRONTEND_URL: "*"
     ports:
       - "8082:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/produtos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       safestock-network:
         aliases:
           - api-back-2
 
-  backend-novo-1:
-    profiles: ["novo"]
-    build:
-      context: ../Back-SafeStock/Project-SafeStock-BackEnd
-      dockerfile: Dockerfile
-    container_name: sf-backend-novo-1
-    restart: always
-    depends_on:
-      mysql:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/safestockDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&useUnicode=true&characterEncoding=UTF-8
-      SPRING_DATASOURCE_USERNAME: safestock_app
-      SPRING_DATASOURCE_PASSWORD: admin123
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
-      SPRING_H2_CONSOLE_ENABLED: "false"
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: admin
-      SPRING_RABBITMQ_PASSWORD: admin123
-      SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
-    ports:
-      - "8081:8080"
-    networks:
-      safestock-network:
-        aliases:
-          - api-back-antigo
-
-  backend-novo-2:
-    profiles: ["novo"]
-    build:
-      context: ../Back-SafeStock/Project-SafeStock-BackEnd
-      dockerfile: Dockerfile
-    container_name: sf-backend-novo-2
-    restart: always
-    depends_on:
-      mysql:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/safestockDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo&useUnicode=true&characterEncoding=UTF-8
-      SPRING_DATASOURCE_USERNAME: safestock_app
-      SPRING_DATASOURCE_PASSWORD: admin123
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
-      SPRING_H2_CONSOLE_ENABLED: "false"
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: admin
-      SPRING_RABBITMQ_PASSWORD: admin123
-      SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
-    ports:
-      - "8082:8080"
-    networks:
-      safestock-network:
-        aliases:
-          - api-back-refatorado
-
   # Load Balancer - Ponto de entrada único
   loadbalancer:
-    profiles: ["antigo", "novo"]
     build:
       context: .
       dockerfile: Dockerfile.loadbalancer
@@ -175,14 +124,19 @@ services:
       - "80:80"      # Porta principal HTTP
       - "5173:80"    # Mantém compatibilidade com porta antiga
     depends_on:
-      - frontend-1
-      - frontend-2
+      backend-1:
+        condition: service_healthy
+      backend-2:
+        condition: service_healthy
+      frontend-1:
+        condition: service_started
+      frontend-2:
+        condition: service_started
     networks:
       - safestock-network
 
   # Frontend 1 - Servidor A
   frontend-1:
-    profiles: ["antigo", "novo"]
     build:
       context: ./Front-end/Plataforma
       dockerfile: Dockerfile.frontend
@@ -199,7 +153,6 @@ services:
 
   # Frontend 2 - Servidor B
   frontend-2:
-    profiles: ["antigo", "novo"]
     build:
       context: ./Front-end/Plataforma
       dockerfile: Dockerfile.frontend
