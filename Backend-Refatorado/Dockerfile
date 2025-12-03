@@ -3,16 +3,16 @@ FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copia arquivos do Maven
-COPY src/pom.xml .
-COPY src/mvnw .
-COPY src/mvnw.cmd .
-COPY src/.mvn .mvn
+COPY pom.xml .
+COPY mvnw .
+COPY mvnw.cmd .
+COPY .mvn .mvn
 
 # Download de dependências
 RUN mvn dependency:go-offline -B
 
 # Copia código fonte
-COPY src/src ./src
+COPY src ./src
 
 # Build da aplicação
 RUN mvn clean package -DskipTests
