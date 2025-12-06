@@ -36,18 +36,17 @@ const ServerIdentifier = () => {
   
   const isServerA = serverId === '1';
   const bgColor = isServerA ? 'bg-green-600' : 'bg-blue-600';
-  const textColor = isServerA ? 'text-green-100' : 'text-blue-100';
-  const dotColor = isServerA ? 'bg-green-300' : 'bg-blue-300';
+  const textColor = isServerA ? 'text-[#60e69a]' : 'text-[#447ed1]';
   const emoji = isServerA ? '🟢' : '🔵';
 
   if (!serverId) return null;
 
   return (
       <div
-      className={`fixed bottom-4 left-4 ${bgColor} ${textColor} py-2 px-3 rounded-lg shadow-lg z-[9999] flex items-center gap-2 text-xs font-medium`}
+      className={`fixed bottom-[0.3vw] right-[0.5vw] ${bgColor} ${textColor} z-[9999] flex items-center gap-2 text-[1.8vh] font-[600]`}
     >
       <span>{emoji}</span>
-      <span>{serverName}</span>
+      <span className=''>{serverName}</span>
     </div>
   );
 };
