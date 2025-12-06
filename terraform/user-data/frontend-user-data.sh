@@ -76,6 +76,9 @@ fi
 # Instalar dependências
 npm ci --prefer-offline --no-audit --silent
 
+# Garantir que ec2-user está no grupo docker
+sudo usermod -aG docker ec2-user
+
 # Build com configurações otimizadas de memória
 export NODE_OPTIONS="--max-old-space-size=1536"
 npm run build:prod || {
@@ -107,7 +110,7 @@ cd /home/ec2-user/SafeStock
 chown -R ec2-user:ec2-user /home/ec2-user/SafeStock
 
 # Executar apenas frontend e load balancer de produção usando profile
-sudo -u ec2-user docker compose -f docker-compose.prod.yml --env-file .env.aws --profile frontend up -d --pull always
+sudo docker compose -f docker-compose.prod.yml --env-file .env.aws --profile frontend up -d --pull always
 
 # Aguardar containers subirem
 echo "==== Aguardando containers do frontend iniciarem ===="
