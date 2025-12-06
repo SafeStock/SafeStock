@@ -50,13 +50,17 @@ export function NotificationBalloon({ campos = [], dados = [] }) {
       return (
         <div
           key={linhaId}
-          className="shadow-[0_0_10px_rgba(0,0,0,0.15)] rounded-[10px] mb-[3vh] w-[95%] h-[10vh] border-spacing-[2vh] mx-auto flex flex-row gap-[3px] text-[#3A577B] text-[2vh]"
+          className="w-[10vw] h-[15vh] shadow-[0_0_10px_rgba(0,0,0,0.15)] rounded-[10px] mb-[3vh] w-[95%] h-[10vh] border-spacing-[2vh] mx-auto overflow-hidden flex flex-col gap-[3px]"
         >
+          <div className="w-full h-[40%] gap-[1vw] text-[#3A577B] flex justify-start items-center ">
+             <StatusBadge  status={acessarPropriedade(item, "status")} />
+          </div>
+          <div className="w-full h-[60%] flex flex-row justify-center items-center gap-[1vh]">
           {Array.isArray(campos) &&
             campos.map((campo, j) => (
               <div key={campo || j} className="flex justify-cente items-around">
                 
-                <div className="flex font-[900] items-center text-[2vh]">
+                <div className="flex font-[900] items-center">
 
 
                   {isEditing ? (
@@ -104,6 +108,7 @@ export function NotificationBalloon({ campos = [], dados = [] }) {
                 </div>
               </div>
             ))}
+            </div>
         </div>
       );
     })}
