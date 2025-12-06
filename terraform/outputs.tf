@@ -148,18 +148,18 @@ output "deployment_summary" {
 # OUTPUTS DO DOMÍNIO (OPCIONAIS)
 # ================================================
 
-# Name servers para configurar no registrador (apenas se domínio for fornecido)
-output "name_servers" {
-  description = "Name servers para configurar no registrador do domínio"
-  value       = var.domain_name != "" ? aws_route53_zone.sf_main_domain[0].name_servers : []
-}
+## Name servers para configurar no registrador (apenas se domínio for fornecido)
+# output "name_servers" {
+#   description = "Name servers para configurar no registrador do domínio"
+#   value       = var.domain_name != "" ? aws_route53_zone.sf_main_domain[0].name_servers : []
+# }
 
-# URLs do domínio configurado (apenas se domínio for fornecido)
-output "domain_urls" {
-  description = "URLs do domínio personalizado"
-  value = var.domain_name != "" ? {
-    frontend = "http://${var.domain_name}"
-    api      = "http://api.${var.domain_name}"
-    www      = "http://www.${var.domain_name}"
-  } : {}
-}
+## URLs do domínio configurado (apenas se domínio for fornecido)
+# output "domain_urls" {
+#   description = "URLs do domínio personalizado"
+#   value = var.domain_name != "" ? {
+#     frontend = "http://${var.domain_name}"
+#     api      = "http://api.${var.domain_name}"
+#     www      = "http://www.${var.domain_name}"
+#   } : {}
+# }

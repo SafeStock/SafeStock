@@ -118,13 +118,13 @@ EOF
 export AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "AWS_EC2_IP detectado: $AWS_EC2_IP"
 
-# Iniciar todos os containers usando o profile antigo com configurações AWS
-echo "==== Iniciando containers com variáveis do Terraform ===="
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d --build
 
-# Aguardar containers subirem
-echo "==== Aguardando containers iniciarem ===="
-sleep 60
+echo "==== Iniciando apenas containers do BACKEND ===="
+docker compose -f docker-compose.prod.yml --env-file .env --profile backend up -d --pull always
+
+# Aguardar containers do backend subirem
+echo "==== Aguardando containers do backend iniciarem ===="
+sleep 30
 
 # Verificar status dos containers
 echo "==== Status dos containers ===="

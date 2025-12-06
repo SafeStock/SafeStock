@@ -64,11 +64,12 @@ free -h
 # Usar .env.production existente (já configurado para usar /api)
 echo "✓ Usando .env.production configurado para proxy /api"
 
-# Build direto no host (mais eficiente em memória)
+# Build direto no host 
 echo "==== Build direto no host ===="
-# Instalar Node.js se necessário
+
+# Instalar Node.js 
 if ! command -v node &> /dev/null; then
-    curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
     sudo yum install -y nodejs
 fi
 
@@ -100,17 +101,17 @@ cat > /home/ec2-user/SafeStock/.env.aws << EOF
 AWS_EC2_IP=$PUBLIC_IP
 EOF
 
-# Iniciar containers usando Docker Compose
-echo "==== Iniciando SafeStock com Docker Compose ===="
+echo "==== Iniciando apenas containers do FRONTEND ===="
+
 cd /home/ec2-user/SafeStock
 chown -R ec2-user:ec2-user /home/ec2-user/SafeStock
 
-# Executar Docker Compose como ec2-user
-sudo -u ec2-user docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d --build
+# Executar apenas frontend e load balancer de produção usando profile
+sudo -u ec2-user docker compose -f docker-compose.prod.yml --env-file .env.aws --profile frontend up -d --pull always
 
 # Aguardar containers subirem
-echo "==== Aguardando containers iniciarem ===="
-sleep 60
+echo "==== Aguardando containers do frontend iniciarem ===="
+sleep 30
 
 # Configurar Nginx como proxy reverso
 echo "==== Configurando Nginx como Proxy Reverso ===="
