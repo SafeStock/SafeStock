@@ -53,13 +53,13 @@ variable "subnet_privada_database_cidr" {
 variable "instance_type_frontend" {
   description = "Tipo de instância para frontend (Nginx + React)"
   type        = string
-  default     = "t3.micro"
+  default     = "t3.small"
 }
 
 variable "instance_type_backend" {
   description = "Tipo de instância para backend (Spring Boot)"
   type        = string
-  default     = "t3.small"
+  default     = "t3.medium"
 }
 
 variable "instance_type_database" {

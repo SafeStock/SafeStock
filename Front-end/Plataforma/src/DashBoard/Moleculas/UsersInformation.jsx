@@ -181,7 +181,7 @@ export function UserInformation({ tabela, campos, titles }) {
   }, [page]);
   const confirmarExclusao = (id) => {
     Swal.fire({
-      title: 'Deseja realmente excluir este Produto?',
+      title: 'Deseja realmente excluir ?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sim, excluir',

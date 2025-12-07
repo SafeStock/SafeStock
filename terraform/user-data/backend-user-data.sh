@@ -68,17 +68,22 @@ systemctl start docker
 systemctl enable docker
 usermod -aG docker ec2-user
 
+
 # Clonar repositório
 echo "==== Clonando repositório ===="
 cd /home/ec2-user
-git clone $REPOSITORY_URL || {
+git clone $REPOSITORY_URL SafeStock || {
     echo "✗ ERRO: Falha ao clonar repositório"
     exit 1
 }
 chown -R ec2-user:ec2-user SafeStock
 
-# Navegar para o diretório do projeto
+# Remover arquivos e pastas desnecessários para o backend
 cd /home/ec2-user/SafeStock
+echo "==== Limpando arquivos desnecessários para EC2 privada (backend) ===="
+rm -rf Front-end docker-compose.frontend.yml Dockerfile.frontend Dockerfile.loadbalancer nginx.conf terraform docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
+rm -rf SafeStock/Front-end SafeStock/terraform
+echo "Arquivos desnecessários removidos."
 
 # Criar arquivo .env com configurações de teste/desenvolvimento
 echo "==== Criando arquivo .env para ambiente de teste ===="
@@ -104,35 +109,27 @@ EOF
 echo "✓ Arquivo .env criado para ambiente de desenvolvimento"
 echo "⚠️  ATENÇÃO: Usando senhas padrão (admin123) para ambiente de teste"
 
-# Criar docker-compose override para corrigir profiles
-echo "==== Criando override para profiles ===="
-cat > docker-compose.override.yml << 'EOF'
-services:
-  mysql:
-    profiles: ["antigo", "novo"]
-  rabbitmq:
-    profiles: ["antigo", "novo"]
-EOF
+
 
 # Definir variáveis de ambiente para AWS
 export AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "AWS_EC2_IP detectado: $AWS_EC2_IP"
 
-# Iniciar todos os containers usando o profile antigo com configurações AWS
-echo "==== Iniciando containers com variáveis do Terraform ===="
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d --build
 
-# Aguardar containers subirem
-echo "==== Aguardando containers iniciarem ===="
-sleep 60
+echo "==== Iniciando apenas containers do BACKEND ===="
+docker compose -f docker-compose.backend.yml --env-file .env up -d --pull always
+
+# Aguardar containers do backend subirem
+echo "==== Aguardando containers do backend iniciarem ===="
+sleep 30
 
 # Verificar status dos containers
 echo "==== Status dos containers ===="
-docker compose -f docker-compose.yml -f docker-compose.aws.yml ps
+docker compose -f docker-compose.backend.yml --env-file .env ps
 
 # Verificar logs dos containers
 echo "==== Logs dos containers ===="
-docker compose -f docker-compose.yml -f docker-compose.aws.yml logs --tail=50
+docker compose -f docker-compose.backend.yml --env-file .env logs --tail=50
 
 # Testar endpoints
 echo "==== Testando endpoints da API ===="
@@ -141,13 +138,15 @@ curl -f http://localhost:8082/health || echo "Backend 2 não respondeu"
 
 # Criar script de update
 echo "==== Criando script de update ===="
+git pull
+docker compose -f docker-compose.backend.yml --env-file .env down
+docker compose -f docker-compose.backend.yml --env-file .env up -d --build
 cat > /home/ec2-user/update-containers.sh << 'EOF'
 #!/bin/bash
 cd /home/ec2-user/SafeStock
 git pull
-export AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo down
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d --build
+docker compose -f docker-compose.backend.yml --env-file .env down
+docker compose -f docker-compose.backend.yml --env-file .env up -d --build
 EOF
 
 chmod +x /home/ec2-user/update-containers.sh
@@ -166,9 +165,8 @@ Type=oneshot
 RemainAfterExit=yes
 User=ec2-user
 WorkingDirectory=/home/ec2-user/SafeStock
-Environment="AWS_EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
-ExecStart=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo up -d
-ExecStop=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo down
+ExecStart=/usr/bin/docker compose -f docker-compose.backend.yml --env-file .env up -d
+ExecStop=/usr/bin/docker compose -f docker-compose.backend.yml --env-file .env down
 TimeoutStartSec=0
 
 [Install]
@@ -186,7 +184,7 @@ echo "  - RabbitMQ: porta 5672 (management: 15672)"
 echo "  - Backend 1: porta 8081"
 echo "  - Backend 2: porta 8082"
 echo "Comandos úteis:"
-echo "  - Ver containers: docker compose -f docker-compose.yml -f docker-compose.aws.yml ps"
-echo "  - Ver logs: docker compose -f docker-compose.yml -f docker-compose.aws.yml logs -f"
+echo "  - Ver containers: docker compose -f docker-compose.backend.yml --env-file .env ps"
+echo "  - Ver logs: docker compose -f docker-compose.backend.yml --env-file .env logs -f"
 echo "  - Restart: docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo restart"
 echo "  - Update: /home/ec2-user/update-containers.sh"

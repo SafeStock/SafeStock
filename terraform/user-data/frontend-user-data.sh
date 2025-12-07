@@ -38,6 +38,7 @@ systemctl start docker
 systemctl enable docker
 usermod -aG docker ec2-user
 
+
 # Clonar repositório
 echo "==== Clonando repositório ===="
 cd /home/ec2-user
@@ -46,6 +47,13 @@ git clone $REPOSITORY_URL SafeStock || {
     exit 1
 }
 chown -R ec2-user:ec2-user SafeStock
+
+# Remover arquivos e pastas desnecessários para o frontend
+cd /home/ec2-user/SafeStock
+echo "==== Limpando arquivos desnecessários para EC2 pública (frontend) ===="
+rm -rf Backend-Refatorado Backend-Legado DataBase terraform docker-compose.backend.yml docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
+rm -rf SafeStock/Back-end SafeStock/Backend-Legado SafeStock/Backend-Refatorado SafeStock/DataBase SafeStock/terraform
+echo "Arquivos desnecessários removidos."
 
 # Buildar frontend - estratégia otimizada
 echo "==== Configurando build otimizado ===="
@@ -64,16 +72,20 @@ free -h
 # Usar .env.production existente (já configurado para usar /api)
 echo "✓ Usando .env.production configurado para proxy /api"
 
-# Build direto no host (mais eficiente em memória)
+# Build direto no host 
 echo "==== Build direto no host ===="
-# Instalar Node.js se necessário
+
+# Instalar Node.js 
 if ! command -v node &> /dev/null; then
-    curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
     sudo yum install -y nodejs
 fi
 
 # Instalar dependências
 npm ci --prefer-offline --no-audit --silent
+
+# Garantir que ec2-user está no grupo docker
+sudo usermod -aG docker ec2-user
 
 # Build com configurações otimizadas de memória
 export NODE_OPTIONS="--max-old-space-size=1536"
@@ -100,17 +112,17 @@ cat > /home/ec2-user/SafeStock/.env.aws << EOF
 AWS_EC2_IP=$PUBLIC_IP
 EOF
 
-# Iniciar containers usando Docker Compose
-echo "==== Iniciando SafeStock com Docker Compose ===="
+echo "==== Iniciando apenas containers do FRONTEND ===="
+
 cd /home/ec2-user/SafeStock
 chown -R ec2-user:ec2-user /home/ec2-user/SafeStock
 
-# Executar Docker Compose como ec2-user
-sudo -u ec2-user docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d --build
+### Executar frontend e load balancer de produção
+sudo docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --pull always
 
 # Aguardar containers subirem
-echo "==== Aguardando containers iniciarem ===="
-sleep 60
+echo "==== Aguardando containers do frontend iniciarem ===="
+sleep 30
 
 # Configurar Nginx como proxy reverso
 echo "==== Configurando Nginx como Proxy Reverso ===="
@@ -230,6 +242,7 @@ nginx -t || {
 
 # Criar serviço systemd REAL para gerenciar a aplicação
 echo "==== Configurando serviço systemd ===="
+
 cat > /etc/systemd/system/safestock-frontend.service << 'EOF'
 [Unit]
 Description=SafeStock Frontend Service
@@ -241,8 +254,8 @@ Type=oneshot
 RemainAfterExit=yes
 User=ec2-user
 WorkingDirectory=/home/ec2-user/SafeStock
-ExecStart=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d
-ExecStop=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws down
+ExecStart=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.frontend.yml --env-file .env.aws up -d
+ExecStop=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.frontend.yml --env-file .env.aws down
 TimeoutStartSec=300
 
 [Install]
@@ -274,12 +287,17 @@ fi
 
 # Criar script de update
 echo "==== Criando script de update ===="
+git pull origin main
+docker compose -f docker-compose.frontend.yml --env-file .env.aws down
+docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --build
+systemctl restart nginx
+echo "SafeStock atualizado com sucesso!"
 cat > /home/ec2-user/update-frontend.sh << 'EOF'
 #!/bin/bash
 cd /home/ec2-user/SafeStock
 git pull origin main
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws down
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d --build
+docker compose -f docker-compose.frontend.yml --env-file .env.aws down
+docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --build
 systemctl restart nginx
 echo "SafeStock atualizado com sucesso!"
 EOF

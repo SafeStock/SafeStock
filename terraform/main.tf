@@ -463,47 +463,43 @@ resource "aws_eip_association" "sf_eip_assoc_frontend" {
   allocation_id = aws_eip.sf_eip_frontend.id
 }
 
-# ================================================
-# DNS E DOMÍNIO - ROUTE 53 (OPCIONAL)
-# ================================================
+## ================================================
+## DNS E DOMÍNIO - ROUTE 53 (OPCIONAL)
+## ================================================
 
-# Hosted Zone para o domínio 
-resource "aws_route53_zone" "sf_main_domain" {
-  count = var.domain_name != "" ? 1 : 0
-  name  = var.domain_name
-
-  tags = merge(var.common_tags, {
-    Name = "sf-hosted-zone-main"
-    Type = "DNS"
-  })
-}
-
-# Registro A para o frontend 
-resource "aws_route53_record" "sf_frontend" {
-  count   = var.domain_name != "" ? 1 : 0
-  zone_id = aws_route53_zone.sf_main_domain[0].zone_id
-  name    = var.domain_name
-  type    = "A"
-  ttl     = 300
-  records = [aws_eip.sf_eip_frontend.public_ip]
-}
-
-# Registro A para a API (mesmo IP do frontend, nginx faz proxy)
-resource "aws_route53_record" "sf_api" {
-  count   = var.domain_name != "" ? 1 : 0
-  zone_id = aws_route53_zone.sf_main_domain[0].zone_id
-  name    = "api.${var.domain_name}"
-  type    = "A"
-  ttl     = 300
-  records = [aws_eip.sf_eip_frontend.public_ip]
-}
-
-# Registro CNAME para www (opcional)
-resource "aws_route53_record" "sf_www" {
-  count   = var.domain_name != "" ? 1 : 0
-  zone_id = aws_route53_zone.sf_main_domain[0].zone_id
-  name    = "www.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = [var.domain_name]
-}
+# resource "aws_route53_zone" "sf_main_domain" {
+#   count = var.domain_name != "" ? 1 : 0
+#   name  = var.domain_name
+#
+#   tags = merge(var.common_tags, {
+#     Name = "sf-hosted-zone-main"
+#     Type = "DNS"
+#   })
+# }
+#
+# resource "aws_route53_record" "sf_frontend" {
+#   count   = var.domain_name != "" ? 1 : 0
+#   zone_id = aws_route53_zone.sf_main_domain[0].zone_id
+#   name    = var.domain_name
+#   type    = "A"
+#   ttl     = 300
+#   records = [aws_eip.sf_eip_frontend.public_ip]
+# }
+#
+# resource "aws_route53_record" "sf_api" {
+#   count   = var.domain_name != "" ? 1 : 0
+#   zone_id = aws_route53_zone.sf_main_domain[0].zone_id
+#   name    = "api.${var.domain_name}"
+#   type    = "A"
+#   ttl     = 300
+#   records = [aws_eip.sf_eip_frontend.public_ip]
+# }
+#
+# resource "aws_route53_record" "sf_www" {
+#   count   = var.domain_name != "" ? 1 : 0
+#   zone_id = aws_route53_zone.sf_main_domain[0].zone_id
+#   name    = "www.${var.domain_name}"
+#   type    = "CNAME"
+#   ttl     = 300
+#   records = [var.domain_name]
+# }
