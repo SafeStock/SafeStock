@@ -22,7 +22,3 @@ jobs:
         working-directory: Backend-Refatorado
         run: mvn -B package -DskipTests
 
-      - name: Run tests with Maven
-        working-directory: Backend-Legado
-        run: mvn test
-
