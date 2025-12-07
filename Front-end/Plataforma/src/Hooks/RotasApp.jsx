@@ -31,7 +31,7 @@ export function RotasApp() {
           <Route path="cadastro" element={<Cadastro />} />
           <Route path="telaprodutos" element={<TelaProdutos />} />
           <Route path="historicoalertas" element={<HistoricoAlertas />} />
-          <Route path="historicouso" element={<HistoricoUso />} />
+          <Route path="/dashboard/historicouso" element={<HistoricoUso />} />
           <Route path="exportarrelatorio" element={<ExportarRelatorio />} />
         </Route>
       </Route>
