@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSetAba } from "../../Hooks/setAba";
 
-export function ButtonAdd({ displayButton = "none", onAdd }) {
+export function ButtonAdd({ displayButton, onAdd }) {
   const navigate = useNavigate();
   const useAba = useSetAba();
 
