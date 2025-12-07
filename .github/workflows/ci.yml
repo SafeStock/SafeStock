@@ -18,5 +18,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build with Maven
+      - name: Build com Maven
+        working-directory: Backend-Refatorado
         run: mvn -B package -DskipTests
