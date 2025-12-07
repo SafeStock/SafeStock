@@ -17,7 +17,8 @@ export function TelaProdutos() {
   const [loading, setLoading] = useState(true); // Loading state
   const token = sessionStorage.getItem("authToken");
   const cargo = sessionStorage.getItem("cargo");
-  const display = cargo === "dono" ? "flex" : "none";
+  console.log(cargo)
+  const display = cargo === "dono" ? "none" : "flex";
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
