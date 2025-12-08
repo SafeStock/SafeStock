@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { StatusBadge } from "../Atomos/BolinhaStatus";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,9 +7,9 @@ import modifyIcon from '../../assets/ModifyUser.svg';
 import removeIcon from '../../assets/RemoveUser.svg';
 
 export function UserInformationTable({
-  titles = [],             
-  campos = [],             
-  dados = [],              
+  titles = [],
+  campos = [],
+  dados = [],
   tabela,
   confirmarExclusao,
   atualizarCadastro,
@@ -25,6 +25,16 @@ export function UserInformationTable({
     return caminho.split(".").reduce((acc, parte) => acc && acc[parte], obj);
   }
 
+  const formatCategoria = (cat) => {
+    if (!cat) return cat;
+    const map = {
+      vidros: "Vidros",
+      chao: "Chão",
+      multi_uso: "Multi Uso"
+    };
+    return map[cat.toLowerCase()] || cat;
+  };
+
   const handleEditarClick = (item) => {
     setIdLinhaEditando(item.id);
     setDadosEditados(JSON.parse(JSON.stringify(item)));
@@ -33,7 +43,7 @@ export function UserInformationTable({
   const handleCancelarClick = () => {
     setIdLinhaEditando(null);
     setDadosEditados({});
-  };    
+  };
 
   const handleSalvarClick = (linhaId) => {
     if (atualizarCadastro) {
@@ -87,7 +97,7 @@ export function UserInformationTable({
   const dateFields = ["dataNascimento", "dataEntrada", "dataValidade"];
   const dadosValidos = Array.isArray(dados) ? dados.filter(item => item) : [];
 
-  
+
   if (!Array.isArray(titles) || !Array.isArray(campos)) {
     return <p>Erro: estrutura da tabela inválida.</p>;
   }
@@ -189,11 +199,13 @@ export function UserInformationTable({
                             type="text"
                             value={acessarPropriedade(dadosEditados, campo) || ""}
                             onChange={(e) => handleInputChange(e, campo)}
-                            className="p-1 bg-white text-[#3A577B] text-[2vh] w-11/12"
+                            className="p-1 bg-white text-[#3A577B} text-[2vh] w-11/12"
                           />
                         )
                       ) : campo === "status" ? (
                         <StatusBadge status={acessarPropriedade(item, campo)} />
+                      ) : campo === "categoriaProduto" ? (  // ← ADICIONE AQUI
+                        formatCategoria(acessarPropriedade(item, campo))  // ← ADICIONE AQUI
                       ) : (
                         acessarPropriedade(item, campo)
                       )}
