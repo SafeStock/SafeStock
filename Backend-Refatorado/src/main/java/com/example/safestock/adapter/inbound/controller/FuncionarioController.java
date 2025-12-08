@@ -1,20 +1,25 @@
 package com.example.safestock.adapter.inbound.controller;
 
 import com.example.safestock.adapter.inbound.dto.FuncionarioResponse;
+import com.example.safestock.adapter.inbound.dto.FuncionarioCadastro;
+import com.example.safestock.adapter.inbound.dto.FuncionarioAtualizar;
 import com.example.safestock.adapter.outbound.error.NotFoundException;
 import com.example.safestock.application.port.in.FuncionarioUseCase;
 import com.example.safestock.domain.model.Funcionario;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Qualifier;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/funcionarios")
+@CrossOrigin(origins = "http://localhost:5173")
 public class FuncionarioController {
 
     private final FuncionarioUseCase useCase;
@@ -54,6 +59,7 @@ public class FuncionarioController {
     }
 
     @GetMapping("/listar/{id}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Funcionario> buscarFuncionarioPorId(@PathVariable Long id) {
         Optional<Funcionario> funcionarioOpt = useCase.buscarFuncionarioPorId(id);
 
@@ -70,7 +76,6 @@ public class FuncionarioController {
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> deletarFuncionario(@PathVariable Long id) {
         try {
-
             Funcionario funcionario = useCase.buscarFuncionarioPorId(id)
                     .orElseThrow(() -> new NotFoundException("Funcionário não encontrado com id: " + id));
 
@@ -84,24 +89,34 @@ public class FuncionarioController {
         }
     }
 
-//    @PostMapping
-//    public ResponseEntity<FuncionarioResponse> create(@RequestBody @Valid FuncionarioRequest req) {
-//        Funcionario d = new Funcionario();
-//        d.setNome(req.getNome());
-//        d.setSobrenome(req.getSobrenome());
-//        d.setCargo(req.getCargo());
-//        d.setEmail(req.getEmail());
-//        d.setSenha(req.getSenha());
-//        d.setTelefone(req.getTelefone());
-//        if (req.getCrecheId() != null) {
-//            Creche c = new Creche(); c.setId(req.getCrecheId()); d.setCreche(c);
-//        }
-//
-//        Funcionario saved = useCase.criar(d);
-//        FuncionarioResponse r = new FuncionarioResponse();
-//        r.setId(saved.getId()); r.setNome(saved.getNome()); r.setSobrenome(saved.getSobrenome()); r.setEmail(saved.getEmail()); r.setTelefone(saved.getTelefone());
-//        if (saved.getCreche() != null) r.setCrecheId(saved.getCreche().getId());
-//
-//        return ResponseEntity.created(URI.create("/api/funcionarios_v2/" + r.getId())).body(r);
-//    }
+    // NOVO: Método para cadastrar funcionário
+    @PostMapping("/cadastro")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioResponse> cadastrarFuncionario(@Valid @RequestBody FuncionarioCadastro funcionarioCadastro) {
+        try {
+            FuncionarioResponse funcionarioCriado = useCase.cadastrarFuncionario(funcionarioCadastro);
+            return ResponseEntity
+                    .created(URI.create("/api/funcionarios/listar/" + funcionarioCriado.getId()))
+                    .body(funcionarioCriado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // NOVO: Método para atualizar funcionário
+    @PutMapping("/atualizar/{id}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<FuncionarioResponse> atualizarFuncionario(
+            @PathVariable Long id,
+            @Valid @RequestBody FuncionarioAtualizar funcionarioAtualizar) {
+        try {
+            FuncionarioResponse funcionarioAtualizado = useCase.atualizarFuncionario(id, funcionarioAtualizar);
+            return ResponseEntity.ok(funcionarioAtualizado);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("não encontrado")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

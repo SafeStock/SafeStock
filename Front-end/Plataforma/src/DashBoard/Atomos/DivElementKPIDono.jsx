@@ -125,7 +125,7 @@ export function DivElementKPIDonoBigRight({
   const useAba = useSetAba();
 
   const handleRedirect = (path) => {
-    navigate(path);
+    navigate(`/dashboard${path}`);
     useAba;
   };
 

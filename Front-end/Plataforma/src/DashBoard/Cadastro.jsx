@@ -33,7 +33,7 @@ export function Cadastro() {
       toast.error("Cargo é obrigatório");
       return false;
     }
-    if (!["dono", "secretaria", "limpeza"].includes(cargo.toLowerCase())) {
+    if (!["secretaria", "limpeza"].includes(cargo.toLowerCase())) {
       toast.error("Cargo inválido");
       return false;
     }
@@ -73,10 +73,9 @@ export function Cadastro() {
     e.preventDefault();
     if (validarSegundaEtapa()) {
       const cargoMap = {
-        dono: 0,
-        secretaria: 1,
-        limpeza: 2
-      };
+      secretaria: "administracao",  // "secretaria" no front = "administracao" no enum
+      limpeza: "limpeza"         // "limpeza" no front = "FUNCIONARIO" no back
+    };
 
       const novoUsuario = {
         nome: nome.trim(),
@@ -85,8 +84,11 @@ export function Cadastro() {
         telefone: telefone.trim(),
         email: email.trim().toLowerCase(),
         senha: senha.trim(),
-        creche: [null]
+        crecheId: 1
       };
+
+    console.log("JSON sendo enviado:", JSON.stringify(novoUsuario, null, 2));
+    console.log("crecheId:", novoUsuario.crecheId, "tipo:", typeof novoUsuario.crecheId);
 
       fetch(`${import.meta.env.VITE_API_BASE_URL}/funcionarios/cadastro`, {
         method: 'POST',

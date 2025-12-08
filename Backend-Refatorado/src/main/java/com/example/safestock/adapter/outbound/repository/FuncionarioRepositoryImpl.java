@@ -22,12 +22,12 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
         this.jpa = jpa;
     }
 
-//    @Override
-//    public Funcionario save(Funcionario funcionario) {
-//        FuncionarioEntity entity = FuncionarioMapper.toEntity(funcionario);
-//        FuncionarioEntity saved = jpa.save(entity);
-//        return FuncionarioMapper.toDomain(saved);
-//    }
+    @Override
+    public Funcionario salvar(Funcionario funcionario) {
+        FuncionarioEntity entity = FuncionarioMapper.toEntity(funcionario);
+        FuncionarioEntity saved = jpa.save(entity);
+        return FuncionarioMapper.toDomain(saved);
+    }
 
     @Override
     public List<Funcionario> buscarPorEmailDiferenteECargoDiferente(String email, CargoFuncionario cargo) {

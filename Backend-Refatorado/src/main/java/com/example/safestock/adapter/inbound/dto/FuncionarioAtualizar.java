@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class FuncionarioCadastro {
+public class FuncionarioAtualizar {
     
     @NotBlank(message = "O nome não pode estar em branco")
     private String nome;
@@ -17,14 +17,12 @@ public class FuncionarioCadastro {
     @Email(message = "Email inválido")
     private String email;
     
-    @NotBlank(message = "A senha não pode estar em branco")
-    private String senha;
-    
     @NotNull(message = "O cargo é obrigatório")
     private CargoFuncionario cargo;
     
-    private String telefone; // Adicionado campo telefone
+    private String telefone;
     
+    // ADICIONE ESTE CAMPO - FALTANDO NO SEU CÓDIGO
     @NotNull(message = "O ID da creche é obrigatório")
     private Long crecheId;
 
@@ -51,14 +49,6 @@ public class FuncionarioCadastro {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 
     public CargoFuncionario getCargo() {
