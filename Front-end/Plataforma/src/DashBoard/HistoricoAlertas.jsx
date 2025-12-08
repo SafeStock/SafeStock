@@ -59,6 +59,7 @@ export function HistoricoAlertas() {
         titles={["Alerta", "Produto", "Status", "Data e Hora"]}
         tabela={"historicoAlertas"}
         campos={["status", "produto.nome", "descricao", "dataHora"]}
+      displayButton={"none"}
       />
     </div>
   );

@@ -3,7 +3,6 @@ import { StatusBadge } from "../Atomos/BolinhaStatusNotification";
 import "react-toastify/dist/ReactToastify.css";
 
 export function NotificationBalloon({ campos = [], dados = [], titles = [] }) {
-  const dateFields = ["dataNascimento", "dataEntrada", "dataValidade", "dataHora"];
 
   // Helper para acessar campos aninhados (produto.nome etc)
   function getNestedValue(obj, path) {
@@ -20,6 +19,8 @@ export function NotificationBalloon({ campos = [], dados = [], titles = [] }) {
     return <p className="text-[#3A577B] mt-4">Nenhuma notificação no momento.</p>;
   }
 
+  console.log("Dados das notificações:", dadosValidos);
+
   return (
     <div className="h-[86vh] w-full overflow-y-auto p-4">
       {dadosValidos.map((item, i) => {
@@ -28,42 +29,29 @@ export function NotificationBalloon({ campos = [], dados = [], titles = [] }) {
         return (
           <div
             key={linhaId}
-            className="w-[95%] min-h-[14vh] rounded-[10px] mb-[3vh] mt-[3vh] mx-auto flex flex-col items-center p-3 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+            className="w-[95%] min-h-[10vh] rounded-[10px] mb-[1.7vh] mt-[1.7vh] mx-auto flex flex-col items-center p-3 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]"
           >
             {/* Título */}
             <div className="w-[98%] h-[3vh] flex items-center border-b-[1px] border-[#3A577B]">
-              <h4 className="text-[#3A577B] font-[300] text-[1.7vh]">
-                Notificação
 
                 {/* Exemplo: mostra o índice de "dataHora" */}
-                <span className="ml-[6vw] text-[#3A577B]">
-                  {campos.findIndex((c) => c === "dataHora")}
+                <span className="text-[#3A577B] ml-[0.1vw] font-[500] text-[1.5vh]">
+                  {getNestedValue(item, "dataHora")?.split("T")[0]}
                 </span>
-              </h4>
             </div>
-
+            <div className="w-full h-[7vh] flex flex-row">
             {/* Status */}
-            <div className="w-full h-[5vh] flex items-center">
+            <div className="w-[2.7vw] h-full flex items-center justify-center">
               <StatusBadge status={item.status} />
             </div>
 
             {/* Campos */}
-            <div className="w-full h-[6vh] flex flex-wrap items-center gap-4">
-              {campos.map((campo, j) => {
-                const valor = getNestedValue(item, campo);
-
-                return (
-                  <div key={j} className="flex flex-col text-[#3A577B] font-semibold">
-                    <span className="text-sm capitalize">{campo}:</span>
-
-                    {dateFields.includes(campo) ? (
-                      <span className="text-sm">{valor?.split("T")[0] ?? "—"}</span>
-                    ) : (
-                      <span className="text-sm">{valor ?? "—"}</span>
-                    )}
-                  </div>
-                );
-              })}
+            <div className="w-[8.5vw] h-full text-[2.5vh] text-[#3A577B] font-[400] flex flex-wrap items-center gap-4">
+              {getNestedValue(item, "nomeProduto")?.split("T")[0]}
+            </div>
+            <div className="w-[18.5vw] h-full text-[2.5vh] text-[#3A577B] font-[400] flex flex-wrap items-center gap-4">
+              {getNestedValue(item, "descricao")?.split("T")[0]}
+            </div>
             </div>
           </div>
         );

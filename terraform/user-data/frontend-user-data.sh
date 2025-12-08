@@ -38,6 +38,7 @@ systemctl start docker
 systemctl enable docker
 usermod -aG docker ec2-user
 
+
 # Clonar repositório
 echo "==== Clonando repositório ===="
 cd /home/ec2-user
@@ -46,6 +47,13 @@ git clone $REPOSITORY_URL SafeStock || {
     exit 1
 }
 chown -R ec2-user:ec2-user SafeStock
+
+# Remover arquivos e pastas desnecessários para o frontend
+cd /home/ec2-user/SafeStock
+echo "==== Limpando arquivos desnecessários para EC2 pública (frontend) ===="
+rm -rf Backend-Refatorado Backend-Legado DataBase terraform docker-compose.backend.yml docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
+rm -rf SafeStock/Back-end SafeStock/Backend-Legado SafeStock/Backend-Refatorado SafeStock/DataBase SafeStock/terraform
+echo "Arquivos desnecessários removidos."
 
 # Buildar frontend - estratégia otimizada
 echo "==== Configurando build otimizado ===="
@@ -109,8 +117,8 @@ echo "==== Iniciando apenas containers do FRONTEND ===="
 cd /home/ec2-user/SafeStock
 chown -R ec2-user:ec2-user /home/ec2-user/SafeStock
 
-# Executar apenas frontend e load balancer de produção usando profile
-sudo docker compose -f docker-compose.prod.yml --env-file .env.aws --profile frontend up -d --pull always
+### Executar frontend e load balancer de produção
+sudo docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --pull always
 
 # Aguardar containers subirem
 echo "==== Aguardando containers do frontend iniciarem ===="
@@ -234,6 +242,7 @@ nginx -t || {
 
 # Criar serviço systemd REAL para gerenciar a aplicação
 echo "==== Configurando serviço systemd ===="
+
 cat > /etc/systemd/system/safestock-frontend.service << 'EOF'
 [Unit]
 Description=SafeStock Frontend Service
@@ -245,8 +254,8 @@ Type=oneshot
 RemainAfterExit=yes
 User=ec2-user
 WorkingDirectory=/home/ec2-user/SafeStock
-ExecStart=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d
-ExecStop=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws down
+ExecStart=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.frontend.yml --env-file .env.aws up -d
+ExecStop=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.frontend.yml --env-file .env.aws down
 TimeoutStartSec=300
 
 [Install]
@@ -278,12 +287,17 @@ fi
 
 # Criar script de update
 echo "==== Criando script de update ===="
+git pull origin main
+docker compose -f docker-compose.frontend.yml --env-file .env.aws down
+docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --build
+systemctl restart nginx
+echo "SafeStock atualizado com sucesso!"
 cat > /home/ec2-user/update-frontend.sh << 'EOF'
 #!/bin/bash
 cd /home/ec2-user/SafeStock
 git pull origin main
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws down
-docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo --env-file .env.aws up -d --build
+docker compose -f docker-compose.frontend.yml --env-file .env.aws down
+docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --build
 systemctl restart nginx
 echo "SafeStock atualizado com sucesso!"
 EOF

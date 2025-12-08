@@ -12,11 +12,11 @@ export function ModalNotification({ isOpen, onClose }) {
       onClick={onClose}
     >
       <div
-        className="h-[100vh] w-[35.5vw] animate-fade-in-left rounded-l-[1vw] shadow-[0px_4px_4px_rgba(0,0,0,0.75)] overflow-hidden"
+        className="h-[100vh] w-[32vw] animate-fade-in-left rounded-l-[1vw] shadow-[0px_4px_4px_rgba(0,0,0,0.75)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-[#3A577B] w-full h-[7vh] flex justify-center items-center">
-          <div className="cursor-pointer absolute text-[white] text-[3.5vh] right-[33.5vw]"
+          <div className="cursor-pointer absolute text-[white] text-[3.5vh] right-[30vw]"
           onClick={onClose}>x</div>
         </div>
 
