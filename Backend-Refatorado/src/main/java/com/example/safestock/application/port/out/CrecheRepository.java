@@ -9,4 +9,6 @@ public interface CrecheRepository {
     Creche save (Creche creche);
     
     Optional<Creche> findById(Long id);
+
+    Optional<Creche> buscarPorId(Long id);
 }

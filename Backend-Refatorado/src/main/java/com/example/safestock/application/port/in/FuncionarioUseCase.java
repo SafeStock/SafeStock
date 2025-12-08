@@ -1,5 +1,7 @@
 package com.example.safestock.application.port.in;
 
+import com.example.safestock.adapter.inbound.dto.FuncionarioAtualizar;
+import com.example.safestock.adapter.inbound.dto.FuncionarioCadastro;
 import com.example.safestock.adapter.inbound.dto.FuncionarioResponse;
 import com.example.safestock.domain.model.Funcionario;
 import com.example.safestock.domain.model.PagedResult;
@@ -18,4 +20,8 @@ public interface FuncionarioUseCase {
     Optional<Funcionario> autenticar(String email, String senha);
     
     PagedResult<FuncionarioResponse> buscarFuncionariosExcetoLogadoEDonoPaginado(String emailLogado, int page, int size);
+
+    FuncionarioResponse cadastrarFuncionario(FuncionarioCadastro funcionarioCadastro);
+    
+    FuncionarioResponse atualizarFuncionario(Long id, FuncionarioAtualizar funcionarioAtualizar);
 }

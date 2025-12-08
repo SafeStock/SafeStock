@@ -29,4 +29,9 @@ public class CrecheRepositoryImpl implements CrecheRepository {
     public Optional<Creche> findById(Long id) {
         return jpa.findById(id).map(CrecheMapper::toDomain);
     }
+    
+    @Override
+    public Optional<Creche> buscarPorId(Long id) {
+        return findById(id); // Reaproveita o findById
+    }
 }
