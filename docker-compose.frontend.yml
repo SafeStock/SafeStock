@@ -37,7 +37,7 @@ services:
     container_name: sf-lb
     restart: always
     ports:
-      - "80:80"
+      - "8080:80"
       - "5173:80"
     depends_on:
       frontend-1:
