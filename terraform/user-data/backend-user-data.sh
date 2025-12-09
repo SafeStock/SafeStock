@@ -1,5 +1,4 @@
 #!/bin/bash
-# BACKEND EC2 COM CONTAINERS (2x Spring Boot + MySQL + RabbitMQ)
 # Logging
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo "==== Backend Containers EC2 User Data - SafeStock ===="
