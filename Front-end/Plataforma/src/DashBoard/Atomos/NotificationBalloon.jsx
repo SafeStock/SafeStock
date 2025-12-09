@@ -29,7 +29,7 @@ export function NotificationBalloon({ campos = [], dados = [], titles = [] }) {
         return (
           <div
             key={linhaId}
-            className="w-[95%] min-h-[10vh] rounded-[10px] mb-[1.7vh] mt-[1.7vh] mx-auto flex flex-col items-center p-3 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+            className="bg-[white] w-[95%] min-h-[10vh] rounded-[10px] transition-transform duration-300 hover:-translate-y-[3px] hover:scale-103 mb-[1.7vh] mt-[1.7vh] mx-auto flex flex-col items-center p-3 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]"
           >
             {/* Título */}
             <div className="w-[98%] h-[3vh] flex items-center border-b-[1px] border-[#3A577B]">

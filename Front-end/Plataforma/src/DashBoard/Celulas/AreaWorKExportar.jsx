@@ -11,6 +11,7 @@ import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ReactDOM from 'react-dom';
 import ExcelJS from "exceljs";
+import { AreaTittle } from "../Moleculas/AreaTittle";
 import { API_BASE_URL } from '../../config/api';
 registerLocale("pt-BR", ptBR);
 
@@ -429,8 +430,10 @@ export function AreaWorkExportar() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-[1vh] h-[85vh] w-[100vw] mt-[1vh]">
-      <div className="flex flex-row items-center gap-[1vw]">
+    <div className="flex flex-col items-center gap-[1vh] h-[100vh] w-[100vw]">
+      <AreaTittle texto ="Exportar Relatório"/>
+      
+      <div className="flex flex-row items-center gap-[1vw] border-[2px] border-[#3A577B] rounded-[1vw] p-[1vh]">
         <div className="cursor-pointer text-[3vh]">📅</div>
         <div className="flex items-center p-[1vw] outline-1 rounded-[1vw] text-[#dadada]">
           <DatePicker
