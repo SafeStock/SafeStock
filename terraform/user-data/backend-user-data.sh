@@ -100,9 +100,12 @@ MYSQL_USER=safestock_app
 RABBITMQ_DEFAULT_USER=admin
 RABBITMQ_DEFAULT_PASS=admin123
 
-# Configurações gerais
 TZ=America/Sao_Paulo
 ENVIRONMENT=development
+
+# Redis
+REDIS_HOST=sf-redis
+REDIS_PORT=6379
 
 # Spring Boot/Actuator
 SPRING_PROFILES_ACTIVE=prod

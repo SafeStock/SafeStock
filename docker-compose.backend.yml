@@ -105,11 +105,11 @@ services:
     networks:
       - safestock-network
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
-      retries: 12
-
+      retries: 5
+      start_period: 30s
   redis:
     image: redis:7-alpine
     container_name: sf-redis
