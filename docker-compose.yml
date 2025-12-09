@@ -167,6 +167,16 @@ services:
         aliases:
           - sf-frontend-2
 
+
+  redis:
+    image: redis:7-alpine
+    container_name: sf-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - safestock-network
+
+
 volumes:
   mysql_data:
     driver: local
@@ -174,3 +184,4 @@ volumes:
 networks:
   safestock-network:
     driver: bridge
+

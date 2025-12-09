@@ -58,6 +58,12 @@ echo "Arquivos desnecessários removidos."
 # Buildar frontend - estratégia otimizada
 echo "==== Configurando build otimizado ===="
 cd /home/ec2-user/SafeStock/Front-end/Plataforma
+cd /home/ec2-user/SafeStock
+# Substituir IP do backend no nginx-loadbalancer.conf para uso no container
+echo "Substituindo IP do backend no nginx-loadbalancer.conf para container loadbalancer..."
+sed -i "s|api-back-1|$BACKEND_IP|g" nginx-loadbalancer.conf
+sed -i "s|api-back-2|$BACKEND_IP|g" nginx-loadbalancer.conf
+cd /home/ec2-user/SafeStock/Front-end/Plataforma
 
 # Criar arquivo de swap adicional para build
 echo "Criando swap adicional..."
@@ -77,8 +83,8 @@ echo "==== Build direto no host ===="
 
 # Instalar Node.js 
 if ! command -v node &> /dev/null; then
-    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
-    sudo yum install -y nodejs
+    curl -fsSL https://rpm.nodesource.com/setup_16.x | bash -
+    yum install -y nodejs
 fi
 
 # Instalar dependências

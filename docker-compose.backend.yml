@@ -72,6 +72,7 @@ services:
         aliases:
           - api-back-2
 
+
   mysql:
     image: mysql:8.0
     container_name: sf-mysql
@@ -81,8 +82,6 @@ services:
       MYSQL_DATABASE: safestockDB
       MYSQL_USER: safestock_app
       MYSQL_PASSWORD: admin123
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./DataBase/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -103,9 +102,18 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin123
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    networks:
+      - safestock-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    container_name: sf-redis
+    restart: always
     networks:
       - safestock-network
     healthcheck:
