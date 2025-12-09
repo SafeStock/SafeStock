@@ -103,6 +103,11 @@ RABBITMQ_DEFAULT_PASS=admin123
 # Configurações gerais
 TZ=America/Sao_Paulo
 ENVIRONMENT=development
+
+# Spring Boot/Actuator
+SPRING_PROFILES_ACTIVE=prod
+MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
+MANAGEMENT_ENDPOINT_HEALTH_ENABLED=true
 EOF
 
 echo "✓ Arquivo .env criado para ambiente de desenvolvimento"
