@@ -20,7 +20,7 @@ export function ExportarRelatorio() {
 
   return (
     <div className="animate-fadeInContent">
-        <AreaTittle texto={`Exportar Relatório`} />
+
         <AreaWorkExportar />
 
     </div>
