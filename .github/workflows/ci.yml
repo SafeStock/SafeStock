@@ -42,7 +42,8 @@ jobs:
       # ------------------------------------
       - name: Build Docker image
         run: |
-          docker build -t safestock-back-end .
+          docker build -t safestock-backend .
+
 
       # ------------------------------------
       # 🔐 5. Login no Docker Hub (CD)
