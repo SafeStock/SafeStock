@@ -41,6 +41,23 @@ fi
 
 echo "✓ Todas as variáveis validadas"
 
+
+# Função de retry para comandos críticos
+retry_command() {
+     local cmd="$1"
+     local max_attempts=5
+     local attempt=1
+     local delay=10
+     while [ $attempt -le $max_attempts ]; do
+          echo "Tentativa $attempt: $cmd"
+          eval "$cmd" && return 0
+          echo "Falhou, aguardando $delay segundos..."
+          sleep $delay
+          attempt=$((attempt + 1))
+     done
+     echo "ERRO: Comando falhou após $max_attempts tentativas: $cmd"
+     return 1
+}
 # Atualizar sistema
 echo "==== Atualizando sistema ===="
 yum update -y
@@ -86,13 +103,17 @@ echo "Arquivos desnecessários removidos."
 
 # Criar arquivo .env com configurações de teste/desenvolvimento
 echo "==== Criando arquivo .env para ambiente de teste ===="
+retry_command "yum update -y"
 cat > .env << EOF
 # Configurações para ambiente de TESTE/DESENVOLVIMENTO
 # Para produção, altere estas variáveis manualmente
+retry_command "yum install -y docker git curl wget htop"
+retry_command "amazon-linux-extras install -y docker"
 
 # MySQL - Senhas padrão para desenvolvimento
 MYSQL_ROOT_PASSWORD=admin123
 MYSQL_PASSWORD=admin123
+retry_command "curl -L 'https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-$(uname -m)' -o /usr/local/lib/docker/cli-plugins/docker-compose"
 MYSQL_DATABASE=safestockDB
 MYSQL_USER=safestock_app
 
@@ -109,6 +130,7 @@ REDIS_PORT=6379
 
 # Spring Boot/Actuator
 SPRING_PROFILES_ACTIVE=prod
+retry_command "git clone $REPOSITORY_URL SafeStock"
 MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
 MANAGEMENT_ENDPOINT_HEALTH_ENABLED=true
 MANAGEMENT_HEALTH_MAIL_ENABLED=false

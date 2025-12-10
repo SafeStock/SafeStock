@@ -49,11 +49,20 @@ git clone $REPOSITORY_URL SafeStock || {
 chown -R ec2-user:ec2-user SafeStock
 
 # Remover arquivos e pastas desnecessários para o frontend
+
 cd /home/ec2-user/SafeStock
 echo "==== Limpando arquivos desnecessários para EC2 pública (frontend) ===="
+# Protege .env.production antes de limpar
+if [ -f Front-end/Plataforma/.env.production ]; then
+    cp Front-end/Plataforma/.env.production /tmp/.env.production
+fi
 rm -rf Backend-Refatorado Backend-Legado DataBase terraform docker-compose.backend.yml docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
 rm -rf SafeStock/Back-end SafeStock/Backend-Legado SafeStock/Backend-Refatorado SafeStock/DataBase SafeStock/terraform
-echo "Arquivos desnecessários removidos."
+# Restaura .env.production se necessário
+if [ -f /tmp/.env.production ]; then
+    mv /tmp/.env.production Front-end/Plataforma/.env.production
+fi
+echo "Arquivos desnecessários removidos e .env.production protegido."
 
 # Buildar frontend - estratégia otimizada
 echo "==== Configurando build otimizado ===="
