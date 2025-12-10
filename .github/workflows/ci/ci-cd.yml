@@ -1,5 +1,4 @@
-name: CI-CD Pipeline
-
+name: Pipeline CI/CD
 on:
   push:
     branches: [ "main" ]
