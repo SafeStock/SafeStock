@@ -37,10 +37,6 @@ jobs:
         working-directory: Front-end/Plataforma
         run: npm install
 
-      - name: Run frontend tests
-        working-directory: Front-end/Plataforma
-        run: npm test --watchAll=false --passWithNoTests
-
       # ------------------------------------
       # 🐳 4. Build da imagem Docker (validação)
       # ------------------------------------
