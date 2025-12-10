@@ -42,7 +42,7 @@ jobs:
       # ------------------------------------
       - name: Build Docker image
         run: |
-          docker build -t safestock-backend-refatorado .
+          docker build -t safestock-back-end .
 
       # ------------------------------------
       # 🔐 5. Login no Docker Hub (CD)
