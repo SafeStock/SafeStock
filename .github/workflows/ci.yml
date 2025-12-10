@@ -1,4 +1,4 @@
-name: CI SafeStock
+name: CI/CD SafeStock
 
 on:
   push:
@@ -26,8 +26,10 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform init
+        working-directory: ./Terraform
         run: terraform init
 
       - name: Terraform apply
+        working-directory: ./Terraform
         run: terraform apply -auto-approve
 
