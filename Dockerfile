@@ -2,11 +2,11 @@
 
 WORKDIR /workspace/app
 
-COPY Back-end/mvnw .
-COPY Back-end/mvnw.cmd .
-COPY Back-end/.mvn .mvn
-COPY Back-end/pom.xml .
-COPY Back-end/src src
+COPY Backend-Refatorado/mvnw .
+COPY Backend-Refatorado/mvnw.cmd .
+COPY Backend-Refatorado/.mvn .mvn
+COPY Backend-Refatorado/pom.xml .
+COPY Backend-Refatorado/src src
 
 RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests

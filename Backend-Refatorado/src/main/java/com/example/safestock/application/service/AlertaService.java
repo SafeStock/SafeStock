@@ -37,7 +37,7 @@ public class AlertaService {
 
     // Executa de 5 em 5 segundos para demonstração - aguarda 5s antes da primeira execução
     // Para produção: @Scheduled(cron = "0 0 8 * * MON") - toda segunda às 8h
-    @Scheduled(initialDelay = 5000, fixedRate = 5000)
+    @Scheduled(initialDelay = 10000, fixedRate = 10000)
     public void verificarVencimentos() {
         List<Produto> produtos = produtoRepository.findAll();
         LocalDate hoje = LocalDate.now();
