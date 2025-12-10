@@ -1,6 +1,3 @@
-// Configuração centralizada da API
-// Essas variáveis podem ser configuradas via .env files ou através de variáveis de ambiente no build
-
 // URL base da API (backend)
 // Usa variável de ambiente ou /api (proxy reverso do load balancer)
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';

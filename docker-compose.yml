@@ -141,7 +141,7 @@ services:
       context: ./Front-end/Plataforma
       dockerfile: Dockerfile.frontend
       args:
-        BUILD_MODE: dev
+        BUILD_MODE: prod
     container_name: sf-frontend-1
     restart: always
     environment:
@@ -157,7 +157,7 @@ services:
       context: ./Front-end/Plataforma
       dockerfile: Dockerfile.frontend
       args:
-        BUILD_MODE: dev
+        BUILD_MODE: prod
     container_name: sf-frontend-2
     restart: always
     environment:
