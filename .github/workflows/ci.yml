@@ -26,7 +26,7 @@ jobs:
           java-version: '21'
 
       - name: Run backend tests (Maven)
-        working-directory: Back-end
+        working-directory: Backend-Refatorado
         run: |
           chmod +x mvnw
           ./mvnw clean test
