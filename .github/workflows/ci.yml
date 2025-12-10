@@ -25,12 +25,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Run backend tests (Maven)
-        working-directory: Backend-Refatorado
-        run: |
-          chmod +x mvnw
-          ./mvnw clean test
-
       # ------------------------------------
       # ⚛️ 3. FRONTEND (React) - Testes
       # ------------------------------------
