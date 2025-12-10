@@ -54,7 +54,7 @@ export function Login() {
       localStorage.removeItem('token');
       sessionStorage.removeItem('authToken');
       
-      const response = await fetch(`${API_BASE_URL}/funcionarios/login`, {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
