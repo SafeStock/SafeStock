@@ -1,4 +1,4 @@
-name: CI/CD SafeStock - Projeto de PI
+name: Safe Stock - CI/CD
 
 on:
   push:
