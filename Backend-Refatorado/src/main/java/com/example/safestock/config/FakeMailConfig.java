@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 public class FakeMailConfig {
     @Bean
     public JavaMailSender javaMailSender() {
-        return new JavaMailSenderImpl(); 
+        System.out.println("✅ [FakeMailConfig] Registrando bean dummy JavaMailSender para profile prod/dev");
+        return new JavaMailSenderImpl(); // Bean dummy, não envia emails
     }
 }
