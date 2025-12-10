@@ -22,3 +22,9 @@ jobs:
         working-directory: Backend-Refatorado
         run: mvn -B package -DskipTests
 
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve
+
