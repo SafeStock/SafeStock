@@ -111,6 +111,7 @@ REDIS_PORT=6379
 SPRING_PROFILES_ACTIVE=prod
 MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
 MANAGEMENT_ENDPOINT_HEALTH_ENABLED=true
+MANAGEMENT_HEALTH_MAIL_ENABLED=false
 EOF
 
 echo "✓ Arquivo .env criado para ambiente de desenvolvimento"
@@ -140,8 +141,8 @@ docker compose -f docker-compose.backend.yml --env-file .env logs --tail=50
 
 # Testar endpoints
 echo "==== Testando endpoints da API ===="
-curl -f http://localhost:8081/health || echo "Backend 1 não respondeu"
-curl -f http://localhost:8082/health || echo "Backend 2 não respondeu"
+curl -f http://localhost:8081/actuator/health || echo "Backend 1 não respondeu"
+curl -f http://localhost:8082/actuator/health || echo "Backend 2 não respondeu"
 
 # Criar script de update
 echo "==== Criando script de update ===="
