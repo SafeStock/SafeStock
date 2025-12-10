@@ -80,7 +80,7 @@ chown -R ec2-user:ec2-user SafeStock
 # Remover arquivos e pastas desnecessários para o backend
 cd /home/ec2-user/SafeStock
 echo "==== Limpando arquivos desnecessários para EC2 privada (backend) ===="
-rm -rf Front-end docker-compose.frontend.yml Dockerfile.frontend Dockerfile.loadbalancer nginx.conf terraform docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
+rm -rf Front-end docker-compose.frontend.yml Dockerfile.frontend Dockerfile.loadbalancer nginx.conf terraform docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml Backend-Legado DataBase ARQUITETURA-AWS.md imagens URL-ACESSO.txt nginx-loadbalancer.conf README.md
 rm -rf SafeStock/Front-end SafeStock/terraform
 echo "Arquivos desnecessários removidos."
 
@@ -161,7 +161,7 @@ chown ec2-user:ec2-user /home/ec2-user/update-containers.sh
 
 # Criar serviço systemd para auto-restart dos containers
 echo "==== Configurando auto-restart dos containers ===="
-cat > /etc/systemd/system/safestock-containers.service << 'EOF'
+sudo tee /etc/systemd/system/safestock-containers.service > /dev/null << 'EOF'
 [Unit]
 Description=SafeStock Containers
 Requires=docker.service
@@ -180,8 +180,8 @@ TimeoutStartSec=0
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
-systemctl enable safestock-containers
+sudo systemctl daemon-reload
+sudo systemctl enable safestock-containers
 
 # Informações finais
 echo "==== Backend Containers EC2 configurado com sucesso! ===="
