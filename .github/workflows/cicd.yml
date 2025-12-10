@@ -9,24 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ------------------------------------
-      # 🔽 1. Baixar código
-      # ------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ------------------------------------
-      # 🔥 2. BACKEND (JAVA) - Testes
-      # ------------------------------------
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      # ------------------------------------
-      # ⚛️ 3. FRONTEND (React) - Testes
-      # ------------------------------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,26 +27,16 @@ jobs:
         working-directory: Front-end/Plataforma
         run: npm install
 
-      # ------------------------------------
-      # 🐳 4. Build da imagem Docker (validação)
-      # ------------------------------------
       - name: Build Docker image
         run: |
           docker build -t safestock-backend .
 
-
-      # ------------------------------------
-      # 🔐 5. Login no Docker Hub (CD)
-      # ------------------------------------
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # ------------------------------------
-      # 🚀 6. Push da imagem para o Docker Hub (CD)
-      # ------------------------------------
       - name: Push Docker image
         run: |
           IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/safestock-backend
