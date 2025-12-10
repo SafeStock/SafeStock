@@ -147,10 +147,11 @@ resource "aws_eip" "sf_eip_frontend" {
 # - Backends ficam privados (acessados via ALB)
 # - Database fica privado (acessado pelos backends)
 # - NAT Gateway pode usar IP público automático
-
-# ================================================================
-# NAT GATEWAY
-# ================================================================
+  user_data = templatefile("${path.module}/user-data/frontend-user-data.sh", {
+    repository_url = var.repository_url
+    backend_ip1    = aws_network_interface.backend1_nic.private_ips[0]
+    backend_ip2    = aws_network_interface.backend2_nic.private_ips[0]
+  })
 
 # Elastic IP para o NAT Gateway
 resource "aws_eip" "sf_eip_nat_gateway" {

@@ -27,9 +27,14 @@ output "frontend_public_dns" {
   value       = aws_instance.sf_ec2_frontend_proxy.public_dns
 }
 
-output "backend_containers_private_ip" {
-  description = "IP privado do servidor com containers (2x Spring Boot + MySQL + RabbitMQ)"
-  value       = aws_instance.sf_ec2_backend_containers.private_ip
+output "backend1_private_ip" {
+  description = "IP privado fixo do backend 1"
+  value       = aws_network_interface.backend1_nic.private_ips[0]
+}
+
+output "backend2_private_ip" {
+  description = "IP privado fixo do backend 2"
+  value       = aws_network_interface.backend2_nic.private_ips[0]
 }
 
 # ================================================================

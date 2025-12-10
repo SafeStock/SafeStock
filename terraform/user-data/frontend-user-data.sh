@@ -8,7 +8,8 @@ echo "==== INÍCIO DA INSTALAÇÃO AUTOMATIZADA ===="
 
 # Variáveis do Terraform
 REPOSITORY_URL="${repository_url}"
-BACKEND_IP="${backend_ip}"
+BACKEND_IP1="${backend_ip1}"
+BACKEND_IP2="${backend_ip2}"
 PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 
 # Atualizar sistema
@@ -17,15 +18,15 @@ yum update -y
 
 # Instalar Docker e Nginx
 echo "==== Instalando Docker e Nginx ===="
-yum install -y docker git
-amazon-linux-extras install -y docker
-amazon-linux-extras install -y nginx1
+sudo yum install -y docker git
+sudo amazon-linux-extras install -y docker
+sudo amazon-linux-extras install -y nginx1
 
 # Instalar Docker Compose v2 (plugin)
 echo "==== Instalando Docker Compose v2 ===="
 mkdir -p /usr/local/lib/docker/cli-plugins
-curl -L "https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
-chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-linux-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 # Verificar instalação
 docker compose version || {
@@ -56,7 +57,7 @@ echo "==== Limpando arquivos desnecessários para EC2 pública (frontend) ===="
 if [ -f Front-end/Plataforma/.env.production ]; then
     cp Front-end/Plataforma/.env.production /tmp/.env.production
 fi
-rm -rf Backend-Refatorado Backend-Legado DataBase terraform docker-compose.backend.yml docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
+rm -rf Backend-Refatorado Backend-Legado DataBase terraform docker-compose.backend.yml docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml docker-compose.override.yml 
 rm -rf SafeStock/Back-end SafeStock/Backend-Legado SafeStock/Backend-Refatorado SafeStock/DataBase SafeStock/terraform
 # Restaura .env.production se necessário
 if [ -f /tmp/.env.production ]; then
@@ -142,7 +143,7 @@ sleep 30
 # Configurar Nginx como proxy reverso
 echo "==== Configurando Nginx como Proxy Reverso ===="
 mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
-cat > /etc/nginx/sites-available/safestock << 'EOF'
+sudo tee /etc/nginx/sites-available/safestock > /dev/null <<'EOF'
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -219,13 +220,18 @@ EOF
 
 # Substituir IP do Backend
 echo "==== Substituindo variáveis ===="
-echo "Backend IP: $BACKEND_IP"
-if [ -z "$BACKEND_IP" ]; then
-    echo "ERRO: BACKEND_IP está vazio!"
+echo "Backend IP1: $BACKEND_IP1"
+echo "Backend IP2: $BACKEND_IP2"
+if [ -z "$BACKEND_IP1" ] || [ -z "$BACKEND_IP2" ]; then
+    echo "ERRO: BACKEND_IP1 ou BACKEND_IP2 está vazio!"
     exit 1
 fi
-sed -i "s|BACKEND_IP|$BACKEND_IP|g" /etc/nginx/sites-available/safestock || {
-    echo "ERRO no comando sed!"
+sed -i "s|BACKEND_IP1|$BACKEND_IP1|g" /etc/nginx/sites-available/safestock || {
+    echo "ERRO no comando sed para BACKEND_IP1!"
+    exit 1
+}
+sed -i "s|BACKEND_IP2|$BACKEND_IP2|g" /etc/nginx/sites-available/safestock || {
+    echo "ERRO no comando sed para BACKEND_IP2!"
     exit 1
 }
 
@@ -256,57 +262,41 @@ nginx -t || {
 }
 
 # Criar serviço systemd REAL para gerenciar a aplicação
-echo "==== Configurando serviço systemd ===="
 
-cat > /etc/systemd/system/safestock-frontend.service << 'EOF'
+# === Serviço systemd para update automático do frontend ===
+echo "==== Configurando serviço systemd de update automático ===="
+cat > /etc/systemd/system/update-frontend.service << 'EOF'
 [Unit]
-Description=SafeStock Frontend Service
-After=docker.service network.target
+Description=SafeStock Frontend Update Service
+After=network.target docker.service
 Requires=docker.service
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
 User=ec2-user
 WorkingDirectory=/home/ec2-user/SafeStock
-ExecStart=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.frontend.yml --env-file .env.aws up -d
-ExecStop=/usr/local/lib/docker/cli-plugins/docker-compose -f docker-compose.frontend.yml --env-file .env.aws down
+ExecStart=/home/ec2-user/update-frontend.sh
 TimeoutStartSec=300
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Substituir IP do Load Balancer
-sed -i "s|LOAD_BALANCER_IP|$LOAD_BALANCER_IP|g" /etc/nginx/conf.d/safestock.conf
+# Timer para rodar no boot
+cat > /etc/systemd/system/update-frontend.timer << 'EOF'
+[Unit]
+Description=SafeStock Frontend Update Timer
 
-# Iniciar serviços
-echo "==== Iniciando serviços ===="
-systemctl daemon-reload
-systemctl enable nginx
-systemctl enable safestock-frontend
-systemctl restart nginx
-systemctl start safestock-frontend
+[Timer]
+OnBootSec=2min
+Unit=update-frontend.service
 
-# Aguardar Nginx iniciar
-sleep 3
+[Install]
+WantedBy=timers.target
+EOF
 
-# Verificar se Nginx está rodando
-if systemctl is-active --quiet nginx; then
-    echo "✓ Nginx está rodando"
-else
-    echo "✗ ERRO: Nginx não está rodando!"
-    systemctl status nginx --no-pager
-    exit 1
-fi
-
-# Criar script de update
-echo "==== Criando script de update ===="
-git pull origin main
-docker compose -f docker-compose.frontend.yml --env-file .env.aws down
-docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --build
-systemctl restart nginx
-echo "SafeStock atualizado com sucesso!"
+# Script de update robusto
 cat > /home/ec2-user/update-frontend.sh << 'EOF'
 #!/bin/bash
 cd /home/ec2-user/SafeStock
@@ -316,45 +306,56 @@ docker compose -f docker-compose.frontend.yml --env-file .env.aws up -d --build
 systemctl restart nginx
 echo "SafeStock atualizado com sucesso!"
 EOF
-
 chmod +x /home/ec2-user/update-frontend.sh
 chown ec2-user:ec2-user /home/ec2-user/update-frontend.sh
 
-# Verificar status dos serviços
+# Ativar e iniciar serviços/timer
+systemctl daemon-reload
+systemctl enable nginx
+systemctl enable update-frontend.service
+systemctl enable update-frontend.timer
+systemctl restart nginx
+systemctl start update-frontend.service
+systemctl start update-frontend.timer
+
+# Status dos serviços
 echo "==== Status dos serviços ===="
 systemctl status nginx --no-pager
-systemctl status safestock-frontend --no-pager
-
-# Aguardar containers subirem
-echo "==== Aguardando frontend container ===="
-sleep 30
+systemctl status update-frontend.service --no-pager
+systemctl status update-frontend.timer --no-pager
 
 # Teste de conectividade
 echo "==== Testando conectividade ===="
-curl -s -o /dev/null -w "Frontend container: %%{http_code}\n" http://localhost:5173/
-curl -s -o /dev/null -w "Nginx proxy: %%{http_code}\n" http://localhost/
-curl -s -o /dev/null -w "Health check: %%{http_code}\n" http://localhost/health
+curl -s -o /dev/null -w "Frontend container: %{http_code}\n" http://localhost:5173/
+curl -s -o /dev/null -w "Nginx proxy: %{http_code}\n" http://localhost/
+curl -s -o /dev/null -w "Health check: %{http_code}\n" http://localhost/health
 
 # Informações finais
 echo "==== Frontend + Proxy EC2 configurado com sucesso! ===="
 PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "IP_NAO_DETECTADO")
 echo "URL da aplicação: http://$PUBLIC_IP"
 echo "URL da API: http://$PUBLIC_IP/api"
-echo "Backend IP: $BACKEND_IP"
+echo "Backend IP1: $BACKEND_IP1"
+echo "Backend IP2: $BACKEND_IP2"
 echo ""
 echo "SERVIÇOS RODANDO:"
 echo "  - Frontend container: porta 5173"
 echo "  - Nginx proxy: porta 80"
-echo "  - Load balancer para: $BACKEND_IP:8081 e $BACKEND_IP:8082"
+echo "  - Load balancer para: $BACKEND_IP1:8081 e $BACKEND_IP2:8082"
 echo ""
 echo "ARQUIVOS IMPORTANTES:"
 echo "  - Configuração Nginx: /etc/nginx/sites-available/safestock"
 echo "  - Script de update: /home/ec2-user/update-frontend.sh"
+echo "  - Serviço systemd: update-frontend.service"
+echo "  - Timer systemd: update-frontend.timer"
 echo ""
 echo "COMANDOS ÚTEIS:"
+echo "  - Atualizar manualmente: /home/ec2-user/update-frontend.sh"
+echo "  - Forçar update: systemctl start update-frontend.service"
 echo "  - Ver logs user-data: tail -f /var/log/user-data.log"
 echo "  - Ver logs nginx: tail -f /var/log/nginx/safestock-error.log"
 echo "  - Ver logs container: docker logs sf-frontend"
 echo "  - Testar nginx: nginx -t"
 echo "  - Reiniciar nginx: systemctl restart nginx"
-echo "  - Atualizar: /home/ec2-user/update-frontend.sh"
+echo "  - Status update: systemctl status update-frontend.service"
+echo "  - Status timer: systemctl status update-frontend.timer"

@@ -3,6 +3,8 @@
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo "==== Backend Containers EC2 User Data - SafeStock ===="
 echo "Timestamp: $(date)"
+PRIVATE_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+echo "Backend Private IP: $PRIVATE_IP"
 
 # Variáveis do Terraform
 REPOSITORY_URL="${repository_url}"
@@ -166,45 +168,63 @@ echo "==== Testando endpoints da API ===="
 curl -f http://localhost:8081/actuator/health || echo "Backend 1 não respondeu"
 curl -f http://localhost:8082/actuator/health || echo "Backend 2 não respondeu"
 
-# Criar script de update
-echo "==== Criando script de update ===="
-git pull
-docker compose -f docker-compose.backend.yml --env-file .env down
-docker compose -f docker-compose.backend.yml --env-file .env up -d --build
+
+# === Serviço systemd para update automático do backend ===
+echo "==== Configurando serviço systemd de update automático do backend ===="
+cat > /etc/systemd/system/update-backend.service << 'EOF'
+[Unit]
+Description=SafeStock Backend Update Service
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=ec2-user
+WorkingDirectory=/home/ec2-user/SafeStock
+ExecStart=/home/ec2-user/update-containers.sh
+TimeoutStartSec=300
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Timer para rodar no boot
+cat > /etc/systemd/system/update-backend.timer << 'EOF'
+[Unit]
+Description=SafeStock Backend Update Timer
+
+[Timer]
+OnBootSec=2min
+Unit=update-backend.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+# Script de update robusto
 cat > /home/ec2-user/update-containers.sh << 'EOF'
 #!/bin/bash
 cd /home/ec2-user/SafeStock
 git pull
 docker compose -f docker-compose.backend.yml --env-file .env down
 docker compose -f docker-compose.backend.yml --env-file .env up -d --build
+echo "SafeStock backend atualizado com sucesso!"
 EOF
-
 chmod +x /home/ec2-user/update-containers.sh
 chown ec2-user:ec2-user /home/ec2-user/update-containers.sh
 
-# Criar serviço systemd para auto-restart dos containers
-echo "==== Configurando auto-restart dos containers ===="
-sudo tee /etc/systemd/system/safestock-containers.service > /dev/null << 'EOF'
-[Unit]
-Description=SafeStock Containers
-Requires=docker.service
-After=docker.service
+# Ativar e iniciar serviços/timer
+systemctl daemon-reload
+systemctl enable update-backend.service
+systemctl enable update-backend.timer
+systemctl start update-backend.service
+systemctl start update-backend.timer
 
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-User=ec2-user
-WorkingDirectory=/home/ec2-user/SafeStock
-ExecStart=/usr/bin/docker compose -f docker-compose.backend.yml --env-file .env up -d
-ExecStop=/usr/bin/docker compose -f docker-compose.backend.yml --env-file .env down
-TimeoutStartSec=0
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable safestock-containers
+# Status dos serviços
+echo "==== Status dos serviços ===="
+systemctl status update-backend.service --no-pager
+systemctl status update-backend.timer --no-pager
 
 # Informações finais
 echo "==== Backend Containers EC2 configurado com sucesso! ===="
@@ -214,7 +234,9 @@ echo "  - RabbitMQ: porta 5672 (management: 15672)"
 echo "  - Backend 1: porta 8081"
 echo "  - Backend 2: porta 8082"
 echo "Comandos úteis:"
+echo "  - Atualizar manualmente: /home/ec2-user/update-containers.sh"
+echo "  - Forçar update: systemctl start update-backend.service"
+echo "  - Status update: systemctl status update-backend.service"
+echo "  - Status timer: systemctl status update-backend.timer"
 echo "  - Ver containers: docker compose -f docker-compose.backend.yml --env-file .env ps"
 echo "  - Ver logs: docker compose -f docker-compose.backend.yml --env-file .env logs -f"
-echo "  - Restart: docker compose -f docker-compose.yml -f docker-compose.aws.yml --profile antigo restart"
-echo "  - Update: /home/ec2-user/update-containers.sh"
