@@ -33,7 +33,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Variáveis de ambiente padrão
-ENV JAVA_OPTS="-Xmx512m -Xms256m"
+ENV JAVA_OPTS="-Xmx512m"
 ENV SPRING_PROFILES_ACTIVE=prod
 
 EXPOSE 8080

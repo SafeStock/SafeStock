@@ -106,7 +106,8 @@ public class SecurityConfiguracao {
                                 "/configuration/security",
                                 "/webjars/**",
                                 "/h2-console/**",
-                                "/error/**"
+                                "/error/**",
+                                "/actuator/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,5 +1,4 @@
 #!/bin/bash
-# BACKEND EC2 COM CONTAINERS (2x Spring Boot + MySQL + RabbitMQ)
 # Logging
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo "==== Backend Containers EC2 User Data - SafeStock ===="
@@ -81,7 +80,7 @@ chown -R ec2-user:ec2-user SafeStock
 # Remover arquivos e pastas desnecessários para o backend
 cd /home/ec2-user/SafeStock
 echo "==== Limpando arquivos desnecessários para EC2 privada (backend) ===="
-rm -rf Front-end docker-compose.frontend.yml Dockerfile.frontend Dockerfile.loadbalancer nginx.conf terraform docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml
+rm -rf Front-end docker-compose.frontend.yml Dockerfile.frontend Dockerfile.loadbalancer nginx.conf terraform docker-compose.yml docker-compose.aws.yml docker-compose.prod.yml Backend-Legado DataBase ARQUITETURA-AWS.md imagens URL-ACESSO.txt nginx-loadbalancer.conf README.md
 rm -rf SafeStock/Front-end SafeStock/terraform
 echo "Arquivos desnecessários removidos."
 
@@ -101,9 +100,18 @@ MYSQL_USER=safestock_app
 RABBITMQ_DEFAULT_USER=admin
 RABBITMQ_DEFAULT_PASS=admin123
 
-# Configurações gerais
 TZ=America/Sao_Paulo
 ENVIRONMENT=development
+
+# Redis
+REDIS_HOST=sf-redis
+REDIS_PORT=6379
+
+# Spring Boot/Actuator
+SPRING_PROFILES_ACTIVE=prod
+MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
+MANAGEMENT_ENDPOINT_HEALTH_ENABLED=true
+MANAGEMENT_HEALTH_MAIL_ENABLED=false
 EOF
 
 echo "✓ Arquivo .env criado para ambiente de desenvolvimento"
@@ -133,8 +141,8 @@ docker compose -f docker-compose.backend.yml --env-file .env logs --tail=50
 
 # Testar endpoints
 echo "==== Testando endpoints da API ===="
-curl -f http://localhost:8081/health || echo "Backend 1 não respondeu"
-curl -f http://localhost:8082/health || echo "Backend 2 não respondeu"
+curl -f http://localhost:8081/actuator/health || echo "Backend 1 não respondeu"
+curl -f http://localhost:8082/actuator/health || echo "Backend 2 não respondeu"
 
 # Criar script de update
 echo "==== Criando script de update ===="
@@ -154,7 +162,7 @@ chown ec2-user:ec2-user /home/ec2-user/update-containers.sh
 
 # Criar serviço systemd para auto-restart dos containers
 echo "==== Configurando auto-restart dos containers ===="
-cat > /etc/systemd/system/safestock-containers.service << 'EOF'
+sudo tee /etc/systemd/system/safestock-containers.service > /dev/null << 'EOF'
 [Unit]
 Description=SafeStock Containers
 Requires=docker.service
@@ -173,8 +181,8 @@ TimeoutStartSec=0
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
-systemctl enable safestock-containers
+sudo systemctl daemon-reload
+sudo systemctl enable safestock-containers
 
 # Informações finais
 echo "==== Backend Containers EC2 configurado com sucesso! ===="
