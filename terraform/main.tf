@@ -105,9 +105,13 @@ resource "aws_route_table_association" "safestock_rta_public" {
 # SECURITY GROUP - ÚNICO PARA SINGLE EC2
 # ================================================================
 
+# ================================================================
+# SECURITY GROUP - TODAS AS PORTAS ABERTAS
+# ================================================================
+
 resource "aws_security_group" "safestock_sg" {
   name        = "safestock-security-group"
-  description = "Security group para SafeStock - single EC2 com Docker Compose"
+  description = "Security group para SafeStock - TODAS portas abertas para teste"
   vpc_id      = aws_vpc.safestock_vpc.id
 
   tags = {
@@ -115,52 +119,22 @@ resource "aws_security_group" "safestock_sg" {
   }
 }
 
-# SSH - Acesso remoto
-resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+# INGRESS - Libera TODAS as portas de entrada
+resource "aws_vpc_security_group_ingress_rule" "allow_all_inbound" {
   security_group_id = aws_security_group.safestock_sg.id
-  description       = "Allow SSH"
+  description       = "Allow ALL inbound traffic"
   
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.allowed_ssh_cidr
+  from_port   = 0
+  to_port     = 0
+  ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
   
   tags = {
-    Name = "allow-ssh"
+    Name = "allow-all-inbound"
   }
 }
 
-# HTTP - Frontend
-resource "aws_vpc_security_group_ingress_rule" "allow_http" {
-  security_group_id = aws_security_group.safestock_sg.id
-  description       = "Allow HTTP for frontend"
-  
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.allowed_http_cidr
-  
-  tags = {
-    Name = "allow-http"
-  }
-}
-
-# HTTPS - Futuro SSL/TLS
-resource "aws_vpc_security_group_ingress_rule" "allow_https" {
-  security_group_id = aws_security_group.safestock_sg.id
-  description       = "Allow HTTPS for future SSL"
-  
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.allowed_https_cidr
-  
-  tags = {
-    Name = "allow-https"
-  }
-}
-
-# Egress - Saída (tudo permitido)
+# EGRESS - Libera TODAS as portas de saída
 resource "aws_vpc_security_group_egress_rule" "allow_all_outbound" {
   security_group_id = aws_security_group.safestock_sg.id
   description       = "Allow all outbound traffic"
@@ -174,7 +148,6 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_outbound" {
     Name = "allow-all-outbound"
   }
 }
-
 # ================================================================
 # ELASTIC IP
 # ================================================================

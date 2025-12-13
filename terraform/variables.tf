@@ -78,17 +78,16 @@ variable "rabbitmq_password" {
   sensitive   = true
 }
 
-# Configurações de Segurança
 variable "allowed_ssh_cidr" {
   description = "CIDR blocks permitidos para SSH"
-  type        = list(string)
-  default     = ["0.0.0.0/0"] # ⚠️ Para produção, restringir ao seu IP
+  type        = string
+  default     = "0.0.0.0/0"
 }
 
 variable "allowed_http_cidr" {
   description = "CIDR blocks permitidos para HTTP/HTTPS"
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+  type        = string
+  default     = "0.0.0.0/0"
 }
 
 # Configurações de Volume
@@ -160,4 +159,17 @@ variable "domain_name" {
   description = "Nome do domínio para a aplicação SafeStock (opcional)"
   type        = string
   default     = "" # Deixe vazio para usar apenas IPs
+}
+
+# Availability Zone
+variable "availability_zone" {
+  description = "Zona de disponibilidade para a subnet"
+  type        = string
+  default     = "us-east-1a"
+}
+
+variable "allowed_https_cidr" {
+  description = "CIDR blocks permitidos para HTTPS"
+  type        = string
+  default     = "0.0.0.0/0"
 }

@@ -40,9 +40,6 @@ output "api_url" {
   description = "URL da API"
   value       = "http://${aws_eip.safestock_eip.public_ip}:8081/api"
 }
-  description = "URL do Frontend usando IP fixo"
-  value       = "http://${aws_eip.sf_eip_frontend.public_ip}"
-}
 
 # ================================================================
 # SSH CONNECTION STRINGS

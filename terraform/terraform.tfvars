@@ -33,15 +33,12 @@ enable_monitoring = false
 
 # Security Configuration
 key_pair_name     = "sf-keypair-main"
-allowed_ssh_cidr  = ["0.0.0.0/0"]
-allowed_http_cidr = ["0.0.0.0/0"]
+allowed_ssh_cidr  = "0.0.0.0/0" 
+allowed_http_cidr = "0.0.0.0/0"  
 
 # Database Configuration
-mysql_root_password = "safestock123" # Senha padrão para testes
-mysql_app_password  = "safestock123"
+mysql_root_password = "safestock123"
 
-# Availability Zones (ajustar conforme região)
-availability_zones = ["us-east-1a", "us-east-1b"]
 
 # Tags personalizadas (opcional)
 common_tags = {
