@@ -21,22 +21,14 @@ provider "aws" {
 # DATA SOURCES
 # ================================================================
 
-# AMI Amazon Linux 2 para us-east-1 (compatível com yum)
-# AMI ID: ami-0abcdef1234567890 (Amazon Linux 2)
-locals {
-  amazon_linux_ami_id = "ami-0abcdef1234567890"  # Será resolvido via data source
-  availability_zones   = ["us-east-1a", "us-east-1b"]
-}
-
-# Data source para pegar a AMI mais recente do Amazon Linux 2
-data "aws_ami" "amazon_linux" {
+# AMI Amazon Linux 2 mais recente
+data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
-
     name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+    values = ["amzn2-ami-hvm-*-x86_64-gp3"]
   }
 
   filter {
@@ -46,413 +38,235 @@ data "aws_ami" "amazon_linux" {
 }
 
 # ================================================================
-# VPC E NETWORKING
+# VPC E NETWORKING - SIMPLIFICADO PARA SINGLE EC2
 # ================================================================
 
 # VPC Principal
-resource "aws_vpc" "sf_vpc_principal" {
+resource "aws_vpc" "safestock_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
-    Name = "sf-vpc-principal"
+    Name = "safestock-vpc"
   }
 }
 
 # Internet Gateway
-resource "aws_internet_gateway" "sf_igw_acesso_publico" {
-  vpc_id = aws_vpc.sf_vpc_principal.id
+resource "aws_internet_gateway" "safestock_igw" {
+  vpc_id = aws_vpc.safestock_vpc.id
 
   tags = {
-    Name = "sf-igw-acesso-publico"
+    Name = "safestock-igw"
   }
 }
 
 # ================================================================
-# SUBNETS PÚBLICAS
+# SUBNET ÚNICA - PÚBLICA (para EC2 com Docker Compose todo-em-um)
 # ================================================================
 
-# Subnet Pública - Frontend
-resource "aws_subnet" "sf_subnet_publica_frontend" {
-  vpc_id                  = aws_vpc.sf_vpc_principal.id
-  cidr_block              = var.subnet_publica_frontend_cidr
-  availability_zone       = local.availability_zones[0]
+resource "aws_subnet" "safestock_subnet_public" {
+  vpc_id                  = aws_vpc.safestock_vpc.id
+  cidr_block              = var.subnet_public_cidr
+  availability_zone       = var.availability_zone
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "sf-subnet-publica-frontend"
-    Type = "Public"
-  }
-}
-
-# Subnet Pública - Load Balancer
-resource "aws_subnet" "sf_subnet_publica_lb" {
-  vpc_id                  = aws_vpc.sf_vpc_principal.id
-  cidr_block              = var.subnet_publica_lb_cidr
-  availability_zone       = local.availability_zones[1]
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "sf-subnet-publica-lb"
+    Name = "safestock-subnet-public"
     Type = "Public"
   }
 }
 
 # ================================================================
-# SUBNETS PRIVADAS
+# ROUTE TABLE PÚBLICA - ÚNICA PARA SINGLE EC2
 # ================================================================
 
-# Subnet Privada - Backend
-resource "aws_subnet" "sf_subnet_privada_backend" {
-  vpc_id            = aws_vpc.sf_vpc_principal.id
-  cidr_block        = var.subnet_privada_backend_cidr
-  availability_zone = local.availability_zones[0]
-
-  tags = {
-    Name = "sf-subnet-privada-backend"
-    Type = "Private"
-  }
-}
-
-# Subnet Privada - Database
-resource "aws_subnet" "sf_subnet_privada_database" {
-  vpc_id            = aws_vpc.sf_vpc_principal.id
-  cidr_block        = var.subnet_privada_database_cidr
-  availability_zone = local.availability_zones[1]
-
-  tags = {
-    Name = "sf-subnet-privada-database"
-    Type = "Private"
-  }
-}
-
-# ================================================================
-# ELASTIC IPS - APENAS ONDE REALMENTE PRECISAMOS
-# ================================================================
-
-# EIP Frontend (acesso público direto necessário)
-resource "aws_eip" "sf_eip_frontend" {
-  domain = "vpc"
-
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-
-  tags = {
-    Name = "sf-eip-frontend"
-  }
-}
-
-# NOTA: 
-# - ALB recebe IP público automaticamente
-# - Backends ficam privados (acessados via ALB)
-# - Database fica privado (acessado pelos backends)
-# - NAT Gateway pode usar IP público automático
-
-# Elastic IP para o NAT Gateway
-resource "aws_eip" "sf_eip_nat_gateway" {
-  domain = "vpc"
-
-  tags = {
-    Name = "sf-eip-nat-gateway"
-  }
-
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-}
-
-# NAT Gateway para subnets privadas (com EIP dedicado)
-resource "aws_nat_gateway" "sf_nat_gateway_privadas" {
-  allocation_id = aws_eip.sf_eip_nat_gateway.id
-  subnet_id     = aws_subnet.sf_subnet_publica_frontend.id
-
-  tags = {
-    Name = "sf-nat-gateway-privadas"
-  }
-
-  depends_on = [aws_internet_gateway.sf_igw_acesso_publico]
-}
-
-# ================================================================
-# ROUTE TABLES
-# ================================================================
-
-# Route Table para Subnets Públicas
-resource "aws_route_table" "sf_rt_subnets_publicas" {
-  vpc_id = aws_vpc.sf_vpc_principal.id
+resource "aws_route_table" "safestock_rt_public" {
+  vpc_id = aws_vpc.safestock_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.sf_igw_acesso_publico.id
+    cidr_block      = "0.0.0.0/0"
+    gateway_id      = aws_internet_gateway.safestock_igw.id
   }
 
   tags = {
-    Name = "sf-rt-subnets-publicas"
+    Name = "safestock-rt-public"
   }
 }
 
-# Route Table para Subnets Privadas
-resource "aws_route_table" "sf_rt_subnets_privadas" {
-  vpc_id = aws_vpc.sf_vpc_principal.id
+resource "aws_route_table_association" "safestock_rta_public" {
+  subnet_id      = aws_subnet.safestock_subnet_public.id
+  route_table_id = aws_route_table.safestock_rt_public.id
+}
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.sf_nat_gateway_privadas.id
-  }
+
+
+# ================================================================
+# SECURITY GROUP - ÚNICO PARA SINGLE EC2
+# ================================================================
+
+resource "aws_security_group" "safestock_sg" {
+  name        = "safestock-security-group"
+  description = "Security group para SafeStock - single EC2 com Docker Compose"
+  vpc_id      = aws_vpc.safestock_vpc.id
 
   tags = {
-    Name = "sf-rt-subnets-privadas"
+    Name = "safestock-sg"
+  }
+}
+
+# SSH - Acesso remoto
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+  security_group_id = aws_security_group.safestock_sg.id
+  description       = "Allow SSH"
+  
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.allowed_ssh_cidr
+  
+  tags = {
+    Name = "allow-ssh"
+  }
+}
+
+# HTTP - Frontend
+resource "aws_vpc_security_group_ingress_rule" "allow_http" {
+  security_group_id = aws_security_group.safestock_sg.id
+  description       = "Allow HTTP for frontend"
+  
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.allowed_http_cidr
+  
+  tags = {
+    Name = "allow-http"
+  }
+}
+
+# HTTPS - Futuro SSL/TLS
+resource "aws_vpc_security_group_ingress_rule" "allow_https" {
+  security_group_id = aws_security_group.safestock_sg.id
+  description       = "Allow HTTPS for future SSL"
+  
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.allowed_https_cidr
+  
+  tags = {
+    Name = "allow-https"
+  }
+}
+
+# Egress - Saída (tudo permitido)
+resource "aws_vpc_security_group_egress_rule" "allow_all_outbound" {
+  security_group_id = aws_security_group.safestock_sg.id
+  description       = "Allow all outbound traffic"
+  
+  from_port   = 0
+  to_port     = 0
+  ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
+  
+  tags = {
+    Name = "allow-all-outbound"
   }
 }
 
 # ================================================================
-# ROUTE TABLE ASSOCIATIONS
+# ELASTIC IP
 # ================================================================
 
-# Associações Subnets Públicas
-resource "aws_route_table_association" "sf_rta_publica_frontend" {
-  subnet_id      = aws_subnet.sf_subnet_publica_frontend.id
-  route_table_id = aws_route_table.sf_rt_subnets_publicas.id
-}
+resource "aws_eip" "safestock_eip" {
+  domain = "vpc"
+  
+  depends_on = [aws_internet_gateway.safestock_igw]
 
-resource "aws_route_table_association" "sf_rta_publica_lb" {
-  subnet_id      = aws_subnet.sf_subnet_publica_lb.id
-  route_table_id = aws_route_table.sf_rt_subnets_publicas.id
-}
-
-# Associações Subnets Privadas
-resource "aws_route_table_association" "sf_rta_privada_backend" {
-  subnet_id      = aws_subnet.sf_subnet_privada_backend.id
-  route_table_id = aws_route_table.sf_rt_subnets_privadas.id
-}
-
-resource "aws_route_table_association" "sf_rta_privada_database" {
-  subnet_id      = aws_subnet.sf_subnet_privada_database.id
-  route_table_id = aws_route_table.sf_rt_subnets_privadas.id
+  tags = {
+    Name = "safestock-eip"
+  }
 }
 
 # ================================================================
-# SECURITY GROUPS
+# NETWORK INTERFACE
 # ================================================================
 
-# Security Group - Frontend (Nginx)
-resource "aws_security_group" "sf_sg_frontend_nginx" {
-  name_prefix = "sf-sg-frontend-nginx"
-  vpc_id      = aws_vpc.sf_vpc_principal.id
-
-  # HTTP
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_http_cidr
-  }
-
-  # HTTPS
-  ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_http_cidr
-  }
-
-  # SSH
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidr
-  }
-
-  # Outbound - All traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_network_interface" "safestock_eni" {
+  subnet_id           = aws_subnet.safestock_subnet_public.id
+  security_groups     = [aws_security_group.safestock_sg.id]
 
   tags = {
-    Name = "sf-sg-frontend-nginx"
+    Name = "safestock-eni"
   }
 }
-
-# Security Group - Backend (Spring Boot)
-resource "aws_security_group" "sf_sg_backend_springboot" {
-  name_prefix = "sf-sg-backend-springboot"
-  vpc_id      = aws_vpc.sf_vpc_principal.id
-
-  # Spring Boot Port (from ALB)
-  ingress {
-    description     = "Spring Boot from ALB"
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sf_sg_lb_publico.id]
-  }
-
-  # SSH
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidr
-  }
-
-  # Outbound - All traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "sf-sg-backend-springboot"
-  }
-}
-
-# Security Group - Database (MySQL)
-resource "aws_security_group" "sf_sg_database_mysql" {
-  name_prefix = "sf-sg-database-mysql"
-  vpc_id      = aws_vpc.sf_vpc_principal.id
-
-  # MySQL (from Backend)
-  ingress {
-    description     = "MySQL from Backend"
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sf_sg_backend_springboot.id]
-  }
-
-  # SSH
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidr
-  }
-
-  # Outbound - All traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "sf-sg-database-mysql"
-  }
-}
-
-# Security Group - Load Balancer
-resource "aws_security_group" "sf_sg_lb_publico" {
-  name_prefix = "sf-sg-lb-publico"
-  vpc_id      = aws_vpc.sf_vpc_principal.id
-
-  # HTTP
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_http_cidr
-  }
-
-  # HTTPS
-  ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_http_cidr
-  }
-
-  # Outbound - All traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "sf-sg-lb-publico"
-  }
-}
-
-# 
-# resource "aws_key_pair" "sf_keypair_main" {
-#   key_name   = var.key_pair_name
-#   public_key = file("~/.ssh/${var.key_pair_name}.pub")
-#   tags = {
-#     Name = "sf-keypair-main"
-#   }
-# }
 
 # ================================================================
-# INSTÂNCIAS EC2 - ARQUITETURA SIMPLES COM CONTAINERS
+# EC2 - SINGLE INSTANCE COM TUDO (DOCKER COMPOSE)
 # ================================================================
 
-# EC2 - Frontend + Load Balancer (Nginx + React)
-resource "aws_instance" "sf_ec2_frontend_proxy" {
-  ami                    = data.aws_ami.amazon_linux.id
-  instance_type          = "t3.medium" # Precisa de 4GB RAM para build do React seguro
-  key_name               = aws_key_pair.main.key_name
-  subnet_id              = aws_subnet.sf_subnet_publica_frontend.id
-  vpc_security_group_ids = [aws_security_group.sf_sg_frontend_nginx.id]
-
-
-  user_data_replace_on_change = true
-
-  tags = {
-    Name = "sf-ec2-frontend-proxy"
-    Type = "Frontend-LoadBalancer"
+resource "aws_instance" "safestock_ec2" {
+  ami           = data.aws_ami.amazon_linux_2.id
+  instance_type = var.instance_type
+  key_name      = var.key_pair_name
+  
+  # Network interface
+  network_interface {
+    network_interface_id = aws_network_interface.safestock_eni.id
+    device_index         = 0
   }
-}
 
-# EC2 - Backend com todos os containers (2x Spring Boot + MySQL + RabbitMQ)
-resource "aws_instance" "sf_ec2_backend_containers" {
-  ami                    = data.aws_ami.amazon_linux.id
-  instance_type          = "t3.small" # Precisa de mais RAM para múltiplos containers
-  key_name               = aws_key_pair.main.key_name
-  subnet_id              = aws_subnet.sf_subnet_privada_backend.id
-  vpc_security_group_ids = [aws_security_group.sf_sg_backend_springboot.id]
-
-  user_data = templatefile("${path.module}/user-data/backend-user-data.sh", {
-    repository_url      = var.repository_url
-    mysql_root_password = var.mysql_root_password
-    mysql_app_password  = var.mysql_app_password
-  })
-
-  user_data_replace_on_change = true
-
-  # Volume maior para containers e dados persistentes
+  # Root volume - Generoso para evitar problemas de espaço
   root_block_device {
-    volume_size = 20 # 20GB
-    volume_type = "gp3"
-    encrypted   = true
+    volume_type           = "gp3"
+    volume_size           = 50  # 50GB para Docker + aplicação + dados
+    delete_on_termination = true
+
+    tags = {
+      Name = "safestock-root-volume"
+    }
   }
 
+  # User data script - instala Docker e inicia aplicação
+  user_data = base64encode(
+    templatefile("${path.module}/user-data/safestock-complete.sh", {
+      repository_url      = var.repository_url
+      repository_branch   = var.repository_branch
+      mysql_root_password = var.mysql_root_password
+      mysql_user          = var.mysql_user
+      mysql_password      = var.mysql_password
+      rabbitmq_user       = var.rabbitmq_user
+      rabbitmq_password   = var.rabbitmq_password
+      environment         = var.environment
+    })
+  )
+
+  user_data_replace_on_change = true
+  associate_public_ip_address = true
+
   tags = {
-    Name = "sf-ec2-backend-containers"
-    Type = "Backend-Database-Queue"
+    Name = "safestock-ec2"
+    Type = "Docker-Compose-All-In-One"
+  }
+
+  depends_on = [
+    aws_internet_gateway.safestock_igw
+  ]
+
+  # Aguardar até 10 minutos para o setup
+  timeouts {
+    create = "10m"
   }
 }
 
 # ================================================================
-# ELASTIC IP ASSOCIATIONS
+# ELASTIC IP ASSOCIATION
 # ================================================================
 
-# Associar EIP apenas ao Frontend (que já faz proxy/load balancer)
-resource "aws_eip_association" "sf_eip_assoc_frontend" {
-  instance_id   = aws_instance.sf_ec2_frontend_proxy.id
-  allocation_id = aws_eip.sf_eip_frontend.id
+resource "aws_eip_association" "safestock_eip_assoc" {
+  instance_id       = aws_instance.safestock_ec2.id
+  allocation_id     = aws_eip.safestock_eip.id
 }
 
 ## ================================================

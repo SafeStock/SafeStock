@@ -25,47 +25,17 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "subnet_publica_frontend_cidr" {
-  description = "CIDR para subnet pública do frontend"
+variable "subnet_public_cidr" {
+  description = "CIDR para subnet pública (única)"
   type        = string
   default     = "10.0.1.0/24"
 }
 
-variable "subnet_publica_lb_cidr" {
-  description = "CIDR para subnet pública do load balancer"
+# Configurações da Instância EC2 (ÚNICA - ALL-IN-ONE)
+variable "instance_type" {
+  description = "Tipo de instância EC2 (único servidor com Docker Compose)"
   type        = string
-  default     = "10.0.2.0/24"
-}
-
-variable "subnet_privada_backend_cidr" {
-  description = "CIDR para subnet privada do backend"
-  type        = string
-  default     = "10.0.10.0/24"
-}
-
-variable "subnet_privada_database_cidr" {
-  description = "CIDR para subnet privada do database"
-  type        = string
-  default     = "10.0.20.0/24"
-}
-
-# Configurações das Instâncias EC2
-variable "instance_type_frontend" {
-  description = "Tipo de instância para frontend (Nginx + React)"
-  type        = string
-  default     = "t3.small"
-}
-
-variable "instance_type_backend" {
-  description = "Tipo de instância para backend (Spring Boot)"
-  type        = string
-  default     = "t3.medium"
-}
-
-variable "instance_type_database" {
-  description = "Tipo de instância para database (MySQL)"
-  type        = string
-  default     = "t3.small"
+  default     = "t3.large"
 }
 
 variable "key_pair_name" {
@@ -82,10 +52,29 @@ variable "mysql_root_password" {
   sensitive   = true
 }
 
-variable "mysql_app_password" {
+variable "mysql_user" {
+  description = "Usuário da aplicação no MySQL"
+  type        = string
+  default     = "safestock_user"
+}
+
+variable "mysql_password" {
   description = "Senha do usuário da aplicação MySQL"
   type        = string
   default     = "SafeStockApp@2024!"
+  sensitive   = true
+}
+
+variable "rabbitmq_user" {
+  description = "Usuário do RabbitMQ"
+  type        = string
+  default     = "safestock_rabbit"
+}
+
+variable "rabbitmq_password" {
+  description = "Senha do usuário RabbitMQ"
+  type        = string
+  default     = "SafeStockRabbit@2024!"
   sensitive   = true
 }
 
@@ -102,11 +91,24 @@ variable "allowed_http_cidr" {
   default     = ["0.0.0.0/0"]
 }
 
-# Availability Zones
-variable "availability_zones" {
-  description = "AZs para distribuir os recursos"
-  type        = list(string)
-  default     = ["us-east-1a", "us-east-1b"]
+# Configurações de Volume
+variable "root_volume_size" {
+  description = "Tamanho em GB do volume raiz (para Docker + dados)"
+  type        = number
+  default     = 50
+}
+
+variable "root_volume_type" {
+  description = "Tipo do volume raiz (gp3 é recomendado)"
+  type        = string
+  default     = "gp3"
+}
+
+# Monitoring
+variable "enable_monitoring" {
+  description = "Habilitar monitoring detalhado da EC2"
+  type        = bool
+  default     = false
 }
 
 # Tags padrão

@@ -1,3 +1,9 @@
+version: '3.8'
+
+# Docker Compose para Produção em AWS EC2
+# Uso: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Ou:   docker compose --env-file .env.production up -d
+
 services:
   mysql:
     image: mysql:8.0
@@ -9,19 +15,27 @@ services:
       MYSQL_USER: ${MYSQL_USER:-safestock_app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-admin123}
     ports:
-      - "3306:3306"
+      # ⚠️ NÃO EXPOR em produção - Remova a linha abaixo se quiser apenas acesso interno
+      # - "3306:3306"
+      - "127.0.0.1:3306:3306"  # Apenas localhost da EC2
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./DataBase/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./DataBase/mysql.conf:/etc/mysql/conf.d/custom.cnf
+      - ./DataBase/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./DataBase/mysql.conf:/etc/mysql/conf.d/custom.cnf:ro
     networks:
       - safestock-network
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -padmin123 --silent"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-      start_period: 20s
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p${MYSQL_PASSWORD:-admin123} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Limites de memória para produção
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -31,15 +45,25 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin123}
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      # AMQP port - apenas interno
+      - "127.0.0.1:5672:5672"
+      # Management interface - opcional em produção
+      # - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - safestock-network
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 10s
       timeout: 5s
-      retries: 12
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   backend-1:
     build:
@@ -64,20 +88,27 @@ services:
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER:-admin}
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-admin123}
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      SPRING_PROFILES_ACTIVE: prod
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      JAVA_OPTS: "-Xmx1024m -Xms512m"
     ports:
       - "8081:8080"
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/produtos/public/paged"]
-      interval: 15s
-      timeout: 10s
-      retries: 8
-      start_period: 120s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       safestock-network:
         aliases:
           - api-back-1
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+        reservations:
+          memory: 1G
 
   backend-2:
     build:
@@ -102,20 +133,27 @@ services:
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER:-admin}
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-admin123}
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      SPRING_PROFILES_ACTIVE: prod
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      JAVA_OPTS: "-Xmx1024m -Xms512m"
     ports:
       - "8082:8080"
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/produtos/public/paged"]
-      interval: 15s
-      timeout: 10s
-      retries: 8
-      start_period: 120s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     networks:
       safestock-network:
         aliases:
           - api-back-2
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+        reservations:
+          memory: 1G
 
   # Load Balancer - Ponto de entrada único
   loadbalancer:
@@ -125,10 +163,7 @@ services:
     container_name: sf-lb
     restart: always
     ports:
-      - "80:80"      # Porta principal HTTP
-      - "5173:80"    # Mantém compatibilidade com porta antiga
-    environment:
-      - BACKEND_UPSTREAM=sf-backend-1:8080
+      - "80:80"
     depends_on:
       backend-1:
         condition: service_healthy
@@ -140,8 +175,14 @@ services:
         condition: service_started
     networks:
       - safestock-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
 
-  # Frontend 1 - Servidor A
+  # Frontend 1
   frontend-1:
     build:
       context: ./Front-end/Plataforma
@@ -156,8 +197,14 @@ services:
       safestock-network:
         aliases:
           - sf-frontend-1
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
 
-  # Frontend 2 - Servidor B
+  # Frontend 2
   frontend-2:
     build:
       context: ./Front-end/Plataforma
@@ -172,22 +219,36 @@ services:
       safestock-network:
         aliases:
           - sf-frontend-2
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
 
-
+  # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: sf-redis
+    restart: always
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"  # Apenas localhost
     networks:
       - safestock-network
-
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+    command: redis-server --appendonly yes  # Ativar AOF para persistência
 
 volumes:
   mysql_data:
+    driver: local
+  rabbitmq_data:
     driver: local
 
 networks:
   safestock-network:
     driver: bridge
-

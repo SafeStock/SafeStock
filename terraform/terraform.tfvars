@@ -22,16 +22,14 @@ repository_branch = "main"
 # }
 
 # Network Configuration
-vpc_cidr                     = "10.0.0.0/16"
-subnet_publica_frontend_cidr = "10.0.1.0/24"
-subnet_publica_lb_cidr       = "10.0.2.0/24"
-subnet_privada_backend_cidr  = "10.0.10.0/24"
-subnet_privada_database_cidr = "10.0.20.0/24"
+vpc_cidr            = "10.0.0.0/16"
+subnet_public_cidr  = "10.0.1.0/24"
 
-# EC2 Configuration
-instance_type_frontend = "t3.medium"
-instance_type_backend  = "t3.small"
-instance_type_database = "t3.small"
+# EC2 Configuration (ÚNICA - ALL-IN-ONE)
+instance_type     = "t3.large"
+root_volume_size  = 50
+root_volume_type  = "gp3"
+enable_monitoring = false
 
 # Security Configuration
 key_pair_name     = "sf-keypair-main"

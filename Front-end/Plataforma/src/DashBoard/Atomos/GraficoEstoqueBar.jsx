@@ -10,7 +10,7 @@ export function GraficoEstoqueBar() {
   const token = sessionStorage.getItem('authToken');
 
   const buscarDados = () => {
-    fetch(`${API_BASE_URL}/produtos`, {
+    fetch(`${API_BASE_URL}/produtos/public/paged?page=0&size=6`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -18,8 +18,9 @@ export function GraficoEstoqueBar() {
     })
       .then((res) => res.json())
         .then((data) => {
-        // assume backend returns products ordered by quantity or provide top-N endpoint; here we take first 6
-        const qtdProdutosPlotados = data.slice(0, 6);
+        // Extrai os produtos do objeto paginado
+        const produtos = data.content || data || [];
+        const qtdProdutosPlotados = produtos.slice(0, 6);
         const dadosFormatados = qtdProdutosPlotados.map((item) => ({
           name: item.nome,
           esperado: item.limiteSemanalDeUso,
