@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
@@ -8,12 +10,10 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-safestockDB}
       MYSQL_USER: ${MYSQL_USER:-safestock_app}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-admin123}
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./DataBase/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./DataBase/mysql.conf:/etc/mysql/conf.d/custom.cnf
+      - ./DataBase/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./DataBase/mysql.conf:/etc/mysql/conf.d/custom.cnf:ro
     networks:
       - safestock-network
     healthcheck:
@@ -31,8 +31,10 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin123}
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "127.0.0.1:5672:5672"      # AMQP - apenas localhost
+      - "127.0.0.1:15672:15672"    # Management - apenas localhost
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - safestock-network
     healthcheck:
@@ -66,8 +68,7 @@ services:
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
-    ports:
-      - "8081:8080"
+      JAVA_OPTS: -Xmx1024m -Xms512m
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/produtos/public/paged"]
       interval: 15s
@@ -77,7 +78,7 @@ services:
     networks:
       safestock-network:
         aliases:
-          - api-back-1
+          - sf-backend-1
 
   backend-2:
     build:
@@ -104,8 +105,7 @@ services:
       SPRING_DATASOURCE_HIKARI_INITIALIZATIONFAILTIMEOUT: "60000"
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
-    ports:
-      - "8082:8080"
+      JAVA_OPTS: -Xmx1024m -Xms512m
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/produtos/public/paged"]
       interval: 15s
@@ -115,9 +115,9 @@ services:
     networks:
       safestock-network:
         aliases:
-          - api-back-2
+          - sf-backend-2
 
-  # Load Balancer - Ponto de entrada único
+  # Load Balancer - Ponto de entrada ÚNICO
   loadbalancer:
     build:
       context: .
@@ -125,10 +125,9 @@ services:
     container_name: sf-lb
     restart: always
     ports:
-      - "80:80"      # Porta principal HTTP
-      - "5173:80"    # Mantém compatibilidade com porta antiga
+      - "80:80"
     environment:
-      - BACKEND_UPSTREAM=sf-backend-1:8080
+      BACKEND_UPSTREAM: "sf-backend-1:8080 max_fails=3 fail_timeout=30s; server sf-backend-2:8080 max_fails=3 fail_timeout=30s"
     depends_on:
       backend-1:
         condition: service_healthy
@@ -141,7 +140,7 @@ services:
     networks:
       - safestock-network
 
-  # Frontend 1 - Servidor A
+  # Frontend 1
   frontend-1:
     build:
       context: ./Front-end/Plataforma
@@ -157,7 +156,7 @@ services:
         aliases:
           - sf-frontend-1
 
-  # Frontend 2 - Servidor B
+  # Frontend 2
   frontend-2:
     build:
       context: ./Front-end/Plataforma
@@ -173,21 +172,20 @@ services:
         aliases:
           - sf-frontend-2
 
-
+  # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: sf-redis
-    ports:
-      - "6379:6379"
+    restart: always
     networks:
       - safestock-network
 
-
 volumes:
   mysql_data:
+    driver: local
+  rabbitmq_data:
     driver: local
 
 networks:
   safestock-network:
     driver: bridge
-
